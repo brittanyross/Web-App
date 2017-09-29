@@ -18,6 +18,7 @@ $router->add('/classes', 'classes/classes.php', 'Classes');
 $router->add('/locations', 'locations/locations.php', 'Locations');
 
 # Attendance Application
-$router->add('/attendance', 'attendance/attendance_dashboard.php', 'Attendance Dashboard');
-$router->add('/record-attendance', 'attendance/attendance_form.php', 'Attendance Form');
+$router->add('/record-attendance', 'attendance/attendance_dashboard.php', 'Attendance Dashboard');
+$router->add('/new-class', 'attendance/new_class.php', 'New Attendance Sheet Class');
+$router->add('/attendance-form', 'attendance/attendance_form.php', 'Attendance Form');
 $router->add('/attendance-history', 'attendance/attendance_history.php', 'Attendance History');

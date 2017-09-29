@@ -2,8 +2,8 @@
 
 authorizedPage();
 
-include('../public/header.php');
-require('../core/util/db_connection.php')
+include('header.php');
+
 ?>
 
     <div class="container">
@@ -25,8 +25,7 @@ require('../core/util/db_connection.php')
                     <th></th>
                 </tr>
                 <?php
-                #TODO: pull info from DB
-
+                     //TODO: pull info from DB
                 ?>
                 <tr>
                     <td>
