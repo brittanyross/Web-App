@@ -11,7 +11,7 @@ require('core/router/Router.php');
 include_once('core/util/helpers.php');
 
 $db = new Database('10.11.12.21', '5432',
-    'postgres', '[actual password]', // replace with actual password
+    'postgres', 'Password1', // replace with actual password
     'New_DB');
 $db->connect();
 

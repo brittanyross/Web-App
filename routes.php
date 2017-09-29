@@ -16,3 +16,8 @@ $router->add('/view-participant', 'agency-requests/view_participant.php', 'View 
 $router->add('/curricula', 'curricula/curricula.php', 'Curricula');
 $router->add('/classes', 'classes/classes.php', 'Classes');
 $router->add('/locations', 'locations/locations.php', 'Locations');
+
+# Attendance Application
+$router->add('/attendance', 'attendance/attendance_dashboard.php', 'Attendance Dashboard');
+$router->add('/record-attendance', 'attendance/attendance_form.php', 'Attendance Form');
+$router->add('/attendance-history', 'attendance/attendance_history.php', 'Attendance History');
