@@ -6,10 +6,45 @@ global $db;
 
 $result_curriculum = $db->no_param_query("SELECT c.curriculumid, c.curriculumname FROM curricula c ORDER BY c.curriculumname ASC;");
 
+$result_classes = $db->no_param_query("SELECT cc.curriculumid, cc.topicname from curriculumclasses cc ORDER BY cc.curriculumid;");
+
 include('header.php');
 
 ?>
 
+<script>
+    //js for holding all the class choices
+    var classesMatrix = [
+        <?php
+            while($row = pg_fetch_assoc($result_curriculum)){
+                echo "[{$row['curriculumid']},{$row['topicname']}],";
+            }
+        ?>
+        ];
+
+</script>
+
+<script>
+    //js for controlling the disabled selection of class section
+    function enableSecondSelection() {
+
+        //enable selection
+        document.getElementById("classSelection").disabled = false;
+
+        /* Display the proper classes */
+
+        //clear the current selection
+        
+        //get current input of curriculum
+
+        //add new options
+
+    }
+    
+    function enableSumbmitButton() {
+        
+    }
+</script>
     <div class="container">
         <!--
             cirriculum dropdown
@@ -25,8 +60,8 @@ include('header.php');
                 <form>
                     <div class="form-group">
                         <label for="disabledSelect">Curriculum</label>
-                        <select id="disabledSelect" class="form-control">
-                            <option>Select Curriculum</option>
+                        <select id="disabledSelect" class="form-control" onchange="enableSecondSelection()">
+                            <option disabled selected="selected" name="classList">Select Curriculum</option>
                             <?php
                                 while($row = pg_fetch_assoc($result_curriculum)){
                                     echo "<option id='{$row['curriculumid']}'>{$row['curriculumname']}</option>";
@@ -35,7 +70,7 @@ include('header.php');
                         </select>
                     </div>
 
-                    <fieldset disabled>
+                    <fieldset disabled="disabled" id="classSelection">
                         <div class="form-group">
                             <label for="disabledSelect">Class Selection</label>
                             <select id="disabledSelect" class="form-control">
