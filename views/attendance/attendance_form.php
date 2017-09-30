@@ -2,6 +2,19 @@
 
 authorizedPage();
 
+//generic db script copied and pasted
+/*
+global $db, $params;
+$peopleid = $params[0];
+
+$result = $db->query("SELECT participants.participantid, participants.dateofbirth, participants.race, people.firstname, people.lastname, people.middleinit " .
+    "FROM participants " .
+    "INNER JOIN people ON participants.participantid = people.peopleid WHERE people.peopleid=$1", [$peopleid]);
+
+$participant = pg_fetch_assoc($result);
+
+*/
+
 include('header.php');
 
 ?>
@@ -18,8 +31,8 @@ include('header.php');
                         <table class="table table-hover table-striped">
                             <thead>
                                 <tr class="m-0">
-                                    <th class="w-10">Present</th>
-                                    <th class="w-65">Name</th>
+                                    <th class="w-25">Present</th>
+                                    <th class="w-50">Name</th>
                                     <th class="w-25"></th>
                                 </tr>
                             </thead>
@@ -29,7 +42,10 @@ include('header.php');
                             ?>
                             <tr class="m-0">
                                 <td class="w-25">
-                                    <input type="checkbox" aria-label="present">
+                                    <label class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input">
+                                        <span class="custom-control-indicator"></span>
+                                    </label>
                                 </td>
                                 <td class="w-50">Jimmy Neutron</td>
                                 <td class="w-25">
@@ -41,6 +57,12 @@ include('header.php');
                         <!-- /Table -->
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <div class="row flex-column">
+            <div class="d-flex justify-content-start">
+                <button type="button" class="btn btn-default" style="margin-top: 15px">New Attendee</button>
             </div>
         </div>
 
@@ -74,9 +96,12 @@ include('header.php');
                                     ?>
                                     <tr class="m-0">
                                         <td class="w-25">
-                                            <input type="checkbox" aria-label="present">
+                                            <label class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input">
+                                                <span class="custom-control-indicator"></span>
+                                            </label>
                                         </td>
-                                        <td class="w-50">Jimmy Neutron</td>
+                                        <td class="w-50">Shaquille O'Neal</td>
                                         <td class="w-25">
                                             <a href="#">More Details...</a>
                                         </td>
