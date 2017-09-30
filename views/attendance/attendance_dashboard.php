@@ -11,14 +11,15 @@ include('header.php');
             <?php
                 //TODO: fix button so that it uses proper php linking
                 //TODO: fix float and panel without borders
+                //TODO: responsive page navigation
             ?>
 
-            <div class="panel panel-default">
+            <div class="card col-12">
 
-                <div class="panel-heading float-left">My Recent Classes</div>
+                <div class="card-block">
 
-                <div class="panel-body">
-                    <br/><br/>
+                    <h4 class="card-title" style="margin-top: 15px;">My Recent Classes</h4>
+
                     <div class="table-responsive">
                         <table class="table">
                             <thead>
@@ -39,21 +40,21 @@ include('header.php');
                     </div>
                 </div>
 
-                <nav aria-label="Page navigation">
+                <nav aria-label="Page navigation example">
                     <ul class="pagination">
-                        <li>
-                            <a href="#" aria-label="Previous">
+                        <li class="page-item">
+                            <a class="page-link" href="#" aria-label="Previous">
                                 <span aria-hidden="true">&laquo;</span>
+                                <span class="sr-only">Previous</span>
                             </a>
                         </li>
-                        <li><a href="#">1</a></li>
-                        <li><a href="#">2</a></li>
-                        <li><a href="#">3</a></li>
-                        <li><a href="#">4</a></li>
-                        <li><a href="#">5</a></li>
-                        <li>
-                            <a href="#" aria-label="Next">
+                        <li class="page-item"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item">
+                            <a class="page-link" href="#" aria-label="Next">
                                 <span aria-hidden="true">&raquo;</span>
+                                <span class="sr-only">Next</span>
                             </a>
                         </li>
                     </ul>
@@ -61,7 +62,7 @@ include('header.php');
             </div>
 
 
-            <button type="button" class="btn btn-default col-12" onclick="window.location.href='./attendance-form'">Record Attendance For New Class</button>
+            <button type="button" class="btn btn-default col-12" style="margin-top: 15px" onclick="window.location.href='./attendance-form'">Record Attendance For New Class</button>
         </div>
 
     </div>
