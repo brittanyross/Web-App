@@ -16,7 +16,7 @@ include('header.php');
     //js for holding all the class choices
     var classesMatrix = [
         <?php
-            while($row = pg_fetch_assoc($result_curriculum)){
+            while($row = pg_fetch_assoc($result_classes)){
                 echo "[{$row['curriculumid']},{$row['topicname']}],";
             }
         ?>
@@ -34,10 +34,28 @@ include('header.php');
         /* Display the proper classes */
 
         //clear the current selection
-        
+        var selectElement = document.getElementById("classes");
+
+        while(selectElement.firstChild){
+            selectElement.removeChild(selectElement.firstChild);
+        }
+
         //get current input of curriculum
+        var classNumberSelected;
+        var optionSelected = document.getElementById("curr").value; //string
+        for(var i = 1; i < selectElement.length; i++){ //loop through children
+            if(document.getElementById("curr")[i].value === optionSelected) {
+                classNumberSelected = document.getElementById("curr")[i].id; //id of class (aka class num)
+            }
+        }
 
         //add new options
+        var node = document.createElement("OPTION");
+        node.selected = true;
+        node.disabled = true;
+
+        selectElement.appendChild(node);
+
 
     }
     
@@ -59,8 +77,8 @@ include('header.php');
 
                 <form>
                     <div class="form-group">
-                        <label for="disabledSelect">Curriculum</label>
-                        <select id="disabledSelect" class="form-control" onchange="enableSecondSelection()">
+                        <label for="curr">Curriculum</label>
+                        <select id="curr" class="form-control" onchange="enableSecondSelection()">
                             <option disabled selected="selected" name="classList">Select Curriculum</option>
                             <?php
                                 while($row = pg_fetch_assoc($result_curriculum)){
@@ -72,8 +90,8 @@ include('header.php');
 
                     <fieldset disabled="disabled" id="classSelection">
                         <div class="form-group">
-                            <label for="disabledSelect">Class Selection</label>
-                            <select id="disabledSelect" class="form-control">
+                            <label for="classes">Class Selection</label>
+                            <select id="classes" class="form-control">
                                 <option></option>
                             </select>
                         </div>
