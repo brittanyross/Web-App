@@ -6,93 +6,94 @@ include('header.php');
 
 ?>
 
-    <div class="container col-12">
+    <div class="container-fluid">
+        <div class="row flex-column">
             <!-- Default container contents -->
             <div class="h2 text-center">Stop the Beatdown: Class Roster</div>
 
-        <div class="card">
-            <div class="card-block">
-                <!-- Table -->
-                <div class="table">
-                    <table class="table-responsive table-hover table-striped">
-                        <colgroup>
-                            <col class="col-2">
-                            <col class="col-8">
-                            <col class="col-2">
-                        </colgroup>
-                        <thead>
-                            <tr>
-                                <th>Present</th>
-                                <th>Name</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        <?php
-                        //TODO: pull info from DB
-                        ?>
-                        <tr>
-                            <td>
-                                <input type="checkbox" class="form-check-inline" aria-label="present">
-                            </td>
-                            <td>Jimmy Neutron</td>
-                            <td>
-                                <a href="#">More Details...</a>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                    <!-- /Table -->
-                </div>
-            </div>
-        </div>
-
-
-        <div class="row col-12">
-            <div class="col-9"></div>
-            <button type="button" class="btn btn-default col-3">New attendee</button>
-        </div>
-
-        <div class="panel-group col-12">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h4 class="panel-title">
-                        <a data-toggle="collapse" href="#collapse1">Other Attendees</a>
-                    </h4>
-                </div>
-                <div id="collapse1" class="panel-collapse collapse">
+            <div class="card">
+                <div class="card-block">
                     <!-- Table -->
-                    <table class="table row table-hover table-bordered table-striped">
-                        <colgroup>
-                            <col class="col-2">
-                            <col class="col-8">
-                            <col class="col-2">
-                        </colgroup>
-                        <tbody>
-                        <tr>
-                            <th>Present</th>
-                            <th>Name</th>
-                            <th></th>
-                        </tr>
-                        <?php
-                        #TODO: pull info from DB
-
-                        ?>
-                        <tr>
-                            <td>
-                                <input type="checkbox" class="form-check-inline" aria-label="present">
-                            </td>
-                            <td>Shaquille O'Neil</td>
-                            <td>
-                                <a href="#">More Details...</a>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
+                    <div class="table-responsive">
+                        <table class="table table-hover table-striped">
+                            <thead>
+                                <tr class="m-0">
+                                    <th class="w-10">Present</th>
+                                    <th class="w-65">Name</th>
+                                    <th class="w-25"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            <?php
+                            //TODO: pull info from DB
+                            ?>
+                            <tr class="m-0">
+                                <td class="w-25">
+                                    <input type="checkbox" aria-label="present">
+                                </td>
+                                <td class="w-50">Jimmy Neutron</td>
+                                <td class="w-25">
+                                    <a href="#">More Details...</a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <!-- /Table -->
+                    </div>
                 </div>
             </div>
         </div>
+
+
+        <div class="row flex-column" style = "margin-top: 15px;">
+            <div>
+                <div class="card">
+                    <div class="card-header" role="tab" id="headingOne">
+                        <h5 class="mb-0">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                                Other Attendees
+                            </a>
+                        </h5>
+                    </div>
+
+                    <div id="collapseOne" class="collapse" role="tabpanel" aria-labelledby="headingOne">
+                        <div class="card-block">
+                            <!-- Table -->
+                            <div class="table-responsive">
+                                <table class="table table-hover table-striped">
+                                    <thead>
+                                    <tr class="m-0">
+                                        <th class="w-10">Present</th>
+                                        <th class="w-65">Name</th>
+                                        <th class="w-25"></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <?php
+                                    //TODO: pull info from DB
+                                    ?>
+                                    <tr class="m-0">
+                                        <td class="w-25">
+                                            <input type="checkbox" aria-label="present">
+                                        </td>
+                                        <td class="w-50">Jimmy Neutron</td>
+                                        <td class="w-25">
+                                            <a href="#">More Details...</a>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <!-- /Table -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
+
+
 <?php
 include('footer.php');
 ?>
