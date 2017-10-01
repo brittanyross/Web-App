@@ -17,14 +17,11 @@ include('header.php');
     var classesMatrix = [
         <?php
             while($row = pg_fetch_assoc($result_classes)){
-                echo "[{$row['curriculumid']},{$row['topicname']}],";
+                echo "[{$row['curriculumid']},\"{$row['topicname']}\"],";
             }
         ?>
         ];
 
-</script>
-
-<script>
     //js for controlling the disabled selection of class section
     function enableSecondSelection() {
 
@@ -33,34 +30,50 @@ include('header.php');
 
         /* Display the proper classes */
 
-        //clear the current selection
-        var selectElement = document.getElementById("classes");
+        //clear the current class selection
+        var classesElement = document.getElementById("classes");
 
-        while(selectElement.firstChild){
-            selectElement.removeChild(selectElement.firstChild);
+        while(classesElement.firstChild){
+            classesElement.removeChild(classesElement.firstChild);
         }
 
         //get current input of curriculum
-        var classNumberSelected;
-        var optionSelected = document.getElementById("curr").value; //string
-        for(var i = 1; i < selectElement.length; i++){ //loop through children
-            if(document.getElementById("curr")[i].value === optionSelected) {
-                classNumberSelected = document.getElementById("curr")[i].id; //id of class (aka class num)
+        var curriculumNumberSelected;
+        var currElement = document.getElementById("curr"); //curriculum element
+        var optionSelected = currElement.value; //string
+        for(var i = 1; i < currElement.length; i++){ //loop through children
+            console.log(currElement[i].value + " === " + optionSelected );
+            if(currElement[i].value === optionSelected) {
+                curriculumNumberSelected = currElement[i].id; //id of class (aka class num)
+                break;
             }
         }
 
+
+
+
         //add new options
+
         var node = document.createElement("OPTION");
         node.selected = true;
         node.disabled = true;
+        node.innerHTML = "Select Class";
+        classesElement.appendChild(node);
 
-        selectElement.appendChild(node);
-
+        console.log(classesMatrix.length);
+        for(var i = 0; i < classesMatrix.length; i++){
+            if(classesMatrix[i][0].toString() === curriculumNumberSelected){ //same course number
+                console.log("got here");
+                var classNode = document.createElement("OPTION");
+                classNode.innerHTML = classesMatrix[i][1];
+                classesElement.appendChild(classNode);
+            }
+        }
 
     }
     
-    function enableSumbmitButton() {
-        
+    function enableSubmitButton() {
+        document.getElementById("sub").disabled = false;
     }
 </script>
     <div class="container">
@@ -88,16 +101,16 @@ include('header.php');
                         </select>
                     </div>
 
-                    <fieldset disabled="disabled" id="classSelection">
+                    <fieldset disabled="disabled" id="classSelection" >
                         <div class="form-group">
                             <label for="classes">Class Selection</label>
-                            <select id="classes" class="form-control">
+                            <select id="classes" class="form-control" onchange="enableSubmitButton()">
                                 <option></option>
                             </select>
                         </div>
                     </fieldset>
 
-                    <fieldset disabled>
+                    <fieldset disabled="disabled" id = "sub">
                         <button type="submit" class="btn btn-primary">Submit</button>
                     </fieldset>
                 </form>
