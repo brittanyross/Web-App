@@ -17,12 +17,28 @@ $participant = pg_fetch_assoc($result);
 
 include('header.php');
 
+//make sure that information was entered into form
+if(isset($_POST['curr'])) $selected_curr = $_POST['curr'];
+else
+{
+    echo "<p>Please first pick a class to take attendance for.</p>";
+    include('footer.php');
+    die;
+}
+
+
+$selected_class = $_POST['classes'];
+
 ?>
 
     <div class="container-fluid">
         <div class="row flex-column">
             <!-- Default container contents -->
-            <div class="h2 text-center">Stop the Beatdown: Class Roster</div>
+            <div class="h2 text-center">
+                <?php
+                    echo "{$selected_class}: Class Roster"
+                ?>
+            </div>
 
             <div class="card">
                 <div class="card-block">
