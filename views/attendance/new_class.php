@@ -25,6 +25,9 @@ include('header.php');
     //js for controlling the disabled selection of class section
     function enableSecondSelection() {
 
+        //disable submit button in case first class was changed
+        document.getElementById("sub").disabled = true;
+
         //enable selection
         document.getElementById("classSelection").disabled = false;
 
@@ -88,10 +91,10 @@ include('header.php');
                 <h4 class="card-title">Class Information</h4>
                 <h6 class="card-subtitle mb-2 text-muted">What class would you like to take attendance for?</h6>
 
-                <form>
+                <form action="attendance-form" method="post">
                     <div class="form-group">
                         <label for="curr">Curriculum</label>
-                        <select id="curr" class="form-control" onchange="enableSecondSelection()">
+                        <select id="curr" class="form-control" onchange="enableSecondSelection()" name="curr">
                             <option disabled selected="selected" name="classList">Select Curriculum</option>
                             <?php
                                 while($row = pg_fetch_assoc($result_curriculum)){
@@ -104,13 +107,13 @@ include('header.php');
                     <fieldset disabled="disabled" id="classSelection" >
                         <div class="form-group">
                             <label for="classes">Class Selection</label>
-                            <select id="classes" class="form-control" onchange="enableSubmitButton()">
+                            <select id="classes" class="form-control" onchange="enableSubmitButton()" name="classes">
                                 <option></option>
                             </select>
                         </div>
                     </fieldset>
 
-                    <fieldset disabled="disabled" id = "sub">
+                    <fieldset disabled="disabled" id="sub">
                         <button type="submit" class="btn btn-primary">Submit</button>
                     </fieldset>
                 </form>

@@ -64,7 +64,7 @@ include('header.php');
             </div>
 
 
-            <button type="button" class="btn btn-default col-12" style="margin-top: 15px" onclick="window.location.href='./attendance-form'">Record Attendance For New Class</button>
+            <button type="button" class="btn btn-default col-12" style="margin-top: 15px" onclick="window.location.href='./new-class'">Record Attendance For New Class</button>
         </div>
 
     </div>
