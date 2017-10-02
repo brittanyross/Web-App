@@ -2,6 +2,18 @@
 
 authorizedPage();
 
+global $db, $params;
+$peopleid = $params[0];
+
+//TODO: make query dynamic so that it changes based on which user is logged in
+//TODO: add option to edit last class' attendance
+$result = $db->query("select fca.topicname, fca.date " .
+ "from facilitators f, facilitatorclassattendance fca, employees e " .
+ "where e.employeeid = f.facilitatorid " .
+ " and f.facilitatorid = fca.facilitatorid;", [$peopleid]);
+
+$participant = pg_fetch_assoc($result);
+
 include('header.php');
 
 ?>
