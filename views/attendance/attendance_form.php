@@ -82,6 +82,11 @@ $selected_class = $_POST['classes'];
             <div class="d-flex justify-content-start">
                 <button type="button" class="btn btn-default" style="margin-top: 15px">New Attendee</button>
             </div>
+
+            <br/>
+            <div class="d-flex justify-content-start">
+                <button type="button" class="btn btn-success">Submit Attendance</button>
+            </div>
         </div>
 
 
