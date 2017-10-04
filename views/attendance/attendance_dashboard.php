@@ -2,17 +2,19 @@
 
 authorizedPage();
 
-global $db, $params;
-$peopleid = $params[0];
+global $db;
 
 //TODO: make query dynamic so that it changes based on which user is logged in
-//TODO: add option to edit last class' attendance
-$result = $db->query("select fca.topicname, fca.date " .
- "from facilitators f, facilitatorclassattendance fca, employees e " .
- "where e.employeeid = f.facilitatorid " .
- " and f.facilitatorid = fca.facilitatorid;", [$peopleid]);
+$peopleid = 5;
 
-$participant = pg_fetch_assoc($result);
+//TODO: add option to edit last class' attendance
+$result = $db->no_param_query("select fca.topicname, fca.date " .
+"from facilitators f, facilitatorclassattendance fca, employees e " .
+"where e.employeeid = f.facilitatorid " .
+"and f.facilitatorid = fca.facilitatorid " .
+"and f.facilitatorid = {$peopleid} " .
+"order by fca.date asc " .
+"limit 20; ");
 
 include('header.php');
 
@@ -33,7 +35,7 @@ include('header.php');
                     <h4 class="card-title" style="margin-top: 15px;">My Recent Classes</h4>
 
                     <div class="table-responsive">
-                        <table class="table">
+                        <table class="table table-striped">
                             <thead>
                                 <tr>
                                     <th>Class</th>
@@ -42,11 +44,18 @@ include('header.php');
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>Stop the beat-down</td>
-                                    <td>9/30/2017</td>
-                                    <td><a href="#">More details...</a> </td>
-                                </tr>
+                            <?php
+                                while($row = pg_fetch_assoc($result)) {
+                                    echo "<tr>";
+                                        echo "<td>{$row['topicname']}</td>";
+                                        //you guessed it, right off of stack overflow
+                                        $time = strtotime($row['date']);
+                                        $myFormatForView = date("m/d/y", $time);
+                                        echo "<td>{$myFormatForView}</td>";
+                                        echo "<td><a href=\"#\">More details...</a> </td>";
+                                    echo "</tr>";
+                                }
+                            ?>
                             </tbody>
                         </table>
                     </div>

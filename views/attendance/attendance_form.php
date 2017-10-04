@@ -21,7 +21,10 @@ include('header.php');
 if(isset($_POST['curr'])) $selected_curr = $_POST['curr'];
 else
 {
-    echo "<p>Please first pick a class to take attendance for.</p>";
+    echo "<div class='container'>";
+    echo "<p>Error: Please first pick a class to take attendance for.</p>";
+    echo "<p><a href='new-class'>Class Selection Link</a></p>";
+    echo "</div>";
     include('footer.php');
     die;
 }
@@ -36,7 +39,7 @@ $selected_class = $_POST['classes'];
             <!-- Default container contents -->
             <div class="h2 text-center">
                 <?php
-                    echo "{$selected_class}: Class Roster"
+                    echo "{$selected_class}: Class Roster";
                 ?>
             </div>
 
@@ -53,17 +56,16 @@ $selected_class = $_POST['classes'];
                                 </tr>
                             </thead>
                             <tbody>
-                            <?php
-                            //TODO: pull info from DB
-                            ?>
+
+
                             <tr class="m-0">
-                                <td class="w-25">
+                                <td class="w-25"">
                                     <label class="custom-control custom-checkbox">
                                         <input type="checkbox" class="custom-control-input">
                                         <span class="custom-control-indicator"></span>
                                     </label>
                                 </td>
-                                <td class="w-50">Jimmy Neutron</td>
+                                <td class="w-50"">Jimmy Neutron</td>
                                 <td class="w-25">
                                     <a href="#">More Details...</a>
                                 </td>
