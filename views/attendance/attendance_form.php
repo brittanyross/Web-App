@@ -29,7 +29,6 @@ else
     die;
 }
 
-
 $selected_class = $_POST['classes'];
 
 ?>
@@ -39,7 +38,7 @@ $selected_class = $_POST['classes'];
             <!-- Default container contents -->
             <div class="h2 text-center">
                 <?php
-                    echo "{$selected_class}: Class Roster";
+                    echo "{$selected_curr} : {$selected_class}";
                 ?>
             </div>
 
@@ -49,25 +48,31 @@ $selected_class = $_POST['classes'];
                     <div class="table-responsive">
                         <table class="table table-hover table-striped">
                             <thead>
-                                <tr class="m-0">
-                                    <th class="w-25">Present</th>
-                                    <th class="w-50">Name</th>
-                                    <th class="w-25"></th>
+                                <tr>
+                                    <th>Present</th>
+                                    <th>Name</th>
+                                    <th>Age</th>
+                                    <th>Zip</th>
+                                    <th>Number of children under 18</th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
 
 
                             <tr class="m-0">
-                                <td class="w-25"">
+                                <td>
                                     <label class="custom-control custom-checkbox">
                                         <input type="checkbox" class="custom-control-input">
                                         <span class="custom-control-indicator"></span>
                                     </label>
                                 </td>
-                                <td class="w-50"">Jimmy Neutron</td>
-                                <td class="w-25">
-                                    <a href="#">More Details...</a>
+                                <td>Jimmy Neutron</td>
+                                <td>25</td>
+                                <td>12601</td>
+                                <td>8</td>
+                                <td>
+                                    <a href="#">Edit</a>
                                 </td>
                             </tr>
                             </tbody>
