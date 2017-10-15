@@ -14,6 +14,35 @@
  * @since 0.1
  */
 
+$roleViews = [
+    Role::Facilitator => [
+	"facilitator"
+    ],
+    Role::Admin => [ 
+	"admin"
+    ],
+    Role::SuperAdmin => [
+	"super-admin"
+    ]
+];
+
+switch($roleViews[$_SESSION['role']][0]){
+	case "super-admin":
+	$buttonOptions = "<button class='btn btn-outline-secondary float-right'>Edit</button>";
+	break;
+	
+	case Role::Admin:
+	break;
+	
+	case Role::SuperAdmin:
+	break;
+	
+	default:
+		print_r(  $roleViews[$_SESSION['role']]);
+	
+}
+
+
 global $db, $params;
 $peopleid = $params[0];
 
