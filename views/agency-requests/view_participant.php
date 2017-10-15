@@ -14,6 +14,35 @@
  * @since 0.1
  */
 
+$roleViews = [
+    Role::Facilitator => [
+	"facilitator"
+    ],
+    Role::Admin => [ 
+	"admin"
+    ],
+    Role::SuperAdmin => [
+	"super-admin"
+    ]
+];
+
+switch($roleViews[$_SESSION['role']][0]){
+	case "super-admin":
+	$buttonOptions = "<button class='btn btn-outline-secondary float-right'>Edit</button>";
+	break;
+	
+	case Role::Admin:
+	break;
+	
+	case Role::SuperAdmin:
+	break;
+	
+	default:
+		print_r(  $roleViews[$_SESSION['role']]);
+	
+}
+
+
 global $db, $params;
 $peopleid = $params[0];
 
@@ -38,7 +67,7 @@ include('header.php');
     </div>
     <div class="card" style="max-width: 700px; width: 100%; margin: 0 auto;">
         <div class="card-header">
-            <h4 class="modal-title"><?= $participant['firstname']." ".$participant['middleinit']." ".$participant['lastname'] ?></h4>
+            <h4 class="modal-title"><?= $participant['firstname']." ".$participant['middleinit']." ".$participant['lastname']." ".$buttonOptions?></h4>
         </div>
         <div class="card-body">
             <div class="w-100 text-center">
