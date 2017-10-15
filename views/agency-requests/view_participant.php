@@ -44,6 +44,25 @@ switch($roleViews[$_SESSION['role']][0]){
 	
 }
 
+<<<<<<< HEAD
+=======
+switch($roleViews[$_SESSION['role']][0]){
+	case "super-admin":
+	$buttonOptions = "<button class='btn btn-outline-secondary float-right'>Edit</button>";
+	break;
+	
+	case Role::Admin:
+	break;
+	
+	case Role::SuperAdmin:
+	break;
+	
+	default:
+		print_r(  $roleViews[$_SESSION['role']]);
+	
+}
+
+>>>>>>> Adding conditional role buttons for editing of participants
 
 global $db, $params;
 $peopleid = $params[0];
