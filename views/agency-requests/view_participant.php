@@ -30,7 +30,9 @@ $roleViews = [
 =======
 switch($roleViews[$_SESSION['role']][0]){
 	case "super-admin":
-	$buttonOptions = "<button class='btn btn-outline-secondary float-right'>Edit</button>";
+	$buttonOptions = "<button class='btn btn-outline-primary float-right'>Edit</button>".
+	"<button class='btn btn-outline-danger float-right'>Remove</button>";
+	
 	break;
 	
 	case Role::Admin:
