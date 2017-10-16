@@ -29,6 +29,7 @@ $router->add('/create-account', 'create_account.php', 'Create Account');
 $router->add('/agency-requests', 'agency-requests/agency_requests.php', 'Agency Requests');
 $router->add('/participant-search', 'agency-requests/agency_requests_results.php', 'Search Results');
 $router->add('/view-participant', 'agency-requests/view_participant.php', 'View Participant');
+$router->add('/edit-participant', 'agency-requests/edit_participant.php', 'Edit Participant');
 
 # Manage Curricula & Classes
 $router->add('/curricula', 'curricula/curricula.php', 'Curricula');
