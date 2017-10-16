@@ -34,6 +34,35 @@ if (!empty($params) && $params[0] == 'view') {
     }
 
     ?>
+	
+<script>
+$(document).ready(function(){
+	
+	var grabUserText  = $("#class-filter").find(":text").first();
+	console.log(grabUserText);
+	
+
+
+        //Disables the default browser autocomplete
+        $("#class-filter").attr( "autocomplete", "off" );
+
+        //construct live search, needs the user input field, where search results will go,
+        //desired class name of search result elements, url for where ajax is sending the request, and
+        //type of data ajax is returning
+        setInputListener(grabUserText,$(".autocomplete-results"),"<li class='list-group-item suggestion' tabindex='0'></li>", "/classes", "html");
+
+        //Set the ajax submit method to either put or get, will default to GET if left blank
+        setMethod("GET");
+		
+        //set what class you're lookin for in the search results
+        setResultFilter('.card-title');
+
+        //search dynamically with every user input
+        $("#class-filter").keyup(function(){
+			$("#class-filter").liveSearch();
+        });
+});
+</script>
     <div style="width: 100%">
         <?php
         if (isset($_SESSION['delete-success']) && $_SESSION['delete-success']) {
@@ -57,6 +86,8 @@ if (!empty($params) && $params[0] == 'view') {
                 <button class="btn btn-secondary" type="submit">Search</button>
             </span>
         </form>
+		<ul class='autocomplete-results'>
+		</ul>
         <br />
         <div class="d-flex flex-row justify-content-center flex-wrap">
             <?php
