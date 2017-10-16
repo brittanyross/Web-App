@@ -72,13 +72,43 @@ if (!empty($params) && $params[0] == 'view') {
                 </a>
             <?php } ?>
         </div><br />
+<script>
+$(document).ready(function(){
+	
+	var grabUserText  = $("#curriculum-filter").find(":text").first();
+	console.log(grabUserText);
+	
 
-        <form id="curriculum-filter" action="/curricula" method="post" class="input-group" style="max-width: 500px; width: 100%; margin: 0 auto">
+
+        //Disables the default browser autocomplete
+        $("#curriculum-filter").attr( "autocomplete", "off" );
+
+        //construct live search, needs the user input field, where search results will go,
+        //desired class name of search result elements, url for where ajax is sending the request, and
+        //type of data ajax is returning
+        setInputListener(grabUserText,$(".autocomplete-results"),"<li class='list-group-item suggestion' tabindex='0'></li>", "/curricula", "html");
+
+        //Set the ajax submit method to either put or get, will default to GET if left blank
+        setMethod("GET");
+		
+        //set what class you're lookin for in the search results
+        setResultFilter('.card-title');
+
+        //search dynamically with every user input
+        $("#curriculum-filter").keyup(function(){
+			$("#curriculum-filter").liveSearch();
+        });
+});
+</script>
+
+        <form id="curriculum-filter" action="/curricula" method="post" class="input-group cirriculum-filter" style="max-width: 500px; width: 100%; margin: 0 auto">
             <input type="text" class="form-control" placeholder="Filter for..." name="filter" value="<?= str_replace('%', '', $filter) ?>">
             <span class="input-group-btn">
                 <button class="btn btn-secondary" type="submit">Search</button>
             </span>
         </form>
+		<ul class='autocomplete-results'>
+		</ul>
         <br />
         <div class="d-flex flex-row justify-content-center flex-wrap">
             <?php
