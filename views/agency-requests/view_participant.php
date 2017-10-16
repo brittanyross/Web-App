@@ -28,7 +28,9 @@ $roleViews = [
 
 switch($roleViews[$_SESSION['role']][0]){
 	case "super-admin":
-	$buttonOptions = "<button class='btn btn-outline-secondary float-right'>Edit</button>";
+	$buttonOptions = "<button class='btn btn-outline-primary float-right'>Edit</button>".
+	"<button class='btn btn-outline-danger float-right'>Remove</button>";
+	
 	break;
 	
 	case Role::Admin:
@@ -54,6 +56,7 @@ $participant = pg_fetch_assoc($result);
 
 include('header.php');
 ?>
+
 <div class="d-flex flex-column w-100" style="height: fit-content;">
     <div class="mb-2">
 		<div class="row">
