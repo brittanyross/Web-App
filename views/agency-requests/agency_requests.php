@@ -45,8 +45,8 @@ include('header.php');
         //type of data ajax is returning
         setInputListener($(".user-search"),$(".list-group"),"<li class='list-group-item suggestion' tabindex='0'></li>", "/participant-search", "html");
 
-        //Set the ajax submit method to either put or get, will default to GET if left blank
-        setMethod("PUT");
+        //Set the ajax submit method to either post or get, will default to GET if left blank
+        setMethod("POST");
 
         //set what class you're lookin for in the search results
         setResultFilter('.list-group-item span');
