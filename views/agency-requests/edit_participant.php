@@ -1,32 +1,7 @@
 <?php
-/**
- * PEP Capping 2017 Algozzine's Class
- *
- * Views details about a given participant.
- *
- * This display shows participant information in subsections
- * to allow for easy reading. Administrators can edit this
- * information if necessary.
- *
- * @author Vallie Joseph
- * @copyright 2017 Marist College
- * @version 0.1.6
- * @since 0.1
- */
+authorizedPage();
 
-$roleViews = [
-    Role::Facilitator => [
-	"facilitator"
-    ],
-    Role::Admin => [ 
-	"admin"
-    ],
-    Role::SuperAdmin => [
-	"super-admin"
-    ]
-];
-
-
+include('header.php');
 global $db, $params;
 $peopleid = $params[0];
 
@@ -36,43 +11,12 @@ $result = $db->query("SELECT participants.participantid, participants.dateofbirt
 
 $participant = pg_fetch_assoc($result);
 
-
-switch($roleViews[$_SESSION['role']][0]){
-	case "super-admin":
-	$buttonOptions = "<a href='/edit-participant/".$participant['participantid']."'><button class='btn btn-outline-primary float-right'>Edit</button></a>".
-	"<button class='btn btn-outline-danger float-right'>Remove</button>";
-	
-	break;
-	
-	case Role::Admin:
-	break;
-	
-	case Role::SuperAdmin:
-	break;
-	
-	default:
-		print_r(  $roleViews[$_SESSION['role']]);
-	
-}
-
-
-include('header.php');
 ?>
-
 <div class="d-flex flex-column w-100" style="height: fit-content;">
-    <div class="mb-2">
-		<div class="row">
-			<div class="col">
-				<button class="cpca btn" onclick="goBack()"><i class="fa fa-arrow-left"></i> Back</button>
-			</div>
-			<div class="col pr-5" align="right">
-				<button type="button" class="btn cpca" onclick="window.print()"><i class="fa fa-print" aria-hidden="true"></i> Print</button>
-			</div>
-		</div>
-    </div>
+    <a href="/back"><button class="cpca btn"><i class="fa fa-arrow-left"></i> Back</button></a>
     <div class="card" style="max-width: 700px; width: 100%; margin: 0 auto;">
         <div class="card-header">
-            <h4 class="modal-title"><?= $participant['firstname']." ".$participant['middleinit']." ".$participant['lastname']." ".$buttonOptions?></h4>
+            <h4 class="modal-title"><?= $participant['firstname']." ".$participant['middleinit']." ".$participant['lastname']?></h4>
         </div>
         <div class="card-body">
             <div class="w-100 text-center">
@@ -81,7 +25,13 @@ include('header.php');
             <h4 class="thin-title">Information</h4>
             <hr>
             <div class="pl-3">
-                <p class="participant_name"><b>Name: </b> <?= $participant['firstname']." ".$participant['middleinit']." ".$participant['lastname'] ?></p>
+                <b>Name: </b>
+				<form class='form changeName'>
+				<input class="form-control" name="participant_f_name" value ='<?= $participant['firstname']?>'>
+				<input type='text' class= 'form-control'  name="participant_m_name" value='<?=$participant['middleinit'] ?>'>
+				<input type='text' class= 'form-control'  name="participant_l_name" value='<?=$participant['lastname'] ?>'>
+				<input type='submit' class='btn cpca form-control'>
+				</form>
                 <p class="participant_status"><b>Status: </b> <span class="badge badge-success">active</span> </p>
                 <p class="participant_notes"><b>Notes: </b> <p class="pl-3">"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."</p></p>
                 <p class="participant_other"><b>Other: </b> Other items to note</p>
@@ -128,5 +78,7 @@ include('header.php');
     </div>
 </div>
 
+
 <?php
-include('footer.php'); ?>
+include('footer.php');
+?>
