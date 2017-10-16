@@ -27,10 +27,24 @@ $roleViews = [
 ];
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+
+global $db, $params;
+$peopleid = $params[0];
+
+$result = $db->query("SELECT participants.participantid, participants.dateofbirth, participants.race, people.firstname, people.lastname, people.middleinit " .
+					"FROM participants " .
+					"INNER JOIN people ON participants.participantid = people.peopleid WHERE people.peopleid=$1", [$peopleid]);
+
+$participant = pg_fetch_assoc($result);
+
+
+>>>>>>> moving inputs around
 switch($roleViews[$_SESSION['role']][0]){
 	case "super-admin":
-	$buttonOptions = "<button class='btn btn-outline-primary float-right'>Edit</button>".
+	$buttonOptions = "<a href='/edit-participant/".$participant['participantid']."'><button class='btn btn-outline-primary float-right'>Edit</button></a>".
 	"<button class='btn btn-outline-danger float-right'>Remove</button>";
 	
 	break;
@@ -48,6 +62,7 @@ switch($roleViews[$_SESSION['role']][0]){
 
 >>>>>>> Adding conditional role buttons for editing of participants
 
+<<<<<<< HEAD
 global $db, $params;
 $peopleid = $params[0];
 
@@ -77,6 +92,8 @@ switch($roleViews[$_SESSION['role']][0]){
 }
 
 
+=======
+>>>>>>> moving inputs around
 include('header.php');
 ?>
 
