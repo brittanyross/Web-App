@@ -45,7 +45,6 @@ include('header.php');
         var currElement = document.getElementById("curr"); //curriculum element
         var optionSelected = currElement.value; //string
         for(var i = 1; i < currElement.length; i++){ //loop through children
-            console.log(currElement[i].value + " === " + optionSelected );
             if(currElement[i].value === optionSelected) {
                 curriculumNumberSelected = currElement[i].id; //id of class (aka class num)
                 break;

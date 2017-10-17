@@ -36,7 +36,7 @@ $selected_class = $_POST['classes'];
     <div class="container-fluid">
         <div class="row flex-column">
             <!-- Default container contents -->
-            <div class="h2 text-center">
+            <div class="h3 text-center">
                 <?php
                     echo "{$selected_curr} : {$selected_class}";
                 ?>
