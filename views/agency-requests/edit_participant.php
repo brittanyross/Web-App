@@ -30,8 +30,9 @@ $participant = pg_fetch_assoc($result);
 				<input class="form-control" name="participant_f_name" value ='<?= $participant['firstname']?>'>
 				<input type='text' class= 'form-control'  name="participant_m_name" value='<?=$participant['middleinit'] ?>'>
 				<input type='text' class= 'form-control'  name="participant_l_name" value='<?=$participant['lastname'] ?>'>
-				<input type='submit' class='btn cpca form-control'>
+				<input type='submit' class='btn cpca form-control' value="Update Participant Name" >
 				</form>
+
 				
                 <p class="participant_status"><b>Status: </b>
 				<span class="badge badge-success">active</span> 
@@ -43,14 +44,58 @@ $participant = pg_fetch_assoc($result);
                 <p class="participant_contact">
 				<b>Contact: </b>
 				</p>
+                <p class="participant_status"><b>Status: </b><span class="status-view badge badge-success">active</button>
+				<form class='form'>
+					<select class="status-selector">
+					<option value = "active">active</option>
+					<option value = "inactive" >inactive</option>
+					<option  value = "graduate">graduate</option>
+					</select>
+					<script>
+					$(document).ready(function(){
+						var statView = $(".status-view");
+						$( ".status-selector" ).change(function() {
+						console.log("it changed, look at that wow");
+						var value= $(this).val();
+						
+						switch(value){
+							case "active":
+							statView.removeClass();
+							statView.addClass("status-view badge badge-success");
+							break;
+							case "inactive":
+							statView.removeClass();
+							statView.addClass("status-view badge badge-secondary");
+							break;
+							case "graduate":
+							statView.removeClass();
+							statView.addClass("status-view badge badge-primary glypico");
+							break;
+							default:
+							console.log("nope");
+						}
+						
+							
+						})
+					});
+					</script>
+				<input type='submit' value="Update Status" class='btn cpca form-control'>
+				</form>
+				</p>
+				
+                <p class="participant_notes"><b>Notes: </b> <p class="pl-3">"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."</p></p>
+                <p class="participant_other"><b>Other: </b> Other items to note</p>
+                <p class="participant_contact"><b>Contact: (click to edit)</b></p>
                 <div class="d-flex justify-content-center">
                     <div class="display-stack">
-                        <div class="display-top">(123) 456-7890</div>
+                        <div class="display-top">
+						<input type='phone' value='(123) 456-7890' readonly></div>
                         <div class="display-split"></div>
                         <div class="display-bottom">Home Phone</div>
                     </div>
                     <div class="display-stack">
-                        <div class="display-top">(800) 867-5309</div>
+                        <div class="display-top">
+						<input type='phone' value='(800) 867-5309' readonly></div>
                         <div class="display-split"></div>
                         <div class="display-bottom">Cell Phone</div>
                     </div>
