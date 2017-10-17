@@ -14,17 +14,6 @@
  * @since 0.1
  */
 
-$roleViews = [
-    Role::Facilitator => [
-	"facilitator"
-    ],
-    Role::Admin => [ 
-	"admin"
-    ],
-    Role::SuperAdmin => [
-	"super-admin"
-    ]
-];
 
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -40,25 +29,36 @@ $result = $db->query("SELECT participants.participantid, participants.dateofbirt
 
 $participant = pg_fetch_assoc($result);
 
+<<<<<<< HEAD
 
 >>>>>>> moving inputs around
 switch($roleViews[$_SESSION['role']][0]){
 	case "super-admin":
+=======
+if(hasRole(Role::User)){
+	echo "i'm super admin and stuff";
+>>>>>>> replacing role check with global has role function
 	$buttonOptions = "<a href='/edit-participant/".$participant['participantid']."'><button class='btn btn-outline-primary float-right'>Edit</button></a>".
 	"<button class='btn btn-outline-danger float-right'>Remove</button>";
 	
-	break;
-	
-	case Role::Admin:
-	break;
-	
-	case Role::SuperAdmin:
-	break;
-	
-	default:
-		print_r(  $roleViews[$_SESSION['role']]);
-	
 }
+// switch($roleViews[$_SESSION['role']][0]){
+	// case "super-admin":
+	// $buttonOptions = "<a href='/edit-participant/".$participant['participantid']."'><button class='btn btn-outline-primary float-right'>Edit</button></a>".
+	// "<button class='btn btn-outline-danger float-right'>Remove</button>";
+	
+	// break;
+	
+	// case Role::Admin:
+	// break;
+	
+	// case Role::SuperAdmin:
+	// break;
+	
+	// default:
+		// print_r(  $roleViews[$_SESSION['role']]);
+	
+// }
 
 >>>>>>> Adding conditional role buttons for editing of participants
 
