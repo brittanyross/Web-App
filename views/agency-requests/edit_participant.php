@@ -32,10 +32,17 @@ $participant = pg_fetch_assoc($result);
 				<input type='text' class= 'form-control'  name="participant_l_name" value='<?=$participant['lastname'] ?>'>
 				<input type='submit' class='btn cpca form-control'>
 				</form>
-                <p class="participant_status"><b>Status: </b> <span class="badge badge-success">active</span> </p>
+				
+                <p class="participant_status"><b>Status: </b>
+				<span class="badge badge-success">active</span> 
+				</p>
+
                 <p class="participant_notes"><b>Notes: </b> <p class="pl-3">"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."</p></p>
                 <p class="participant_other"><b>Other: </b> Other items to note</p>
-                <p class="participant_contact"><b>Contact: </b></p>
+				
+                <p class="participant_contact">
+				<b>Contact: </b>
+				</p>
                 <div class="d-flex justify-content-center">
                     <div class="display-stack">
                         <div class="display-top">(123) 456-7890</div>
@@ -54,6 +61,15 @@ $participant = pg_fetch_assoc($result);
             <hr>
 
             <!-- <button type="button" class="btn cpca">Download as PDF</button>-->
+<?php  
+$familyInfo = $params[0];
+
+$familyResult = $db->query("SELECT participants.participantid, participants.dateofbirth, participants.race, people.firstname, people.lastname, people.middleinit " .
+					"FROM participants " .
+					"INNER JOIN people ON participants.participantid = people.peopleid WHERE people.peopleid=$1", [$familyInfo]);
+
+$participant = pg_fetch_assoc($familyResult);
+?>
             <table class="table table-striped">
                 <tr><th>Col 1</th><th>Col 2</th><th>Col 3</th></tr>
                 <tr><td>Data</td><td>Data</td><td>Data</td></tr>
