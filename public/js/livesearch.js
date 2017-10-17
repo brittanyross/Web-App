@@ -92,23 +92,13 @@ function setResultFilter(filter){
 				//clear the search result display each time we look up new results - otherwise duplicates show
 				results.empty();
 				var userResults = $(data).find(resultFilter);
-<<<<<<< HEAD
-				
-				//check to see if we're looking for card elements
-				if(userResults.attr('class') ==  "card-title"){
-					userResults = $("."+userResults.attr('class')+":contains("+userInput+")");
-					
-				}
-				
-=======
-				console.log(userResults.attr('class'));
 				
 				//check to see if we're looking for card elements
 				if(userResults.attr('class') ==  "card-title"){
 							userResults = $("."+userResults.attr('class')+":contains("+userInput+")");
 					
 				}
->>>>>>> making adjustments to live search to work with html cards
+				
 				//jquery for each short hand, populating result list with well...results
 				$(userResults).each(function(){
 					//creates new children for dev specified parent
