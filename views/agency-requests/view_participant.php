@@ -27,22 +27,11 @@ $participant = pg_fetch_assoc($result);
 
 
 $buttonOptions = null;
-if(hasRole(Role::User)){
+if(hasRole(Role::SuperAdmin)){
 	echo "i'm super admin and stuff";
 	$buttonOptions = "<a href='/edit-participant/".$participant['participantid']."'><button class='btn btn-outline-primary float-right'>Edit</button></a>".
 	"<button class='btn btn-outline-danger float-right'>Remove</button>";
-	
 }
-
-global $db, $params;
-$peopleid = $params[0];
-
-$result = $db->query("SELECT participants.participantid, participants.dateofbirth, participants.race, people.firstname, people.lastname, people.middleinit " .
-					"FROM participants " .
-					"INNER JOIN people ON participants.participantid = people.peopleid WHERE people.peopleid=$1", [$peopleid]);
-
-$participant = pg_fetch_assoc($result);
-
 
 
 
