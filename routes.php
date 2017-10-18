@@ -21,4 +21,5 @@ $router->add('/locations', 'locations/locations.php', 'Locations');
 $router->add('/record-attendance', 'attendance/attendance_dashboard.php', 'Attendance Dashboard');
 $router->add('/new-class', 'attendance/new_class.php', 'New Attendance Sheet');
 $router->add('/attendance-form', 'attendance/attendance_form.php', 'Attendance Form');
+$router->add('/attendance-form-confirmation', 'attendance/attendance_form_confirmation.php', 'Confirm Attendance');
 $router->add('/attendance-history', 'attendance/attendance_history.php', 'Attendance History');

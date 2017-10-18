@@ -2,6 +2,8 @@
 
 authorizedPage();
 
+$_SESSION['employeeid'] = 5;
+
 //generic db script copied and pasted
 /*
 global $db, $params;
@@ -42,12 +44,13 @@ $selected_class = $_POST['classes'];
                 ?>
             </div>
 
-            <div class="card">
-                <div class="card-block">
-                    <!-- Table -->
-                    <div class="table-responsive">
-                        <table class="table table-hover table-striped">
-                            <thead>
+            <form action ="attendance-form-confirmation" method="post">
+                <div class="card">
+                    <div class="card-block">
+                        <!-- Table -->
+                        <div class="table-responsive">
+                            <table class="table table-hover table-striped">
+                                <thead>
                                 <tr>
                                     <th>Present</th>
                                     <th>Name</th>
@@ -56,31 +59,31 @@ $selected_class = $_POST['classes'];
                                     <th>Number of children under 18</th>
                                     <th></th>
                                 </tr>
-                            </thead>
-                            <tbody>
+                                </thead>
+                                <tbody>
 
 
-                            <tr class="m-0">
-                                <td>
-                                    <label class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="custom-control-input">
-                                        <span class="custom-control-indicator"></span>
-                                    </label>
-                                </td>
-                                <td>Jimmy Neutron</td>
-                                <td>25</td>
-                                <td>12601</td>
-                                <td>8</td>
-                                <td>
-                                    <a href="#">Edit</a>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                        <!-- /Table -->
+                                <tr class="m-0">
+                                    <td>
+                                        <label class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input">
+                                            <span class="custom-control-indicator"></span>
+                                        </label>
+                                    </td>
+                                    <td>Jimmy Neutron</td>
+                                    <td>25</td>
+                                    <td>12601</td>
+                                    <td>8</td>
+                                    <td>
+                                        <a href="#">Edit</a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <!-- /Table -->
+                        </div>
                     </div>
                 </div>
-            </div>
         </div>
 
         <div class="row flex-column">
@@ -90,60 +93,10 @@ $selected_class = $_POST['classes'];
 
             <br/>
             <div class="d-flex justify-content-start">
-                <button type="button" class="btn btn-success">Submit Attendance</button>
+                <button type="submit" class="btn btn-success">Submit Attendance</button>
             </div>
         </div>
-
-
-        <div class="row flex-column" style = "margin-top: 15px;">
-            <div>
-                <div class="card">
-                    <div class="card-header" role="tab" id="headingOne">
-                        <h5 class="mb-0">
-                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-                                Other Attendees
-                            </a>
-                        </h5>
-                    </div>
-
-                    <div id="collapseOne" class="collapse" role="tabpanel" aria-labelledby="headingOne">
-                        <div class="card-block">
-                            <!-- Table -->
-                            <div class="table-responsive">
-                                <table class="table table-hover table-striped">
-                                    <thead>
-                                    <tr class="m-0">
-                                        <th class="w-10">Present</th>
-                                        <th class="w-65">Name</th>
-                                        <th class="w-25"></th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <?php
-                                    //TODO: pull info from DB
-                                    ?>
-                                    <tr class="m-0">
-                                        <td class="w-25">
-                                            <label class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input">
-                                                <span class="custom-control-indicator"></span>
-                                            </label>
-                                        </td>
-                                        <td class="w-50">Shaquille O'Neal</td>
-                                        <td class="w-25">
-                                            <a href="#">More Details...</a>
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                                <!-- /Table -->
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
+        </form>
     </div>
 
 
