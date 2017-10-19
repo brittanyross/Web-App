@@ -516,6 +516,8 @@ label[for=password] {
 }
 .edit-form{
 	background-color:lightgrey;
+}.edit-form{
+	background-color:lightgrey;
 }
 /*When printing, display all of the main-content div, and nothing else.*/
 @media print{
