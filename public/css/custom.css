@@ -533,6 +533,10 @@ label[for=password] {
 .col-form-label {
     text-align: right;
 }
+
+.edit-form{
+	background-color:lightgrey;
+}
 /*When printing, display all of the main-content div, and nothing else.*/
 @media print{
 	#main-content {
