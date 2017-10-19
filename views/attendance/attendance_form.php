@@ -20,8 +20,7 @@ $participant = pg_fetch_assoc($result);
 include('header.php');
 
 //make sure that information was entered into form
-if(isset($_POST['curr'])) $selected_curr = $_POST['curr'];
-else
+if(!isset($_POST['curr']))
 {
     echo "<div class='container'>";
     echo "<p>Error: Please first pick a class to take attendance for.</p>";
@@ -32,6 +31,17 @@ else
 }
 
 $selected_class = $_POST['classes'];
+$selected_curr = $_POST['curr'];
+$selected_date = $_POST['date-input'];
+$selected_time = $_POST['time-input'];
+
+
+
+$convert_date = DateTime::createFromFormat('Y-m-d', $selected_date);
+$display_date = $convert_date->format('l, F jS');
+
+$convert_time = DateTime::createFromFormat('H:i:00', $selected_time);
+$display_time = $convert_time->format('g:i A');
 
 ?>
 
@@ -41,6 +51,11 @@ $selected_class = $_POST['classes'];
             <div class="h3 text-center">
                 <?php
                     echo "{$selected_curr} : {$selected_class}";
+                ?>
+            </div>
+            <div class="h6 text-center">
+                <?php
+                    echo "Class Time: {$display_time} - {$display_date}";
                 ?>
             </div>
 

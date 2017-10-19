@@ -10,6 +10,9 @@ $result_classes = $db->no_param_query("SELECT cc.curriculumid, cc.topicname from
 
 include('header.php');
 
+
+echo "<script>console.log(" . date('d-m-Y') . ")</script>"
+
 ?>
 
 <script>
@@ -77,13 +80,9 @@ include('header.php');
     function enableSubmitButton() {
         document.getElementById("sub").disabled = false;
     }
+
 </script>
     <div class="container">
-        <!--
-            cirriculum dropdown
-            class dropdown
-            next page
-        -->
 
         <div class="card">
             <div class="card-block p-2">
@@ -106,11 +105,25 @@ include('header.php');
                     <fieldset disabled="disabled" id="classSelection" >
                         <div class="form-group">
                             <label for="classes">Class Selection</label>
-                            <select id="classes" class="form-control" onchange="enableSubmitButton()" name="classes">
+                            <select id="classes" class="form-control" name="classes" onchange="enableSubmitButton()">
                                 <option></option>
                             </select>
                         </div>
                     </fieldset>
+
+                    <div class="form-group row">
+                        <label for="date-input" class="col-2 col-form-label">Date</label>
+                        <div class="col-10">
+                            <input class="form-control" type="date" value="<?php echo date('Y-m-d'); ?>" id="date-input" name = "date-input">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="time-input" class="col-2 col-form-label">Time</label>
+                        <div class="col-10">
+                            <input class="form-control" type="time" value="<?php echo date('H:i:00') ?>" id="time-input" name = "time-input">
+                        </div>
+                    </div>
 
                     <fieldset disabled="disabled" id="sub">
                         <button type="submit" class="btn btn-primary">Submit</button>
