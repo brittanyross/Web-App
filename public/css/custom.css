@@ -514,7 +514,9 @@ label[for=password] {
 	background-color:#5C629C;
 	color:white;
 }
-
+.edit-form{
+	background-color:lightgrey;
+}
 /*When printing, display all of the main-content div, and nothing else.*/
 @media print{
 	#main-content {
