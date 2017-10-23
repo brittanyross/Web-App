@@ -30,7 +30,7 @@ select
   people.lastname,
   participants.dateofbirth,
   forms.addressid,
-  count(children.childrenid)
+  participantclassattendance.numchildren
 
 from
   classes,

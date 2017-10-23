@@ -36,11 +36,10 @@ $selected_date = $_POST['date-input'];
 $selected_time = $_POST['time-input'];
 
 
-
 $convert_date = DateTime::createFromFormat('Y-m-d', $selected_date);
 $display_date = $convert_date->format('l, F jS');
 
-$convert_time = DateTime::createFromFormat('H:i:00', $selected_time);
+$convert_time = DateTime::createFromFormat('H:i', $selected_time);
 $display_time = $convert_time->format('g:i A');
 
 ?>
