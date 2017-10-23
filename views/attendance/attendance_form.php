@@ -101,8 +101,104 @@ $display_time = $convert_time->format('g:i A');
         </div>
 
         <div class="row flex-column">
-            <div class="d-flex justify-content-start">
-                <button type="button" class="btn btn-default" style="margin-top: 15px">New Attendee</button>
+
+            <div id="accordion" role="tablist" aria-multiselectable="true">
+                <div class="card">
+                    <div class="card-header" role="tab" id="headingOne">
+                        <h5 class="mb-0">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                                Search for Person
+                            </a>
+                        </h5>
+                    </div>
+
+                    <div id="collapseOne" class="collapse show" role="tabpanel" aria-labelledby="headingOne">
+                        <div class="card-block" style="padding: 10px;">
+                            <p>
+                                If a person is not shown here but has already filled out the intake packet,
+                                please search for them here.
+                            </p>
+
+                            <form class="search-agency" target="_blank">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" name="searchquery" placeholder="Begin typing participant's name...">
+                                </div>
+                                <button type="button" class="btn cpca form-control">Submit</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header" role="tab" id="headingTwo">
+                        <h5 class="mb-0">
+                            <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                New Person In System
+                            </a>
+                        </h5>
+                    </div>
+                    <div id="collapseTwo" class="collapse" role="tabpanel" aria-labelledby="headingTwo">
+                        <div class="card-block" style="padding: 10px">
+                            <!-- first -->
+                            <div class="form-group row">
+                                <label for="new-person-first" class="col-2 col-form-label">First</label>
+                                <div class="col-10">
+                                    <input class="form-control" type="text" value="" id="new-person-first" placeholder="enter first name...">
+                                </div>
+                            </div>
+                            <!-- middle initial -->
+                            <div class="form-group row">
+                                <label for="new-person-middle" class="col-2 col-form-label">Middle Initial</label>
+                                <div class="col-10">
+                                    <input class="form-control" type="text" value="" id="new-person-middle">
+                                </div>
+                            </div>
+                            <!-- last -->
+                            <div class="form-group row">
+                                <label for="new-person-last" class="col-2 col-form-label">Last</label>
+                                <div class="col-10">
+                                    <input class="form-control" type="text" value="" id="new-person-last" placeholder="enter last name...">
+                                </div>
+                            </div>
+                            <!-- race
+                            TODO: dynamically get races
+                            -->
+                            <div class="form-group row">
+                                <label for="race-select" class="col-2 col-form-label">Race</label>
+                                    <div class="col-10">
+                                    <select id="race-select" class="form-control">
+                                        <option>Select Race...</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <!-- Age -->
+                            <div class="form-group row">
+                                <label for="age-input" class="col-2 col-form-label">Age</label>
+                                <div class="col-10">
+                                    <input class="form-control" type="number" value="0" id="age-input">
+                                </div>
+                            </div>
+                            <!-- Number of children under 18 -->
+                            <div class="form-group row">
+                                <label for="num-children-input" class="col-2 col-form-label">Number of children under 18</label>
+                                <div class="col-10">
+                                    <input class="form-control" type="number" value="" id="num-children-input">
+                                </div>
+                            </div>
+                            <!-- Zip code -->
+                            <div class="form-group row">
+                                <label for="zip-input" class="col-2 col-form-label">Zip code</label>
+                                <div class="col-10">
+                                    <input class="form-control" type="text" value="" id="zip-input" placeholder="enter zip code...">
+                                </div>
+                            </div>
+
+                            <!-- validate and add to list above -->
+                            <div class = "row">
+                                <button type="button" class="btn btn-primary" style="margin-left:15px">Add Person</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <br/>
@@ -111,19 +207,6 @@ $display_time = $convert_time->format('g:i A');
             </div>
         </div>
         </form>
-
-        <div class="row">
-            <div class="jumbotron" style="max-width: 700px; width: 100%; margin: 10px auto" >
-                <h4 class="secondary-title">Search for Participants</h4>
-                <br />
-                <form class="search-agency" method="POST" action="/agency-requests">
-                    <div class="form-group">
-                        <input type="text" class="form-control" name="searchquery" placeholder="Begin typing participant's name...">
-                    </div>
-                    <button type="submit" class="btn cpca form-control">Submit</button>
-                </form>
-            </div>
-        </div>
     </div>
 
 

@@ -121,7 +121,7 @@ echo "<script>console.log(" . date('d-m-Y') . ")</script>"
                     <div class="form-group row">
                         <label for="time-input" class="col-2 col-form-label">Time</label>
                         <div class="col-10">
-                            <input class="form-control" type="time" value="<?php echo date('H:i:00') ?>" id="time-input" name = "time-input">
+                            <input class="form-control" type="time" value="<?php echo date('H:i') ?>" id="time-input" name = "time-input">
                         </div>
                     </div>
 
