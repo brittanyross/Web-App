@@ -142,6 +142,7 @@ $display_time = $convert_time->format('g:i A');
                             <div class="form-group row" style="margin-left: 10px">
                                 <p>If a person has not filled out intake forms, please enter their information below.</p>
                             </div>
+                            <div id = "alert-box"></div>
                             <!-- first -->
                             <div class="form-group row">
                                 <label for="new-person-first" class="col-3 col-form-label">First <div style="color:red; display:inline">*</div></label>

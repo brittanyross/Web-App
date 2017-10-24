@@ -15,6 +15,18 @@ function addPersonToTable() {
     zip = document.getElementById("zip-input").value;
 
     //javascript validation (will do php validation later, too)
+    var valid = true;
+    var errorMessage = null;
+
+    //success or failure message
+    var insertAlertHere = document.getElementById("alert-box");
+
+    while(insertAlertHere.hasChildNodes()) { //remove all children
+        insertAlertHere.removeChild(insertAlertHere.lastChild);
+    }
+    insertAlertHere.appendChild(createMessage(valid, errorMessage));
+
+
 
     //add to table
     var table = document.getElementById("class-list");
@@ -28,9 +40,6 @@ function addPersonToTable() {
     document.getElementById("age-input").value = '';
     document.getElementById("num-children-input").value = '';
     document.getElementById("zip-input").value = '';
-
-    //collapse the accordion and expand search for person
-    
 }
 
 function createRow(firstName, middleInitial, lastName, age, zip, numChildren, editLink) {
@@ -66,6 +75,21 @@ function createRow(firstName, middleInitial, lastName, age, zip, numChildren, ed
     tr.appendChild(tabEdit);
 
     return tr;
+}
+
+function createMessage(success, errorMessage) {
+    var div = document.createElement("div");
+    div.setAttribute("role", "alert");
+
+    if(success){
+        div.setAttribute("class", "alert alert-success");
+        div.innerHTML = "<strong>Success!</strong> Person added to list."
+    } else {
+        div.setAttribute("class", "alert alert-warning");
+        div.innerHTML = "<strong>Oops!</strong>" + errorMessage;
+    }
+
+    return div;
 }
 
 function validateFields(){
