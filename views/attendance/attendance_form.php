@@ -43,6 +43,7 @@ $convert_time = DateTime::createFromFormat('H:i', $selected_time);
 $display_time = $convert_time->format('g:i A');
 
 ?>
+    <script src="/js/attendance-scripts/attendance-form-add-new-person.js"></script>
 
     <div class="container-fluid">
         <div class="row flex-column">
@@ -63,7 +64,7 @@ $display_time = $convert_time->format('g:i A');
                     <div class="card-block">
                         <!-- Table -->
                         <div class="table-responsive">
-                            <table class="table table-hover table-striped">
+                            <table class="table table-hover table-striped" id="class-list">
                                 <thead>
                                 <tr>
                                     <th>Present</th>
@@ -138,24 +139,27 @@ $display_time = $convert_time->format('g:i A');
                     </div>
                     <div id="collapseTwo" class="collapse" role="tabpanel" aria-labelledby="headingTwo">
                         <div class="card-block" style="padding: 10px">
+                            <div class="form-group row" style="margin-left: 10px">
+                                <p>If a person has not filled out intake forms, please enter their information below.</p>
+                            </div>
                             <!-- first -->
                             <div class="form-group row">
-                                <label for="new-person-first" class="col-2 col-form-label">First</label>
-                                <div class="col-10">
+                                <label for="new-person-first" class="col-3 col-form-label">First <div style="color:red; display:inline">*</div></label>
+                                <div class="col-9">
                                     <input class="form-control" type="text" value="" id="new-person-first" placeholder="enter first name...">
                                 </div>
                             </div>
                             <!-- middle initial -->
                             <div class="form-group row">
-                                <label for="new-person-middle" class="col-2 col-form-label">Middle Initial</label>
-                                <div class="col-10">
-                                    <input class="form-control" type="text" value="" id="new-person-middle">
+                                <label for="new-person-middle" class="col-3 col-form-label">Middle Initial</label>
+                                <div class="col-9">
+                                    <input class="form-control" type="text" value="" id="new-person-middle" placeholder="enter middle initial...">
                                 </div>
                             </div>
                             <!-- last -->
                             <div class="form-group row">
-                                <label for="new-person-last" class="col-2 col-form-label">Last</label>
-                                <div class="col-10">
+                                <label for="new-person-last" class="col-3 col-form-label">Last <div style="color:red; display:inline">*</div></label>
+                                <div class="col-9">
                                     <input class="form-control" type="text" value="" id="new-person-last" placeholder="enter last name...">
                                 </div>
                             </div>
@@ -163,8 +167,8 @@ $display_time = $convert_time->format('g:i A');
                             TODO: dynamically get races
                             -->
                             <div class="form-group row">
-                                <label for="race-select" class="col-2 col-form-label">Race</label>
-                                    <div class="col-10">
+                                <label for="race-select" class="col-3 col-form-label">Race <div style="color:red; display:inline">*</div></label>
+                                    <div class="col-9">
                                     <select id="race-select" class="form-control">
                                         <option>Select Race...</option>
                                     </select>
@@ -172,29 +176,29 @@ $display_time = $convert_time->format('g:i A');
                             </div>
                             <!-- Age -->
                             <div class="form-group row">
-                                <label for="age-input" class="col-2 col-form-label">Age</label>
-                                <div class="col-10">
-                                    <input class="form-control" type="number" value="0" id="age-input">
+                                <label for="age-input" class="col-3 col-form-label">Age <div style="color:red; display:inline">*</div></label>
+                                <div class="col-9">
+                                    <input class="form-control" type="number" value="" id="age-input" placeholder="please enter age...">
                                 </div>
                             </div>
                             <!-- Number of children under 18 -->
                             <div class="form-group row">
-                                <label for="num-children-input" class="col-2 col-form-label">Number of children under 18</label>
-                                <div class="col-10">
-                                    <input class="form-control" type="number" value="" id="num-children-input">
+                                <label for="num-children-input" class="col-3 col-form-label">Number of children under 18 <div style="color:red; display:inline">*</div></label>
+                                <div class="col-9">
+                                    <input class="form-control" type="number" value="" id="num-children-input" placeholder="please enter number of children...">
                                 </div>
                             </div>
                             <!-- Zip code -->
                             <div class="form-group row">
-                                <label for="zip-input" class="col-2 col-form-label">Zip code</label>
-                                <div class="col-10">
+                                <label for="zip-input" class="col-3 col-form-label">Zip code <div style="color:red; display:inline">*</div></label>
+                                <div class="col-9">
                                     <input class="form-control" type="text" value="" id="zip-input" placeholder="enter zip code...">
                                 </div>
                             </div>
 
                             <!-- validate and add to list above -->
                             <div class = "row">
-                                <button type="button" class="btn btn-primary" style="margin-left:15px">Add Person</button>
+                                <button type="button" class="btn btn-primary" style="margin-left:15px" onclick="addPersonToTable()">Add Person</button>
                             </div>
                         </div>
                     </div>
