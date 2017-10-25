@@ -5,7 +5,7 @@ authorizedPage();
 global $db;
 
 //TODO: make query dynamic so that it changes based on which user is logged in
-$peopleid = 5;
+$peopleid = 1;
 
 //TODO: add option to edit last class' attendance
 $result = $db->no_param_query("select fca.topicname, fca.date " .

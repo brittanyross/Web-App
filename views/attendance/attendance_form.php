@@ -2,11 +2,13 @@
 
 authorizedPage();
 
-$_SESSION['employeeid'] = 5;
+$_SESSION['employeeid'] = 1;
 
 //generic db script copied and pasted
-/*
-global $db, $params;
+
+global $db;
+
+/*$params;
 $peopleid = $params[0];
 
 $result = $db->query("SELECT participants.participantid, participants.dateofbirth, participants.race, people.firstname, people.lastname, people.middleinit " .
@@ -35,6 +37,16 @@ $selected_curr = $_POST['curr'];
 $selected_date = $_POST['date-input'];
 $selected_time = $_POST['time-input'];
 
+$employee_id = $_SESSION['employeeid'];
+
+$get_races = $db->no_param_query("SELECT unnest(enum_range(NULL::race));");
+
+//some curricula have apostrophe's in their name that need to be escaped
+$escaped_curr_name = str_replace("'","''", $selected_curr);
+$get_participants = $db->no_param_query(
+        "select * from classattendancedetails " .
+        " where curriculumname = '{$escaped_curr_name}' " .
+        "and facilitatorid = {$employee_id};");
 
 $convert_date = DateTime::createFromFormat('Y-m-d', $selected_date);
 $display_date = $convert_date->format('l, F jS');
@@ -79,20 +91,39 @@ $display_time = $convert_time->format('g:i A');
 
 
                                 <tr class="m-0">
-                                    <td>
-                                        <label class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input">
-                                            <span class="custom-control-indicator"></span>
-                                        </label>
-                                    </td>
-                                    <td>Jimmy Neutron</td>
-                                    <td>25</td>
-                                    <td>12601</td>
-                                    <td>8</td>
-                                    <td>
-                                        <a href="#">Edit</a>
-                                    </td>
-                                </tr>
+                                <?php
+                                while($row = pg_fetch_assoc($get_participants)){
+                                echo "<tr class=\"m-0\">";
+                                    echo "<td>";
+                                        echo "<label class=\"custom-control custom-checkbox\">";
+                                            echo "<input type=\"checkbox\" class=\"custom-control-input\">";
+                                            echo "<span class=\"custom-control-indicator\"></span>";
+                                        echo "</label>";
+                                    echo "</td>";
+                                    echo "<td>{$row['participantfirstname']} {$row['participantmiddleinit']} {$row['participantlastname']}</td>";
+
+                                    //stack overflow next level stuff
+                                      //date in mm-dd-yyyy format; or it can be in other formats as well
+                                    $birthDateRaw = $row['dateofbirth'];
+                                    //explode the date to get month, day and year
+                                    $birthDate = explode("-", $birthDateRaw);
+                                    //reformat to fit the mm-dd-yyyy format
+                                    $birthDateFormatted = array($birthDate[1], $birthDate[2], $birthDate[0]);
+                                    //get age from date or birthdate
+                                    $age = (date("md", date("U", mktime(0, 0, 0, $birthDateFormatted[0], $birthDateFormatted[1], $birthDateFormatted[2]))) > date("md")
+                                      ? ((date("Y") - $birthDateFormatted[2]) - 1)
+                                      : (date("Y") - $birthDateFormatted[2]));
+
+                                    echo "<td>{$age}</td>";
+                                    //TODO: zip is being added to the view
+                                    echo "<td>12601</td>";
+                                    echo "<td>{$row['numchildren']}</td>";
+                                    echo "<td>" .
+                                             "<a href=\"#\">Edit</a>" .
+                                        "</td>";
+                                echo "</tr>";
+                                }
+                                    ?>
                                 </tbody>
                             </table>
                             <!-- /Table -->
@@ -172,16 +203,11 @@ $display_time = $convert_time->format('g:i A');
                                     <div class="col-9">
                                     <select id="race-select" class="form-control">
                                         <option>Select Race...</option>
-                                        <option>Altmer (High Elves)</option>
-                                        <option>Argonian</option>
-                                        <option>Breton</option>
-                                        <option>Bosmer (Wood Elves)</option>
-                                        <option>Dunmer (Dark Elves)</option>
-                                        <option>Imperial</option>
-                                        <option>Khajiit</option>
-                                        <option>Nord</option>
-                                        <option>Redguard</option>
-                                        <option>Orsimer (Orks)</option>
+                                        <?php
+                                        while($row = pg_fetch_assoc($get_races)){
+                                            echo "<option>{$row['unnest']}</option>";
+                                        }
+                                        ?>
                                     </select>
                                 </div>
                             </div>
