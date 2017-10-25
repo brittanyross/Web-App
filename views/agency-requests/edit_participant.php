@@ -6,7 +6,7 @@ global $db, $params;
 
 # Get people id from params
 $peopleid = rawurldecode(implode('/', $params));
-$params[1] = $peopleid;
+//$params[1] = $peopleid;
 
 
 $result = $db->query("SELECT * FROM classattendancedetails WHERE pid = $1", [$peopleid]);
@@ -18,16 +18,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 	
 	if(isset($_POST["fname-update"])){
 		$fname = $_POST["fname-update"];
-		$resultUpdate = $db->query("UPDATE people SET firstname = $1 WHERE pid = $2",[$fname, $peopleid]);
+		$update = $db->query("UPDATE people SET firstname = $1 WHERE peopleid = $2",[$fname, $peopleid]);
 	}
 	
 	if(isset($_POST["mname-update"])){
 		$mname = $_POST["mname-update"];
-		$resultUpdate = $db->query("UPDATE people SET middleinit = $1 WHERE pid = $2",[$mname, $peopleid]);
+		$update = $db->query("UPDATE people SET middleinit = $1 WHERE peopleid = $2",[$mname, $peopleid]);
 	}
 	if(isset($_POST["lname-update"])){
 		$lname = $_POST["lname-update"];
-		$resultUpdate = $db->query("UPDATE people SET lastname = $1 WHERE pid = $2",[$lname, $peopleid]);
+		$update = $db->query("UPDATE people SET lastname = $1 WHERE peopleid = $2",[$lname, $peopleid]);
 	}
 	
 	
