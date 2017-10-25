@@ -43,10 +43,21 @@ $get_races = $db->no_param_query("SELECT unnest(enum_range(NULL::race));");
 
 //some curricula have apostrophe's in their name that need to be escaped
 $escaped_curr_name = str_replace("'","''", $selected_curr);
-$get_participants = $db->no_param_query(
-        "select * from classattendancedetails " .
-        " where curriculumname = '{$escaped_curr_name}' " .
-        "and facilitatorid = {$employee_id};");
+
+//date subtraction for view
+$today = new DateTime('now');
+//3 weeks ago plus 1 day for overlap if class time changes or something similar
+$threeWeeksAgoDate = $today->sub(DateInterval::createFromDateString('22 days'));
+$threeWeeksAgoDateFormatted = $threeWeeksAgoDate->format('Y-m-d');
+
+$fullQuery = "select * from classattendancedetails " .
+    " where curriculumname = '{$escaped_curr_name}' " .
+    "and facilitatorid = {$employee_id} " .
+    "and classdate >= '{$threeWeeksAgoDateFormatted}';";
+
+//query the view
+$get_participants = $db->no_param_query($fullQuery);
+
 
 $convert_date = DateTime::createFromFormat('Y-m-d', $selected_date);
 $display_date = $convert_date->format('l, F jS');
@@ -93,7 +104,7 @@ $display_time = $convert_time->format('g:i A');
                                 <tr class="m-0">
                                 <?php
                                 while($row = pg_fetch_assoc($get_participants)){
-                                echo "<tr class=\"m-0\">";
+                                echo "<tr class=\"m-0\" id=\"{$row['pid']}\">";
                                     echo "<td>";
                                         echo "<label class=\"custom-control custom-checkbox\">";
                                             echo "<input type=\"checkbox\" class=\"custom-control-input\">";
