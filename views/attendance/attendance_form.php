@@ -172,6 +172,16 @@ $display_time = $convert_time->format('g:i A');
                                     <div class="col-9">
                                     <select id="race-select" class="form-control">
                                         <option>Select Race...</option>
+                                        <option>Altmer (High Elves)</option>
+                                        <option>Argonian</option>
+                                        <option>Breton</option>
+                                        <option>Bosmer (Wood Elves)</option>
+                                        <option>Dunmer (Dark Elves)</option>
+                                        <option>Imperial</option>
+                                        <option>Khajiit</option>
+                                        <option>Nord</option>
+                                        <option>Redguard</option>
+                                        <option>Orsimer (Orks)</option>
                                     </select>
                                 </div>
                             </div>
