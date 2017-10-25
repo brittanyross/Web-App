@@ -13,7 +13,7 @@ $result = $db->no_param_query("select fca.topicname, fca.date " .
 "where e.employeeid = f.facilitatorid " .
 "and f.facilitatorid = fca.facilitatorid " .
 "and f.facilitatorid = {$peopleid} " .
-"order by fca.date asc " .
+"order by fca.date desc " .
 "limit 20; ");
 
 include('header.php');
