@@ -48,7 +48,7 @@ $threeWeeksAgo = date_subtraction('22 days');
 $fullQuery = "select * from classattendancedetails " .
     " where curriculumname = '" . escape_apostrophe($selected_curr) . "' " .
     "and facilitatorid = {$employee_id} " .
-    "and classdate >= '{$threeWeeksAgo}';";
+    "and date >= '{$threeWeeksAgo}';";
 
 //query the view
 $get_participants = $db->no_param_query($fullQuery);
@@ -88,7 +88,8 @@ $display_time = $convert_time->format('g:i A');
                                     <th>Name</th>
                                     <th>Age</th>
                                     <th>Zip</th>
-                                    <th>Number of children under 18</th>
+                                    <th>Number of </br> children under 18</th>
+                                    <th>Comments</th>
                                     <th></th>
                                 </tr>
                                 </thead>
@@ -98,24 +99,31 @@ $display_time = $convert_time->format('g:i A');
                                 <tr class="m-0">
                                 <?php
                                 while($row = pg_fetch_assoc($get_participants)){
-                                echo "<tr class=\"m-0\" id=\"{$row['pid']}\">";
+                                echo "<tr class=\"m-0\" id=\"{$row['participantid']}\">";
                                     echo "<td>";
                                         echo "<label class=\"custom-control custom-checkbox\">";
                                             echo "<input type=\"checkbox\" class=\"custom-control-input\">";
                                             echo "<span class=\"custom-control-indicator\"></span>";
                                         echo "</label>";
                                     echo "</td>";
-                                    echo "<td>{$row['participantfirstname']} {$row['participantmiddleinit']} {$row['participantlastname']}</td>";
+                                    echo "<td>{$row['firstname']} {$row['middleinit']} {$row['lastname']}</td>";
 
                                     $age = calculate_age($row['dateofbirth']);
 
                                     echo "<td>{$age}</td>";
                                     //TODO: zip is being added to the view
-                                    echo "<td>12601</td>";
+                                    echo "<td>{$row['zipcode']}</td>";
                                     echo "<td>{$row['numchildren']}</td>";
-                                    echo "<td>" .
-                                             "<a href=\"#\">Edit</a>" .
-                                        "</td>";
+                                    echo "<td>";
+                                        echo "<div class=\"form-group\">";
+                                            echo "<div class=\"col-10\">";
+                                                echo "<textarea class=\"form-control\" type=\"textarea\" rows=\"2\" value=\"\" id=\"example-text-input\" placeholder=\"enter comments here...\"></textarea>";
+                                            echo "</div>";
+                                        echo "</div>";
+                                        echo "</td>";
+                                    echo "<td>";
+                                        echo "<a href=\"#\">Edit</a>";
+                                    echo "</td>";
                                 echo "</tr>";
                                 }
                                     ?>

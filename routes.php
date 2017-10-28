@@ -39,7 +39,6 @@ $router->add('/record-attendance', 'attendance/attendance_dashboard.php', 'Atten
 $router->add('/new-class', 'attendance/new_class.php', 'New Attendance Sheet');
 $router->add('/attendance-form', 'attendance/attendance_form.php', 'Attendance Form');
 $router->add('/attendance-form-confirmation', 'attendance/attendance_form_confirmation.php', 'Confirm Attendance');
-$router->add('/attendance-history', 'attendance/attendance_history.php', 'Attendance History');
 $router->add('/historical-class-view', 'attendance/historical_class_view.php', 'Historical Class View');
 
 #Reports
