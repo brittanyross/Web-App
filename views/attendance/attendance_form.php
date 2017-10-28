@@ -8,6 +8,8 @@ $_SESSION['employeeid'] = 1;
 
 global $db;
 
+require "attendance_utilities.php";
+
 /*$params;
 $peopleid = $params[0];
 
@@ -41,23 +43,15 @@ $employee_id = $_SESSION['employeeid'];
 
 $get_races = $db->no_param_query("SELECT unnest(enum_range(NULL::race));");
 
-//some curricula have apostrophe's in their name that need to be escaped
-$escaped_curr_name = str_replace("'","''", $selected_curr);
-
-//date subtraction for view
-$today = new DateTime('now');
-//3 weeks ago plus 1 day for overlap if class time changes or something similar
-$threeWeeksAgoDate = $today->sub(DateInterval::createFromDateString('22 days'));
-$threeWeeksAgoDateFormatted = $threeWeeksAgoDate->format('Y-m-d');
+$threeWeeksAgo = date_subtraction('22 days');
 
 $fullQuery = "select * from classattendancedetails " .
-    " where curriculumname = '{$escaped_curr_name}' " .
+    " where curriculumname = '" . escape_apostrophe($selected_curr) . "' " .
     "and facilitatorid = {$employee_id} " .
-    "and classdate >= '{$threeWeeksAgoDateFormatted}';";
+    "and classdate >= '{$threeWeeksAgo}';";
 
 //query the view
 $get_participants = $db->no_param_query($fullQuery);
-
 
 $convert_date = DateTime::createFromFormat('Y-m-d', $selected_date);
 $display_date = $convert_date->format('l, F jS');
@@ -113,17 +107,7 @@ $display_time = $convert_time->format('g:i A');
                                     echo "</td>";
                                     echo "<td>{$row['participantfirstname']} {$row['participantmiddleinit']} {$row['participantlastname']}</td>";
 
-                                    //stack overflow next level stuff
-                                      //date in mm-dd-yyyy format; or it can be in other formats as well
-                                    $birthDateRaw = $row['dateofbirth'];
-                                    //explode the date to get month, day and year
-                                    $birthDate = explode("-", $birthDateRaw);
-                                    //reformat to fit the mm-dd-yyyy format
-                                    $birthDateFormatted = array($birthDate[1], $birthDate[2], $birthDate[0]);
-                                    //get age from date or birthdate
-                                    $age = (date("md", date("U", mktime(0, 0, 0, $birthDateFormatted[0], $birthDateFormatted[1], $birthDateFormatted[2]))) > date("md")
-                                      ? ((date("Y") - $birthDateFormatted[2]) - 1)
-                                      : (date("Y") - $birthDateFormatted[2]));
+                                    $age = calculate_age($row['dateofbirth']);
 
                                     echo "<td>{$age}</td>";
                                     //TODO: zip is being added to the view
@@ -237,12 +221,14 @@ $display_time = $convert_time->format('g:i A');
                                 </div>
                             </div>
                             <!-- Zip code -->
-                            <div class="form-group row">
-                                <label for="zip-input" class="col-3 col-form-label">Zip code <div style="color:red; display:inline">*</div></label>
-                                <div class="col-9">
-                                    <input class="form-control" type="text" value="" id="zip-input" placeholder="enter zip code...">
+                            <fieldset disabled>
+                                <div class="form-group row">
+                                    <label for="zip-input" class="col-3 col-form-label">Zip code</label>
+                                    <div class="col-9">
+                                        <input class="form-control" type="text" value="12601" id="zip-input" placeholder="enter zip code...">
+                                    </div>
                                 </div>
-                            </div>
+                            </fieldset>
 
                             <!-- validate and add to list above -->
                             <div class = "row">

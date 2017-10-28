@@ -3,6 +3,7 @@
 authorizedPage();
 
 global $db;
+require("attendance_utilities.php");
 
 //TODO: make query dynamic so that it changes based on which user is logged in
 $peopleid = 1;
@@ -11,22 +12,13 @@ $class_topic = 'How to be a good parent';
 $site_name = 'Dutchess County Jail';
 $class_date = '2017-09-23 05:22:21.649491';
 
-/*
-select participantfirstname, participantmiddleinit, participantlastname, numchildren, comments
-from classattendancedetails
-where classtopic = 'How to be a good parent'
-and sitename = 'Dutchess County Jail'
-and classdate = '2017-09-23 05:22:21.649491';
-*/
-
 //TODO: add ' for classtopic and location as it may interfere with some queries
 $result = $db->no_param_query(
         "select participantfirstname pfn, participantmiddleinit pmi, participantlastname pln, numchildren nc, comments c" .
         "from classattendancedetails" .
-        "where classtopic = '{$class_topic}'" .
-        "and sitename = '{$site_name}'" .
+        "where classtopic = '" . escape_apostrophe($class_topic) ."'" .
+        "and sitename = '" . escape_apostrophe($site_name) ."'" .
         "and classdate = '{$class_date}';"
-
 );
 
 include('header.php');
@@ -48,12 +40,9 @@ include('header.php');
                             <table class="table table-striped">
                                 <thead>
                                 <tr>
-                                    <th>Present</th>
                                     <th>Name</th>
-                                    <th>Age</th>
-                                    <th>Zip</th>
                                     <th>Number of children under 18</th>
-                                    <th></th>
+                                    <th>Comments</th>
                                 </tr>
                                 </thead>
                                 <tbody>
