@@ -8,12 +8,31 @@ require("attendance_utilities.php");
 
 include('header.php');
 
+//what result number was the post
+$classN = $_POST["whichButton"];
+
 //TODO: make query dynamic so that it changes based on which user is logged in
 $peopleid = 1;
-//TODO make dynamic
-$class_topic = 'How to be a good parent';
-$site_name = 'Dutchess County Jail';
-$class_date = '2017-09-23 05:22:21.649491';
+
+//grab the specific class we clicked
+$resultClassInfo = $db->no_param_query("select fca.topicname, fca.date, co.sitename " .
+    "from facilitatorclassattendance fca, classoffering co " .
+    "where fca.topicname = co.topicname " .
+    "and fca.sitename = co.sitename " .
+    "and fca.date = co.date " .
+    "and fca.facilitatorid = {$peopleid} " .
+    "order by fca.date desc " .
+    "limit 20; ");
+
+//loop through to desired result
+for($i = 0; $i < $classN; $i++){
+    pg_fetch_assoc($resultClassInfo);
+}
+$row = pg_fetch_assoc($resultClassInfo); //actual row we want
+
+$class_topic = $row['topicname'];
+$site_name = $row['sitename'];
+$class_date = $row['date'];
 $displayDate = formatSQLDate($class_date);
 
 $query = "select firstname fn, middleinit mi, lastname ln, numchildren nc, comments c, participantid pid " .
@@ -24,6 +43,8 @@ $query = "select firstname fn, middleinit mi, lastname ln, numchildren nc, comme
         "order by ln asc;";
 
 $result = $db->no_param_query($query);
+
+
 
 
 
@@ -38,7 +59,8 @@ $result = $db->no_param_query($query);
 
             <div class="card">
                 <div class="card-block">
-                    <h4>Attendance: <?php echo $displayDate; ?> </h4>
+                    <h4 class="card-title" style="margin-top: 10px; margin-left: 10px; text-align: center;">Attendance: <?php echo $displayDate; ?> </h4>
+                    <h6 style="text-align: center;"><?php echo $site_name . " : " . $class_topic?></h6>
                     <!-- Table -->
                     <div class="table-responsive">
                         <table class="table table-striped">
@@ -67,6 +89,10 @@ $result = $db->no_param_query($query);
                     </div>
                 </div>
             </div>
+        </div>
+
+        <div class="row flex-column" style="margin-top: 10px">
+            <button type="button" class="btn btn-primary" onclick="location.href = '/record-attendance'">Back to previous page</button>
         </div>
 
 
