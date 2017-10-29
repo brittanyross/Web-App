@@ -3,7 +3,10 @@
 authorizedPage();
 
 global $db;
+
 require("attendance_utilities.php");
+
+include('header.php');
 
 //TODO: make query dynamic so that it changes based on which user is logged in
 $peopleid = 1;
@@ -12,16 +15,15 @@ $class_topic = 'How to be a good parent';
 $site_name = 'Dutchess County Jail';
 $class_date = '2017-09-23 05:22:21.649491';
 
-//TODO: add ' for classtopic and location as it may interfere with some queries
-$result = $db->no_param_query(
-        "select participantfirstname pfn, participantmiddleinit pmi, participantlastname pln, numchildren nc, comments c" .
-        "from classattendancedetails" .
-        "where classtopic = '" . escape_apostrophe($class_topic) ."'" .
-        "and sitename = '" . escape_apostrophe($site_name) ."'" .
-        "and classdate = '{$class_date}';"
-);
+$query = "select firstname fn, middleinit mi, lastname ln, numchildren nc, comments c, participantid pid " .
+        "from classattendancedetails " .
+        "where topicname = '" . escape_apostrophe($class_topic) ."' " .
+        "and sitename = '" . escape_apostrophe($site_name) ."' " .
+        "and date = '{$class_date}';";
 
-include('header.php');
+$result = $db->no_param_query($query);
+
+
 
 ?>
 
@@ -47,14 +49,16 @@ include('header.php');
                                 </thead>
                                 <tbody>
 
+                                <?php
+                                    while($row = pg_fetch_assoc($result)) {
+                                        echo "<tr class=\"m-0\">";
+                                            echo "<td></td>";
+
+                                    }
+
+                                ?>
 
                                 <tr class="m-0">
-                                    <td>
-                                        <label class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input">
-                                            <span class="custom-control-indicator"></span>
-                                        </label>
-                                    </td>
                                     <td>Jimmy Neutron</td>
                                     <td>25</td>
                                     <td>12601</td>
