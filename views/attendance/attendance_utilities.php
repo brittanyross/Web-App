@@ -31,10 +31,20 @@ function calculate_age($raw_sqlDate) {
     return $age;
 }
 
-//
+//input: ray sql timestamp
+//output: nicely formatted date and time
 function formatSQLDate($sqlDate) {
     $convert_date = DateTime::createFromFormat('Y-m-d H:i:s.u', $sqlDate);
     $formatted_date = $convert_date->format('l, F jS g:i A');
 
     return $formatted_date;
+}
+
+
+function serializeParticipantMatrix($matrix) {
+    return base64_encode(serialize($matrix));
+}
+
+function deserializeParticipantMatrix($encodedMatrix) {
+    return unserialize(base64_decode($encodedMatrix));
 }
