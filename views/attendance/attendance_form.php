@@ -28,20 +28,23 @@ $pageInformation = array();
 //if we have previous information passed to us from lookup form or add person form,
 //  then display this information instead of db information
 if(isset($_POST['serializedInfo'])) {
-    deserializeParticipantMatrix($_POST['serializedInfo']);
+    $pageInformation = deserializeParticipantMatrix($_POST['serializedInfo']);
 }
 //else grab information from the db and format it into the associative array format
 else {
     while($row = pg_fetch_assoc($get_participants)){
-        $pid = $row['participantid'];
-        $fn = $row['firstname'];
-        $mi = $row['middleinit'];
-        $ln = $row['lastname'];
-        $dob = $row['dateofbirth'];
-        $zip = $row['zipcode'];
-        $row['numchildren'];
 
-        $pageInformation[] = ;
+        $pageInformation[] = array(
+            "pid"           => $row['participantid'],
+            "fn"            => $row['firstname'],
+            "mi"            => $row['middleinit'],
+            "ln"            => $row['lastname'],
+            "dob"           => $row['dateofbirth'],
+            "zip"           => $row['zipcode'],
+            "numChildren"   => $row['numchildren'],
+            "comments"      => null,
+            "present"       => false
+        );
     }
 }
 
@@ -110,6 +113,7 @@ $display_time = $convert_time->format('g:i A');
 
                                     <tr class="m-0">
                                     <?php
+                                    for($i = 0; i < count($pageInformation); $i++)
                                     while($row = pg_fetch_assoc($get_participants)){
                                     echo "<tr class=\"m-0\" id=\"{$row['participantid']}\">";
                                         echo "<td>";
