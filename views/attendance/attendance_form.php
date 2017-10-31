@@ -60,7 +60,9 @@ else {
             "zip"           => $row['zipcode'],
             "numChildren"   => $row['numchildren'],
             "comments"      => null,
-            "present"       => false
+            "present"       => false,
+            "isNew"         => false,
+            "firstClass"    => false
     );
     }
 }
@@ -91,7 +93,6 @@ $display_time = $convert_time->format('g:i A');
                 ?>
             </div>
 
-            <form action ="attendance-form-confirmation" method="post">
                 <div class="card">
                     <div class="card-block">
                         <form>
@@ -118,14 +119,16 @@ $display_time = $convert_time->format('g:i A');
                                         echo "<tr class=\"m-0\" id=\"{$pageInformation[$i]['pid']}\">";
                                         echo "<td>";
                                         echo "<label class=\"custom-control custom-checkbox\">";
-                                        echo "<input type=\"checkbox\" class=\"custom-control-input\">";
+                                        //checkbox checked option
+                                        $checked = null;
+                                        $pageInformation[$i]['present'] ? $checked = "checked=\"checked\"" : $checked = "";
+                                        echo "<input type=\"checkbox\" class=\"custom-control-input\" {$checked}>";
                                         echo "<span class=\"custom-control-indicator\"></span>";
                                         echo "</label>";
                                         echo "</td>";
                                         echo "<td>{$pageInformation[$i]['fn']} {$pageInformation[$i]['mi']} {$pageInformation[$i]['ln']}</td>";
 
                                         $age = calculate_age($pageInformation[$i]['dob']);
-
                                         echo "<td>{$age}</td>";
                                         //TODO: zip is being added to the view
                                         echo "<td>{$pageInformation[$i]['zip']}</td>";
@@ -133,12 +136,9 @@ $display_time = $convert_time->format('g:i A');
                                         echo "<td>";
                                         echo "<div class=\"form-group\">";
                                         echo "<div class=\"col-10\">";
+                                        //pre-fill comment if exists
                                         $comment = null;
-                                        if (is_null($pageInformation[$i]['comments'])) {
-                                            $comment = "";
-                                        } else {
-                                            $comment = $pageInformation[$i]['comments'];
-                                        }
+                                        (is_null($pageInformation[$i]['comments'])) ? $comment = "" : $comment = $pageInformation[$i]['comments'];
                                         echo "<textarea class=\"form-control\" type=\"textarea\" rows=\"2\" value=\"{$comment}\" id=\"example-text-input\" placeholder=\"enter comments here...\"></textarea>";
                                         echo "</div>";
                                         echo "</div>";
@@ -279,7 +279,6 @@ $display_time = $convert_time->format('g:i A');
                 <button type="submit" class="btn btn-success">Submit Attendance</button>
             </div>
         </div>
-        </form>
     </div>
 
 
