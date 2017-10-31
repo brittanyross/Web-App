@@ -23,6 +23,13 @@ if(!isset($_POST['curr']))
     die;
 }
 
+$selected_class = $_POST['classes'];
+$selected_curr = $_POST['curr'];
+$selected_date = $_POST['date-input'];
+$selected_time = $_POST['time-input'];
+
+$employee_id = $_SESSION['employeeid'];
+
 $pageInformation = array();
 
 //if we have previous information passed to us from lookup form or add person form,
@@ -32,6 +39,16 @@ if(isset($_POST['serializedInfo'])) {
 }
 //else grab information from the db and format it into the associative array format
 else {
+    $threeWeeksAgo = date_subtraction('22 days');
+
+    $fullQuery = "select * from classattendancedetails " .
+        " where curriculumname = '" . escape_apostrophe($selected_curr) . "' " .
+        "and facilitatorid = {$employee_id} " .
+        "and date >= '{$threeWeeksAgo}';";
+
+    //query the view
+    $get_participants = $db->no_param_query($fullQuery);
+
     while($row = pg_fetch_assoc($get_participants)){
 
         $pageInformation[] = array(
@@ -44,28 +61,12 @@ else {
             "numChildren"   => $row['numchildren'],
             "comments"      => null,
             "present"       => false
-        );
+    );
     }
 }
 
-$selected_class = $_POST['classes'];
-$selected_curr = $_POST['curr'];
-$selected_date = $_POST['date-input'];
-$selected_time = $_POST['time-input'];
-
-$employee_id = $_SESSION['employeeid'];
 
 $get_races = $db->no_param_query("SELECT unnest(enum_range(NULL::race));");
-
-$threeWeeksAgo = date_subtraction('22 days');
-
-$fullQuery = "select * from classattendancedetails " .
-    " where curriculumname = '" . escape_apostrophe($selected_curr) . "' " .
-    "and facilitatorid = {$employee_id} " .
-    "and date >= '{$threeWeeksAgo}';";
-
-//query the view
-$get_participants = $db->no_param_query($fullQuery);
 
 $convert_date = DateTime::createFromFormat('Y-m-d', $selected_date);
 $display_date = $convert_date->format('l, F jS');
@@ -113,34 +114,39 @@ $display_time = $convert_time->format('g:i A');
 
                                     <tr class="m-0">
                                     <?php
-                                    for($i = 0; i < count($pageInformation); $i++)
-                                    while($row = pg_fetch_assoc($get_participants)){
-                                    echo "<tr class=\"m-0\" id=\"{$row['participantid']}\">";
+                                    for($i = 0; $i < count($pageInformation); $i++) {
+                                        echo "<tr class=\"m-0\" id=\"{$pageInformation[$i]['pid']}\">";
                                         echo "<td>";
-                                            echo "<label class=\"custom-control custom-checkbox\">";
-                                                echo "<input type=\"checkbox\" class=\"custom-control-input\">";
-                                                echo "<span class=\"custom-control-indicator\"></span>";
-                                            echo "</label>";
+                                        echo "<label class=\"custom-control custom-checkbox\">";
+                                        echo "<input type=\"checkbox\" class=\"custom-control-input\">";
+                                        echo "<span class=\"custom-control-indicator\"></span>";
+                                        echo "</label>";
                                         echo "</td>";
-                                        echo "<td>{$row['firstname']} {$row['middleinit']} {$row['lastname']}</td>";
+                                        echo "<td>{$pageInformation[$i]['fn']} {$pageInformation[$i]['mi']} {$pageInformation[$i]['ln']}</td>";
 
-                                        $age = calculate_age($row['dateofbirth']);
+                                        $age = calculate_age($pageInformation[$i]['dob']);
 
                                         echo "<td>{$age}</td>";
                                         //TODO: zip is being added to the view
-                                        echo "<td>{$row['zipcode']}</td>";
-                                        echo "<td>{$row['numchildren']}</td>";
+                                        echo "<td>{$pageInformation[$i]['zip']}</td>";
+                                        echo "<td>{$pageInformation[$i]['numChildren']}</td>";
                                         echo "<td>";
-                                            echo "<div class=\"form-group\">";
-                                                echo "<div class=\"col-10\">";
-                                                    echo "<textarea class=\"form-control\" type=\"textarea\" rows=\"2\" value=\"\" id=\"example-text-input\" placeholder=\"enter comments here...\"></textarea>";
-                                                echo "</div>";
-                                            echo "</div>";
-                                            echo "</td>";
-                                        echo "<td>";
-                                            echo "<a href=\"#\">Edit</a>";
+                                        echo "<div class=\"form-group\">";
+                                        echo "<div class=\"col-10\">";
+                                        $comment = null;
+                                        if (is_null($pageInformation[$i]['comments'])) {
+                                            $comment = "";
+                                        } else {
+                                            $comment = $pageInformation[$i]['comments'];
+                                        }
+                                        echo "<textarea class=\"form-control\" type=\"textarea\" rows=\"2\" value=\"{$comment}\" id=\"example-text-input\" placeholder=\"enter comments here...\"></textarea>";
+                                        echo "</div>";
+                                        echo "</div>";
                                         echo "</td>";
-                                    echo "</tr>";
+                                        echo "<td>";
+                                        echo "<a href=\"#\">Edit</a>";
+                                        echo "</td>";
+                                        echo "</tr>";
                                     }
                                         ?>
                                     </tbody>
