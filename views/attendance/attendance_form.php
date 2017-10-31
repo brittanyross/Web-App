@@ -192,7 +192,7 @@ $display_time = $convert_time->format('g:i A');
                     <div class="card-header" role="tab" id="headingTwo">
                         <h5 class="mb-0">
                             <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                New Person In System
+                                No Intake Forms
                             </a>
                         </h5>
                     </div>
