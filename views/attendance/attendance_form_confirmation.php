@@ -2,20 +2,12 @@
 
 authorizedPage();
 
-$_SESSION['employeeid'] = 5;
+$_SESSION['employeeid'] = 1;
 
-//generic db script copied and pasted
-/*
-global $db, $params;
-$peopleid = $params[0];
+require ('attendance_utilities.php');
 
-$result = $db->query("SELECT participants.participantid, participants.dateofbirth, participants.race, people.firstname, people.lastname, people.middleinit " .
-    "FROM participants " .
-    "INNER JOIN people ON participants.participantid = people.peopleid WHERE people.peopleid=$1", [$peopleid]);
-
-$participant = pg_fetch_assoc($result);
-
-*/
+//update class information from previous form
+updateSessionClassInformation();
 
 include('header.php');
 

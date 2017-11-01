@@ -48,3 +48,30 @@ function serializeParticipantMatrix($matrix) {
 function deserializeParticipantMatrix($encodedMatrix) {
     return unserialize(base64_decode($encodedMatrix));
 }
+
+//input: class information matrix
+//output: updated class information matrix
+function handleAttendanceSheetInfo($classInformation){
+    //get the post information and match it with people in the roster
+    for($i = 0; $i < count($classInformation); $i++){
+        //set the important intake fields (present, comment)
+        //each row's post name is made up index and field name
+        $classInformation[$i]["present"] = isset($_POST[((string)$i . "present")]);
+        $classInformation[$i]["comments"] = isset($_POST[((string)$i . "comment")]) ? ($_POST[((string)$i . "comment")]) : null ;
+    }
+
+    return $classInformation;
+}
+
+function updateSessionClassInformation(){
+    //get serialized class information
+    $serializedClassInfo = $_SESSION['serializedInfo'];
+    //deserialize info
+    $deserializeClassInfo = deserializeParticipantMatrix($serializedClassInfo);
+    //update info with handle class attendance function
+    $updatedInfo = handleAttendanceSheetInfo($deserializeClassInfo);
+    //serialize this new information
+    $updatedInfoSerialize = serializeParticipantMatrix($updatedInfo);
+    //update the session info with this new value
+    $_SESSION['serializedInfo'] = $updatedInfoSerialize;
+}
