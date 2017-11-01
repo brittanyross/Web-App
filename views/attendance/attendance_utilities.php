@@ -56,8 +56,8 @@ function handleAttendanceSheetInfo($classInformation){
     for($i = 0; $i < count($classInformation); $i++){
         //set the important intake fields (present, comment)
         //each row's post name is made up index and field name
-        $classInformation[$i]["present"] = isset($_POST[((string)$i . "present")]);
-        $classInformation[$i]["comments"] = isset($_POST[((string)$i . "comment")]) ? ($_POST[((string)$i . "comment")]) : null ;
+        $classInformation[$i]['present'] = isset($_POST[((string)$i . "-present")]);
+        $classInformation[$i]['comments'] = isset($_POST[((string)$i . "-comment")]) ? ($_POST[((string)$i . "-comment")]) : null ;
     }
 
     return $classInformation;
