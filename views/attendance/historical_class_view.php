@@ -8,21 +8,52 @@ require("attendance_utilities.php");
 
 include('header.php');
 
-//what result number was the post
-$classN = $_POST["whichButton"];
-
 //TODO: make query dynamic so that it changes based on which user is logged in
-$peopleid = 1;
+$_SESSION['employeeid'] = 1;
+$peopleid = $_SESSION['employeeid'];
+
+$classN = null;
+$queryClassList = null;
+$whatPageWeCameFrom = null;
+
+//check to see where the post came from
+if(isset ($_POST["whichButton"])) {
+    $whatPageWeCameFrom = "dashboard";
+    $classN = $_POST["whichButton"];
+    $queryClassList  = "select fca.topicname, fca.date, co.sitename " .
+        "from facilitatorclassattendance fca, classoffering co " .
+        "where fca.topicname = co.topicname " .
+        "and fca.sitename = co.sitename " .
+        "and fca.date = co.date " .
+        "and fca.facilitatorid = {$peopleid} " .
+        "order by fca.date desc " .
+        "limit 20; ";
+}
+else if(isset($_POST["whichButtonHistoricalSearch"])){
+    $whatPageWeCameFrom = "historicalLookup";
+    $classN = $_POST["whichButtonHistoricalSearch"];
+    $classListDate = $_POST["input-date"];
+    $queryClassList = "select fca.topicname, fca.date, co.sitename " .
+        "from facilitatorclassattendance fca, classoffering co, curricula cu, " .
+        "facilitators fac, employees emp, people peop " .
+        "where fca.topicname = co.topicname " .
+        "and fca.sitename = co.sitename " .
+        "and fca.date = co.date " .
+        "and co.curriculumid = cu.curriculumid " .
+        "and fca.facilitatorid = fac.facilitatorid " .
+        "and fac.facilitatorid = emp.employeeid " .
+        "and emp.employeeid = peop.peopleid " .
+        "and to_char(co.date, 'YYYY-MM-DD') = '{$classListDate}';";
+}
+else{ //shouldn't be here
+    die;
+}
+
+
+
 
 //grab the specific class we clicked
-$resultClassInfo = $db->no_param_query("select fca.topicname, fca.date, co.sitename " .
-    "from facilitatorclassattendance fca, classoffering co " .
-    "where fca.topicname = co.topicname " .
-    "and fca.sitename = co.sitename " .
-    "and fca.date = co.date " .
-    "and fca.facilitatorid = {$peopleid} " .
-    "order by fca.date desc " .
-    "limit 20; ");
+$resultClassInfo = $db->no_param_query($queryClassList);
 
 //loop through to desired result
 for($i = 0; $i < $classN; $i++){
@@ -35,14 +66,14 @@ $site_name = $row['sitename'];
 $class_date = $row['date'];
 $displayDate = formatSQLDate($class_date);
 
-$query = "select firstname fn, middleinit mi, lastname ln, numchildren nc, comments c, participantid pid " .
+$queryClassInformation = "select firstname fn, middleinit mi, lastname ln, numchildren nc, comments c, participantid pid " .
         "from classattendancedetails " .
         "where topicname = '" . escape_apostrophe($class_topic) ."' " .
         "and sitename = '" . escape_apostrophe($site_name) ."' " .
         "and date = '{$class_date}' " .
         "order by ln asc;";
 
-$result = $db->no_param_query($query);
+$result = $db->no_param_query($queryClassInformation);
 
 
 
@@ -92,7 +123,15 @@ $result = $db->no_param_query($query);
         </div>
 
         <div class="row flex-column" style="margin-top: 10px">
-            <button type="button" class="btn btn-primary" onclick="location.href = '/record-attendance'">Back to previous page</button>
+            <?php
+            //back to previous page depends on whether or not came from historical class lookup or dashboard
+            if($whatPageWeCameFrom == "dashboard"){
+                echo "<button type=\"button\" class=\"btn btn-primary\" onclick=\"location.href = '/record-attendance'\">Back To Dashboard</button>";
+            } else { //historicalLookup
+                echo "<button type=\"button\" class=\"btn btn-primary\" onclick=\"location.href = '/record-attendance'\">Back To Dashboard</button>";
+                echo "<button type=\"button\" class=\"btn btn-secondary\" onclick=\"location.href = '/historical-class-search'\" style='margin-top: 10px;'>Search New Day</button>";
+            }
+            ?>
         </div>
 
 

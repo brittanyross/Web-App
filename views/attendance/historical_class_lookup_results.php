@@ -4,11 +4,12 @@ authorizedPage();
 
 global $db;
 include('header.php');
+require ('attendance_utilities.php');
 
 $classDate = $_POST['date-input'];
 
 //TODO: add option to edit last class' attendance
-$result = $db->no_param_query("select fca.topicname, fca.date, co.sitename, cu.curriculumname, peop.firstname, peop.lastname " .
+$query = "select fca.topicname, fca.date, co.sitename, cu.curriculumname, peop.firstname, peop.lastname " .
 "from facilitatorclassattendance fca, classoffering co, curricula cu, " .
   "facilitators fac, employees emp, people peop " .
 "where fca.topicname = co.topicname " .
@@ -18,8 +19,9 @@ $result = $db->no_param_query("select fca.topicname, fca.date, co.sitename, cu.c
 "and fca.facilitatorid = fac.facilitatorid " .
 "and fac.facilitatorid = emp.employeeid " .
 "and emp.employeeid = peop.peopleid " .
-"and co.date = '{$classDate}';"
-);
+"and to_char(co.date, 'YYYY-MM-DD') = '{$classDate}';";
+
+$result = $db->no_param_query($query);
 
 
 ?>
@@ -32,8 +34,12 @@ $result = $db->no_param_query("select fca.topicname, fca.date, co.sitename, cu.c
             <div class="card col-12">
 
                 <div class="card-block">
+                    <?php
+                    $convert_date = DateTime::createFromFormat('Y-m-d', $classDate);
+                    $formatted_date = $convert_date->format('l, F jS');
+                    ?>
 
-                    <h4 class="card-title" style="margin-top: 15px;">My Recent Classes</h4>
+                    <h4 class="card-title" style="margin-top: 15px;">Classes On <?php echo $formatted_date; ?></h4>
 
                     <div class="table-responsive">
                         <form action = "historical-class-view" method="post" name="classView">
@@ -60,7 +66,6 @@ $result = $db->no_param_query("select fca.topicname, fca.date, co.sitename, cu.c
                                     $time = strtotime($row['date']);
                                     $myFormatTime = date("h:i A", $time);
                                     echo "<td><em>{$myFormatTime}</em></td>";
-                                    //echo "<td><a href=\"#\" type=\"submit\" name=\"action\" value="{$counter}">More details...</a> </td>";
                                     echo "<td><button href=\"#\" class=\"btn btn-link\" type=\"submit\" onclick=\"changeHiddenFormFieldValue({$counter})\">More details...</button></td>";
                                     echo "</tr>";
                                     $counter++;
@@ -70,14 +75,14 @@ $result = $db->no_param_query("select fca.topicname, fca.date, co.sitename, cu.c
                             </table>
 
                             <!-- The hidden field -->
-                            <input type="hidden" id="whichButton" name="whichButton" value="" />
+                            <input type="hidden" id="whichButton" name="whichButtonHistoricalSearch" value="" />
+                            <input type="hidden" id="input-date" name="input-date" value="<?php echo $classDate; ?>" />
                         </form>
                     </div>
                 </div>
             </div>
 
-
-            <button type="button" class="btn btn-secondary col-12" style="margin-top: 15px" onclick="window.location.href='./new-class'">Return To Attendance Dashboard</button>
+            <button type="button" class="btn btn-secondary col-12" style="margin-top: 15px" onclick="window.location.href='./record-attendance'">Return To Attendance Dashboard</button>
             <button type="button" class="btn btn-info col-12" style="margin-top: 15px" onclick="window.location.href='./historical-class-search'">Return To Date Selection</button>
         </div>
 
