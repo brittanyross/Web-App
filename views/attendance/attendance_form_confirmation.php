@@ -71,6 +71,8 @@ $display_time = $convert_time->format('g:i A');
                             <tr class="m-0">
                                 <?php
                                 for($i = 0; $i < count($pageInformation); $i++) {
+                                    $tf = $pageInformation[$i]['present'] ? "true" : "false";
+
                                     //field names - unique field names for individuals which are checked upon post
                                     $presentName =      (string) $i . "-" . "check";
                                     $commentName =      (string) $i . "-" . "comment";
@@ -81,7 +83,7 @@ $display_time = $convert_time->format('g:i A');
                                     echo "<fieldset disabled>"; //disable checkbox
                                     //checkbox checked option
                                     $checked = null;
-                                    $pageInformation[$i]['present'] ? $checked = "checked=\"checked\"" : $checked = "";
+                                    $tf ? $checked = "checked=\"checked\"" : $checked = "";
                                     echo "<input type=\"checkbox\" class=\"custom-control-input\" {$checked} name='{$presentName}'>";
                                     echo "<span class=\"custom-control-indicator\"></span>";
                                     echo "</fieldset>";
@@ -102,7 +104,7 @@ $display_time = $convert_time->format('g:i A');
                                     $placeholder = null; //disable placeholder
                                     (is_null($pageInformation[$i]['comments'])) ? $comment = "" : $comment = $pageInformation[$i]['comments'];
                                     (is_null($pageInformation[$i]['comments'])) ? $placeholder = "" : $placeholder = "placeholder=\"enter comments here...\"";
-                                    echo "<textarea class=\"form-control\" type=\"textarea\" rows=\"2\" value=\"{$comment}\" {$placeholder} name='{$commentName}'></textarea>";
+                                    echo "<textarea class=\"form-control\" type=\"textarea\" rows=\"2\" {$placeholder} name='{$commentName}'>{$comment}</textarea>";
                                     echo "</fieldset>";
                                     echo "</div>";
                                     echo "</div>";
