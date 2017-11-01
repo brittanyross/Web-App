@@ -9,9 +9,13 @@ $peopleid = rawurldecode(implode('/', $params));
 //$params[1] = $peopleid;
 
 
-$result = $db->query("SELECT * FROM classattendancedetails WHERE pid = $1", [$peopleid]);
+$result = $db->query("SELECT participants.participantid, participants.dateofbirth, participants.race, people.firstname, people.lastname, people.middleinit " .
+					"FROM participants " .
+					"INNER JOIN people ON participants.participantid = people.peopleid WHERE people.peopleid=$1", [$peopleid]);
 
 $participant = pg_fetch_assoc($result);
+
+// print_r($participant);
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 	$fname = $mname = $lname = null;
@@ -19,6 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 	if(isset($_POST["fname-update"])){
 		$fname = $_POST["fname-update"];
 		$update = $db->query("UPDATE people SET firstname = $1 WHERE peopleid = $2",[$fname, $peopleid]);
+		
 	}
 	
 	if(isset($_POST["mname-update"])){
@@ -29,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 		$lname = $_POST["lname-update"];
 		$update = $db->query("UPDATE people SET lastname = $1 WHERE peopleid = $2",[$lname, $peopleid]);
 	}
-	
+	echo(isset($_POST["fname-update"]));
 	
 }
 
@@ -41,11 +46,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 <form class="mt-5 d-flex flex-column w-50 edit-form p-5 rounded" method="POST" action= "">
   <div class="form-group">
     <label for="fname-update">First Name</label>
-    <input name ="fname-update" type="text" class="form-control" id="fname-update" value="<?= $participant['participantfirstname']?>">
+    <input name ="fname-update" type="text" class="form-control" id="fname-update" value="<?= $participant['firstname']?>">
     <label for="mname-update">Middle Name</label>
-    <input name ="mname-update"  type="text" class="form-control" id="mname-update" placeholder="Enter middle initial" value="<?= $participant['participantmiddleinit']?>">
+    <input name ="mname-update"  type="text" class="form-control" id="mname-update" placeholder="Enter middle initial" value="<?= $participant['middleinit']?>">
     <label for="lname-update">Last Name</label>
-    <input name ="lname-update"  type="text" class="form-control" id="lname-update" value="<?= $participant['participantlastname']?>">
+    <input name ="lname-update"  type="text" class="form-control" id="lname-update" value="<?= $participant['lastname']?>">
    </div>
   <div class="form-group">
     <label for="status-update">Status</label>
