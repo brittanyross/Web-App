@@ -35,7 +35,7 @@ $pageInformation = array();
 //if we have previous information passed to us from lookup form or add person form,
 //  then display this information instead of db information
 if(isset($_SESSION['serializedInfo'])) {
-    $pageInformation = deserializeParticipantMatrix($_POST['serializedInfo']);
+    $pageInformation = deserializeParticipantMatrix($_SESSION['serializedInfo']);
 }
 //else grab information from the db and format it into the associative array format
 else {
@@ -61,7 +61,8 @@ else {
             "numChildren"   => $row['numchildren'],
             "comments"      => null,
             "present"       => false,
-            "isNew"         => false,
+            "isNew"         => false, //isNew field from DB
+            //people who haven't completed the intake forms and just filled out info in the "no intake form" section
             "firstClass"    => false
     );
     }
@@ -79,6 +80,23 @@ $display_time = $convert_time->format('g:i A');
 ?>
     <script src="/js/attendance-scripts/attendance-form-add-new-person.js"></script>
 
+    <script>
+        function setFormAction(formID, action){
+            document.getElementById(formID).action = action;
+        }
+
+        function submitAttendance() {
+            //set page to go to that
+            setFormAction('attendance-sheet', 'attendance-form-confirmation');
+            document.getElementById('attendance-sheet').submit();
+        }
+
+        function editPerson(){
+            setFormAction('attendance-sheet', 'edit-participant');
+            document.getElementById('attendance-sheet').submit();
+        }
+    </script>
+
     <div class="container-fluid">
         <div class="row flex-column">
             <!-- Default container contents -->
@@ -95,7 +113,7 @@ $display_time = $convert_time->format('g:i A');
 
                 <div class="card">
                     <div class="card-block">
-                        <form>
+                        <form action="" method="post" id="attendance-sheet">
                             <!-- Table -->
                             <div class="table-responsive">
                                 <table class="table table-hover table-striped" id="class-list">
@@ -116,13 +134,17 @@ $display_time = $convert_time->format('g:i A');
                                     <tr class="m-0">
                                     <?php
                                     for($i = 0; $i < count($pageInformation); $i++) {
-                                        echo "<tr class=\"m-0\" id=\"{$pageInformation[$i]['pid']}\">";
+                                        //field names - unique field names for individuals which are checked upon post
+                                        $presentName =      (string) $i . "-" . "check";
+                                        $commentName =      (string) $i . "-" . "comment";
+
+                                        echo "<tr class=\"m-0\" id=\"{$i}\">";
                                         echo "<td>";
                                         echo "<label class=\"custom-control custom-checkbox\">";
                                         //checkbox checked option
                                         $checked = null;
                                         $pageInformation[$i]['present'] ? $checked = "checked=\"checked\"" : $checked = "";
-                                        echo "<input type=\"checkbox\" class=\"custom-control-input\" {$checked}>";
+                                        echo "<input type=\"checkbox\" class=\"custom-control-input\" {$checked} name='{$presentName}'>";
                                         echo "<span class=\"custom-control-indicator\"></span>";
                                         echo "</label>";
                                         echo "</td>";
@@ -130,7 +152,6 @@ $display_time = $convert_time->format('g:i A');
 
                                         $age = calculate_age($pageInformation[$i]['dob']);
                                         echo "<td>{$age}</td>";
-                                        //TODO: zip is being added to the view
                                         echo "<td>{$pageInformation[$i]['zip']}</td>";
                                         echo "<td>{$pageInformation[$i]['numChildren']}</td>";
                                         echo "<td>";
@@ -139,20 +160,34 @@ $display_time = $convert_time->format('g:i A');
                                         //pre-fill comment if exists
                                         $comment = null;
                                         (is_null($pageInformation[$i]['comments'])) ? $comment = "" : $comment = $pageInformation[$i]['comments'];
-                                        echo "<textarea class=\"form-control\" type=\"textarea\" rows=\"2\" value=\"{$comment}\" id=\"example-text-input\" placeholder=\"enter comments here...\"></textarea>";
+                                        echo "<textarea class=\"form-control\" type=\"textarea\" rows=\"2\" value=\"{$comment}\" placeholder=\"enter comments here...\" name='{$commentName}'></textarea>";
                                         echo "</div>";
                                         echo "</div>";
                                         echo "</td>";
                                         echo "<td>";
-                                        echo "<a href=\"#\">Edit</a>";
+                                        echo "<button class='btn btn-link' onclick='editPerson()'>Edit</button>";
                                         echo "</td>";
                                         echo "</tr>";
                                     }
+                                    //update the session information
+                                    $_SESSION['serializedInfo'] = serializeParticipantMatrix($pageInformation);
                                         ?>
                                     </tbody>
                                 </table>
                                 <!-- /Table -->
                             </div>
+                            <?php
+                            //hidden form values
+
+                            //class information
+                            echo "<input type=\"hidden\" id=\"classes\" name=\"classes\" value=\"{$selected_class}\" />";
+                            echo "<input type=\"hidden\" id=\"curr\" name=\"curr\" value=\"{$selected_curr}\" />";
+                            echo "<input type=\"hidden\" id=\"date-input\" name=\"date-input\" value=\"{$selected_date}\" />";
+                            echo "<input type=\"hidden\" id=\"time-input\" name=\"time-input\" value=\"{$selected_time}\" />";
+
+                            //edit button information
+                            echo "<input type=\"hidden\" id=\"editButton\" name=\"editButton\" value=\"\" />";
+                            ?>
                         </form>
                     </div>
                 </div>
@@ -192,7 +227,7 @@ $display_time = $convert_time->format('g:i A');
                     <div class="card-header" role="tab" id="headingTwo">
                         <h5 class="mb-0">
                             <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                No Intake Forms
+                                No Intake Form
                             </a>
                         </h5>
                     </div>
@@ -276,7 +311,7 @@ $display_time = $convert_time->format('g:i A');
 
             <br/>
             <div class="d-flex justify-content-start">
-                <button type="submit" class="btn btn-success">Submit Attendance</button>
+                <button type="button" class="btn btn-success" onclick="submitAttendance()">Submit Attendance</button>
             </div>
         </div>
     </div>

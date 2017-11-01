@@ -73,7 +73,7 @@ $result = $db->no_param_query("select fca.topicname, fca.date, co.sitename " .
 
 
             <button type="button" class="btn btn-default col-12" style="margin-top: 15px" onclick="window.location.href='./new-class'">Record Attendance For New Class</button>
-            <button type="button" class="btn btn-info col-12" style="margin-top: 15px" onclick="window.location.href='./historical-class-search'">Search For Historical Attendance By Day</button>
+            <button type="button" class="btn btn-info col-12" style="margin-top: 15px" onclick="window.location.href='./historical-class-search'">Search For Historical Attendance</button>
         </div>
 
     </div>

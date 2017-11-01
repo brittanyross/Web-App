@@ -4,6 +4,11 @@ authorizedPage();
 
 global $db;
 
+//unset previous class session information
+if(isset($_SESSION['serializedInfo'])) {
+    unset($_SESSION['serializedInfo']);
+}
+
 $result_curriculum = $db->no_param_query("SELECT c.curriculumid, c.curriculumname FROM curricula c ORDER BY c.curriculumname ASC;");
 
 $result_classes = $db->no_param_query("SELECT cc.curriculumid, cc.topicname from curriculumclasses cc ORDER BY cc.curriculumid;");
