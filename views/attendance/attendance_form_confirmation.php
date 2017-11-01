@@ -57,7 +57,6 @@ $display_time = $convert_time->format('g:i A');
                         <table class="table table-hover table-striped" id="class-list">
                             <thead>
                             <tr>
-                                <th>Present</th>
                                 <th>Name</th>
                                 <th>Age</th>
                                 <th>Zip</th>
@@ -71,24 +70,12 @@ $display_time = $convert_time->format('g:i A');
                             <tr class="m-0">
                                 <?php
                                 for($i = 0; $i < count($pageInformation); $i++) {
-                                    $tf = $pageInformation[$i]['present'] ? "true" : "false";
 
                                     //field names - unique field names for individuals which are checked upon post
                                     $presentName =      (string) $i . "-" . "check";
                                     $commentName =      (string) $i . "-" . "comment";
 
                                     echo "<tr class=\"m-0\" id=\"{$i}\">";
-                                    echo "<td>";
-                                    echo "<label class=\"custom-control custom-checkbox\">";
-                                    echo "<fieldset disabled>"; //disable checkbox
-                                    //checkbox checked option
-                                    $checked = null;
-                                    $tf ? $checked = "checked=\"checked\"" : $checked = "";
-                                    echo "<input type=\"checkbox\" class=\"custom-control-input\" {$checked} name='{$presentName}'>";
-                                    echo "<span class=\"custom-control-indicator\"></span>";
-                                    echo "</fieldset>";
-                                    echo "</label>";
-                                    echo "</td>";
                                     echo "<td>{$pageInformation[$i]['fn']} {$pageInformation[$i]['mi']} {$pageInformation[$i]['ln']}</td>";
 
                                     $age = calculate_age($pageInformation[$i]['dob']);
