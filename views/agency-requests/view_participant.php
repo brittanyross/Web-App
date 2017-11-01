@@ -26,12 +26,14 @@ $participant = pg_fetch_assoc($result);
 
 $buttonOptions = null;
 if(hasRole(Role::Superuser)){
-	echo "i'm super user and stuff";
+	// echo "i'm super user and stuff";
 	$buttonOptions = "<a href='/edit-participant/".$participant['participantid']."'><button class='btn btn-outline-primary float-right'>Edit</button></a>".
 	"<button class='btn btn-outline-danger float-right'>Remove</button>";
 }
 
-
+$resultNotes = $db->query("SELECT * from participantclassattendance WHERE participantid = $1", [$peopleid]);
+$notes = pg_fetch_assoc($resultNotes);
+// print_r($notes);
 
 
 include('header.php');
@@ -71,6 +73,20 @@ include('header.php');
                 </div>
             </div>
             <br>
+			<h4 class="thin-title">Class Information</h4>
+            <hr>
+
+            <!-- <button type="button" class="btn cpca">Download as PDF</button>-->
+            <table class="table table-striped">
+                <tr><th>Class</th><th>Last Date Attended</th><th>Location</th></tr>
+               <?php 
+			   echo "<tr>
+					   <td>".$notes['topicname']."</td>
+					   <td>".$notes['date']."</td>
+					   <td>".$notes['sitename']."</td>
+					   </tr>";
+			   ?>
+            </table>
             <h4 class="thin-title">Family Info</h4>
             <hr>
 
