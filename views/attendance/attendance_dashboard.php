@@ -26,11 +26,6 @@ $result = $db->no_param_query("select fca.topicname, fca.date, co.sitename " .
 
     <div class="container col-12">
         <div class="row col-12">
-            <?php
-                //TODO: fix button so that it uses proper php linking
-                //TODO: fix float and panel without borders
-                //TODO: responsive page navigation
-            ?>
 
             <div class="card col-12">
 
@@ -56,7 +51,6 @@ $result = $db->no_param_query("select fca.topicname, fca.date, co.sitename " .
                                         echo "<tr>";
                                             echo "<td>{$row['topicname']}</td>";
                                             echo "<td>{$row['sitename']}</td>";
-                                            //you guessed it, right off of stack overflow
                                             $time = strtotime($row['date']);
                                             $myFormatDate = date("m/d/y", $time);
                                             $myFormatTime = date("h:i A", $time);
@@ -75,32 +69,11 @@ $result = $db->no_param_query("select fca.topicname, fca.date, co.sitename " .
                         </form>
                     </div>
                 </div>
-
-                <div class="d-flex justify-content-center">
-                    <nav aria-label="Previous classes">
-                        <ul class="pagination">
-                            <li class="page-item">
-                                <a class="page-link" href="#" aria-label="Previous">
-                                    <span aria-hidden="true">&laquo;</span>
-                                    <span class="sr-only">Previous</span>
-                                </a>
-                            </li>
-                            <li class="page-item"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                            <li class="page-item">
-                                <a class="page-link" href="#" aria-label="Next">
-                                    <span aria-hidden="true">&raquo;</span>
-                                    <span class="sr-only">Next</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
             </div>
 
 
             <button type="button" class="btn btn-default col-12" style="margin-top: 15px" onclick="window.location.href='./new-class'">Record Attendance For New Class</button>
+            <button type="button" class="btn btn-info col-12" style="margin-top: 15px" onclick="window.location.href='./historical-class-search'">Search For Historical Attendance By Day</button>
         </div>
 
     </div>

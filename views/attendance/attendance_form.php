@@ -34,7 +34,7 @@ $pageInformation = array();
 
 //if we have previous information passed to us from lookup form or add person form,
 //  then display this information instead of db information
-if(isset($_POST['serializedInfo'])) {
+if(isset($_SESSION['serializedInfo'])) {
     $pageInformation = deserializeParticipantMatrix($_POST['serializedInfo']);
 }
 //else grab information from the db and format it into the associative array format

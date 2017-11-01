@@ -40,6 +40,8 @@ $router->add('/new-class', 'attendance/new_class.php', 'New Attendance Sheet');
 $router->add('/attendance-form', 'attendance/attendance_form.php', 'Attendance Form');
 $router->add('/attendance-form-confirmation', 'attendance/attendance_form_confirmation.php', 'Confirm Attendance');
 $router->add('/historical-class-view', 'attendance/historical_class_view.php', 'Historical Class View');
+$router->add('/historical-class-search', 'attendance/historical_class_lookup.php', 'Search By Day');
+$router->add('/historical-class-search-results', 'attendance/historical_class_lookup_results.php', 'Historical Class Search Results');
 
 #Reports
 $router->add('/quarterly-reports', 'reports/quarterly.php', 'Quarterly Reports');
