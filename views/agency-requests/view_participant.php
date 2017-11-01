@@ -25,8 +25,8 @@ $participant = pg_fetch_assoc($result);
 
 
 $buttonOptions = null;
-if(hasRole(Role::SuperAdmin)){
-	echo "i'm super admin and stuff";
+if(hasRole(Role::Superuser)){
+	echo "i'm super user and stuff";
 	$buttonOptions = "<a href='/edit-participant/".$participant['participantid']."'><button class='btn btn-outline-primary float-right'>Edit</button></a>".
 	"<button class='btn btn-outline-danger float-right'>Remove</button>";
 }
