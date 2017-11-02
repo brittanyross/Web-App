@@ -51,10 +51,10 @@ $display_time = $convert_time->format('g:i A');
 
         <div class="card">
             <div class="card-block">
-                <form action="" method="post" id="attendance-sheet">
+                <form action="" method="post" id="attendance-form-confirmed">
                     <!-- Table -->
                     <div class="table-responsive">
-                        <table class="table table-hover table-striped" id="class-list">
+                        <table class="table table-striped" id="class-list">
                             <thead>
                             <tr>
                                 <th>Name</th>
@@ -93,7 +93,7 @@ $display_time = $convert_time->format('g:i A');
                                         $comment = null;
                                         $placeholder = null; //disable placeholder
                                         (is_null($pageInformation[$i]['comments'])) ? $comment = "" : $comment = $pageInformation[$i]['comments'];
-                                        (is_null($pageInformation[$i]['comments'])) ? $placeholder = "" : $placeholder = "placeholder=\"enter comments here...\"";
+                                        (($pageInformation[$i]['comments']) == '') ? $placeholder = "" : $placeholder = "placeholder=\"enter comments here...\"";
                                         echo "<textarea class=\"form-control\" type=\"textarea\" rows=\"2\" {$placeholder} name='{$commentName}'>{$comment}</textarea>";
                                         echo "</fieldset>";
                                         echo "</div>";
@@ -131,7 +131,7 @@ $display_time = $convert_time->format('g:i A');
                     <button type="button" class="btn btn-danger d-flex justify-content-start">Edit Attendance</button>
                 </div>
                 <div class="justify-content-between">
-                    <button type="button" class="btn btn-success d-flex justify-content-end">Submit Attendance</button>
+                    <button type="submit" class="btn btn-success d-flex justify-content-end">Submit Attendance</button>
                 </div>
             </div>
         </div>
