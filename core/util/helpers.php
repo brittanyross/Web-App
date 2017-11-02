@@ -209,3 +209,14 @@ function prettyPrint($arr) {
 function valueOrEmpty($arr, $key) {
     return isset($arr[$key]) ? $arr[$key] : '';
 }
+
+/**
+ * Takes in an object and casts it to a string type
+ * return array copy of the object that can be referenced in array['index'] format
+ * @param $object object The object that needs to be converted
+ * @return array the new array cast of the object
+**/
+function toString($object){
+	$object = (array) $object;
+	return $object;
+}	
