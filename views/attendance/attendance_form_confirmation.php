@@ -70,36 +70,40 @@ $display_time = $convert_time->format('g:i A');
                             <tr class="m-0">
                                 <?php
                                 for($i = 0; $i < count($pageInformation); $i++) {
+                                    $present = (boolean)$pageInformation[$i]['present'];
 
-                                    //field names - unique field names for individuals which are checked upon post
-                                    $presentName =      (string) $i . "-" . "check";
-                                    $commentName =      (string) $i . "-" . "comment";
+                                    if ($present) {
 
-                                    echo "<tr class=\"m-0\" id=\"{$i}\">";
-                                    echo "<td>{$pageInformation[$i]['fn']} {$pageInformation[$i]['mi']} {$pageInformation[$i]['ln']}</td>";
+                                        //field names - unique field names for individuals which are checked upon post
+                                        $presentName = (string)$i . "-" . "check";
+                                        $commentName = (string)$i . "-" . "comment";
 
-                                    $age = calculate_age($pageInformation[$i]['dob']);
-                                    echo "<td>{$age}</td>";
-                                    echo "<td>{$pageInformation[$i]['zip']}</td>";
-                                    echo "<td>{$pageInformation[$i]['numChildren']}</td>";
-                                    echo "<td>";
-                                    echo "<div class=\"form-group\">";
-                                    echo "<div class=\"col-10\">";
-                                    echo "<fieldset disabled>"; //disable comments
-                                    //pre-fill comment if exists
-                                    $comment = null;
-                                    $placeholder = null; //disable placeholder
-                                    (is_null($pageInformation[$i]['comments'])) ? $comment = "" : $comment = $pageInformation[$i]['comments'];
-                                    (is_null($pageInformation[$i]['comments'])) ? $placeholder = "" : $placeholder = "placeholder=\"enter comments here...\"";
-                                    echo "<textarea class=\"form-control\" type=\"textarea\" rows=\"2\" {$placeholder} name='{$commentName}'>{$comment}</textarea>";
-                                    echo "</fieldset>";
-                                    echo "</div>";
-                                    echo "</div>";
-                                    echo "</td>";
-                                    echo "</tr>";
+                                        echo "<tr class=\"m-0\" id=\"{$i}\">";
+                                        echo "<td>{$pageInformation[$i]['fn']} {$pageInformation[$i]['mi']} {$pageInformation[$i]['ln']}</td>";
+
+                                        $age = calculate_age($pageInformation[$i]['dob']);
+                                        echo "<td>{$age}</td>";
+                                        echo "<td>{$pageInformation[$i]['zip']}</td>";
+                                        echo "<td>{$pageInformation[$i]['numChildren']}</td>";
+                                        echo "<td>";
+                                        echo "<div class=\"form-group\">";
+                                        echo "<div class=\"col-10\">";
+                                        echo "<fieldset disabled>"; //disable comments
+                                        //pre-fill comment if exists
+                                        $comment = null;
+                                        $placeholder = null; //disable placeholder
+                                        (is_null($pageInformation[$i]['comments'])) ? $comment = "" : $comment = $pageInformation[$i]['comments'];
+                                        (is_null($pageInformation[$i]['comments'])) ? $placeholder = "" : $placeholder = "placeholder=\"enter comments here...\"";
+                                        echo "<textarea class=\"form-control\" type=\"textarea\" rows=\"2\" {$placeholder} name='{$commentName}'>{$comment}</textarea>";
+                                        echo "</fieldset>";
+                                        echo "</div>";
+                                        echo "</div>";
+                                        echo "</td>";
+                                        echo "</tr>";
+                                    }
+                                    //update the session information
+                                    $_SESSION['serializedInfo'] = serializeParticipantMatrix($pageInformation);
                                 }
-                                //update the session information
-                                $_SESSION['serializedInfo'] = serializeParticipantMatrix($pageInformation);
                                 ?>
                             </tbody>
                         </table>
