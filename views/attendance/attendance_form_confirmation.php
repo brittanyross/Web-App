@@ -35,6 +35,24 @@ $display_time = $convert_time->format('g:i A');
 
 ?>
 
+    <script>
+        function setFormAction(formID, action){
+            document.getElementById(formID).action = action;
+        }
+
+        function submitAttendance() {
+            //set page to go to that
+            setFormAction('attendance-sheet', 'attendance-form-confirmed');
+            document.getElementById('attendance-sheet').submit();
+        }
+
+        function editAttendance(){
+            setFormAction('attendance-sheet', 'attendance-form-confirmation');
+            document.getElementById('attendance-sheet').submit();
+        }
+    </script>
+
+
     <div class="container-fluid">
     <div class="row flex-column">
         <!-- Default container contents -->
@@ -128,10 +146,10 @@ $display_time = $convert_time->format('g:i A');
         <div class="row flex-column">
             <div class="d-flex">
                 <div class="justify-content-between">
-                    <button type="button" class="btn btn-danger d-flex justify-content-start">Edit Attendance</button>
+                    <button type="button" class="btn btn-danger d-flex justify-content-start" onclick="editAttendance()">Edit Attendance</button>
                 </div>
                 <div class="justify-content-between">
-                    <button type="submit" class="btn btn-success d-flex justify-content-end">Submit Attendance</button>
+                    <button type="submit" class="btn btn-success d-flex justify-content-end" onclick="submitAttendance()">Submit Attendance</button>
                 </div>
             </div>
         </div>
