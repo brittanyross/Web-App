@@ -10,8 +10,9 @@
  *
  * @author Jack Grzechowiak
  * @copyright 2017 Marist College
- * @version 0.3.2
+ * @version 0.3.3
  * @since 0.1
+ * @deprecated
  */
 
 global $params, $db;

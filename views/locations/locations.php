@@ -11,15 +11,16 @@
  *
  * @author Jack Grzechowiak
  * @copyright 2017 Marist College
- * @version 0.3.2
+ * @version 0.3.3
  * @since 0.1
+ * @deprecated
  */
 
 global $params, $route, $view;
 
 include ('../models/Notification.php');
 
-$pages = ['view', 'edit', 'create', 'delete', 'restore'];
+$pages = ['view', 'edit', 'create', 'delete', 'archive'];
 
 # Update page title to reflect route
 if (!empty($params) && in_array($params[0], $pages)) {
@@ -35,6 +36,8 @@ if (!empty($params) && $params[0] == 'view') {
 } else if (!empty($params) && $params[0] == 'create') {
     $view->display('locations/locations_modify.php');
 } else if (!empty($params) && $params[0] == 'delete') {
+    $view->display('locations/locations_delete.php');
+} else if (!empty($params) && $params[0] == 'archive') {
     $view->display('locations/locations_archive.php');
 } else {
     include('header.php');
@@ -43,17 +46,20 @@ if (!empty($params) && $params[0] == 'view') {
     $filter = "";
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $filter = isset($_POST['filter']) ? '%' . $_POST['filter'] . '%' : '%%';
-        $result = $db->query("SELECT * FROM sites WHERE LOWER(sitename) LIKE LOWER($1)".
+        $result = $db->query("SELECT * FROM sites WHERE df = 0 AND LOWER(sitename) LIKE LOWER($1)".
             " OR LOWER(programtype::text) LIKE LOWER($1) ORDER BY sitename", [$filter]);
     } else {
-        $result = $db->query("SELECT * FROM sites ORDER BY sitename", []);
+        $result = $db->query("SELECT * FROM sites WHERE df = 0 ORDER BY sitename", []);
     }
 
     ?>
     <div style="width: 100%">
         <?php
-        if (isset($_SESSION['delete-success']) && $_SESSION['delete-success']) {
-            $notification = new Notification('Success!', 'Location was successfully deleted!', 'success');
+        if (isset($_SESSION['delete-success'])) {
+            if ($_SESSION['delete-success'])
+                $notification = new Notification('Success!', 'Location was successfully deleted!', 'success');
+            else
+                $notification = new Notification('Error!', 'Location was not deleted!', 'danger');
             $notification->display();
             unset($_SESSION['delete-success']);
         }
@@ -67,8 +73,8 @@ if (!empty($params) && $params[0] == 'view') {
             }
             if (hasRole(Role::Superuser)) {
             ?>
-                <a id="restore-location-btn" class="ml-3" href="/locations/restore">
-                    <button class="btn-outline-secondary btn"><i class="fa fa-repeat"></i> Restore</button>
+                <a id="restore-location-btn" class="ml-3" href="/locations/archive">
+                    <button class="btn-outline-secondary btn"><i class="fa fa-archive"></i> See Archive</button>
                 </a>
             <?php } ?>
         </div><br />

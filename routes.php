@@ -33,7 +33,7 @@ $router->add('/view-participant', 'agency-requests/view_participant.php', 'View 
 # Manage Curricula & Classes
 $router->add('/curricula', 'curricula/curricula.php', 'Curricula');
 $router->add('/classes', 'classes/classes.php', 'Classes');
-$router->add('/locations', 'locations/locations.php', 'Locations');
+//$router->add('/locations', 'locations/locations.php', 'Locations');
 
 #Reports
 $router->add('/quarterly-reports', 'reports/quarterly.php', 'Quarterly Reports');

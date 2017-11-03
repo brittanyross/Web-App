@@ -10,7 +10,7 @@
  *
  * @author Jack Grzechowiak
  * @copyright 2017 Marist College
- * @version 0.3.2
+ * @version 0.3.3
  * @since 0.1
  */
 
@@ -46,8 +46,8 @@ include('header.php');
 		</div>
     <div class="form-wrapper card view-card">
         <h4 class="card-header text-left">
-            <?= $class['topicname'] ?>
-            <?php if (hasRole(Role::Coordinator)) { ?>
+            <?php echo $class['topicname'] . ($class['df'] != 0 ? ' <span class="badge badge-secondary">Deleted</span>' : '') ?>
+            <?php if (hasRole(Role::Coordinator) && $class['df'] == 0) { ?>
                 <div class="float-right">
                     <a href="/classes/edit/<?= implode('/', $params) ?>"><button class="btn btn-outline-secondary btn-sm">Edit</button></a>
                     <a href="/classes/delete/<?= implode('/', $params) ?>"><button class="btn btn-outline-danger btn-sm">Delete</button></a>
@@ -69,7 +69,7 @@ include('header.php');
                     <tr>
                         <td class="pl-2 align-middle"><?= $info['curriculumname'] ?></td>
                         <td class="pr-2 text-right">
-                            <a href="/curricula/view/<?= $info['curriculumid'] ?>">
+                            <a href="/curricula/view/<?= $info['curriculumname'] ?>">
                                 <button class="btn btn-outline-secondary btn-sm">View</button>
                             </a>
                         </td>

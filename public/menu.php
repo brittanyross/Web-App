@@ -95,9 +95,9 @@ $active = [
                     <a class="nav-link text-secondary py-0 collapsed <?= active('/classes') ?>" data-parent="#ManageCourses" href="<?= BASEURL.'/classes' ?>">
                         Classes
                     </a>
-                    <a class="nav-link text-secondary py-0 collapsed <?= active('/locations') ?>" data-parent="#ManageCourses" href="<?= BASEURL.'/locations' ?>">
+                    <!--a class="nav-link text-secondary py-0 collapsed <?= active('/locations') ?>" data-parent="#ManageCourses" href="<?= BASEURL.'/locations' ?>">
                         Locations
-                    </a>
+                    </a-->
                 </ul>
             </div>
 

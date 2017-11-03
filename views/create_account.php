@@ -25,7 +25,7 @@ if (!isset($_SESSION['ldaprdn']))
 $error = "";
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $email = $_SESSION['ldaprdn'];
+    $email = strtolower($_SESSION['ldaprdn']);
     $fname = valueOrEmpty($_POST, 'firstName');
     $mInit = valueOrEmpty($_POST, 'middleInit');
     $lname = valueOrEmpty($_POST, 'lastName');

@@ -11,14 +11,17 @@
  *
  * @author Jack Grzechowiak
  * @copyright 2017 Marist College
- * @version 0.3.2
+ * @version 0.3.3
  * @since 0.1
  */
 
 global $params, $db;
-$id = $params[1];
+array_shift($params);
 
-$result = $db->query("SELECT * FROM curricula WHERE curriculumid = $1", [$id]);
+# Get topic name from params
+$curriculaName = rawurldecode(implode('/', $params));
+
+$result = $db->query("SELECT * FROM curricula WHERE curriculumname = $1", [$curriculaName]);
 
 # If no results, curricula doesn't exist, redirect
 if (pg_num_rows($result) == 0) {
@@ -29,7 +32,9 @@ if (pg_num_rows($result) == 0) {
 $curricula = pg_fetch_assoc($result);
 pg_free_result($result);
 
-$topics = $db->query("SELECT * FROM curriculumclasses WHERE curriculumid = $1", [$id]);
+$topics = $db->query("SELECT * FROM curriculumclasses, classes WHERE curriculumname = $1 ".
+    "AND curriculumclasses.topicname = classes.topicname ".
+    "AND classes.df = 0 ORDER BY classes.topicname", [$curriculaName]);
 
 include('header.php');
 ?>
@@ -47,8 +52,8 @@ include('header.php');
             <?= $curricula['curriculumname'] ?>
             <?php if (hasRole(Role::Coordinator)) { ?>
                 <div class="float-right">
-                    <a href="/curricula/edit/<?= $id ?>"><button class="btn btn-outline-secondary btn-sm">Edit</button></a>
-                    <a href="/curricula/delete/<?= $id ?>"><button class="btn btn-outline-danger btn-sm">Delete</button></a>
+                    <a href="/curricula/edit/<?= $curriculaName ?>"><button class="btn btn-outline-secondary btn-sm">Edit</button></a>
+                    <a href="/curricula/delete/<?= $curriculaName ?>"><button class="btn btn-outline-danger btn-sm">Delete</button></a>
                 </div>
             <?php } ?>
         </h4>
@@ -56,9 +61,9 @@ include('header.php');
             <h4>Information</h4>
             <div class="d-flex justify-content-center">
                 <div class="display-stack">
-                    <div class="display-top"><?= $curricula['curriculumtype'] ?></div>
+                    <div class="display-top"><?= $curricula['sitename'] ?></div>
                     <div class="display-split"></div>
-                    <div class="display-bottom">Type</div>
+                    <div class="display-bottom">Location</div>
                 </div>
                 <div class="display-stack">
                     <div class="display-top"><?= $curricula['missnumber'] ?></div>

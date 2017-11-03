@@ -11,7 +11,7 @@
  *
  * @author Jack Grzechowiak
  * @copyright 2017 Marist College
- * @version 0.1.6
+ * @version 0.3.3
  * @since 0.1
  */
 
@@ -47,15 +47,12 @@ $errors = [
     "name" => false,
     "desc" => false
 ];
-# Used to display messages based on POST
-$success = "";
-$errorMsg = "";
 
 # Validate form information, display errors if needed
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $oldName = $name;
-    $name = isset($_POST['name']) ? $_POST['name'] : $name;
-    $desc = isset($_POST['desc']) ? $_POST['desc'] : $desc;
+    $name = isset($_POST['name']) ? trim($_POST['name']) : $name;
+    $desc = isset($_POST['desc']) ? trim($_POST['desc']) : $desc;
 
     $valid = true;
 
@@ -79,20 +76,31 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if ($res) {
             $state = pg_result_error_field($res, PGSQL_DIAG_SQLSTATE);
             if ($state == 0) {
-                $success = "true";
+                $success = true;
             } else {
-                $success = "false";
+                $success = false;
                 if ($state == "23505") { // unique_violation
                     $errorMsg = "Class with name \"$name\" already exists.";
-                } else {
-                    // process other errors
                 }
+                $errorState = $state;
             }
         } else {
-            $success = "false";
+            $success = false;
         }
 
         $class = pg_fetch_assoc($db->execute("get_class", [$name]));
+    } else {
+        $success = false;
+        $errorMsg = "There are errors in the form.";
+    }
+
+    if ($success) {
+        $note['title'] = 'Success!';
+        $note['msg'] = 'The class has been ' . ($isEdit ? 'updated' : 'created') . '.';
+        $note['type'] = 'success';
+        $_SESSION['notification'] = $note;
+        header("Location: /classes");
+        die();
     }
 }
 
@@ -104,13 +112,12 @@ include ('header.php');
     <button class="cpca btn" onclick="goBack()"><i class="fa fa-arrow-left"></i> Back</button>
     <div class="jumbotron form-wrapper mb-3">
         <?php
-        if ($success == "true") {
-            $notification = new Notification('Success!', 'The class has been '.($isEdit ? 'updated' : 'created').'.', 'success');
-            $notification->display();
-        } else if ($success == "false") { // == false, prevents == null from being true
-            $notification = new Notification('Error!', !empty($errorMsg) ? $errorMsg : ('Uh oh! an error occurred and the class wasn\'t '.
-                ($isEdit ? 'updated' : 'created').'.'), 'danger');
-            $notification->display();
+        if (isset($success)) {
+            if (!$success) {
+                $notification = new Notification('Error!', isset($errorMsg) ? $errorMsg : ('Uh oh! An error occurred and the class wasn\'t ' .
+                    ($isEdit ? 'updated' : 'created') . '.') . (isset($errorState) ? " [$errorState]" : ""), 'danger');
+                $notification->display();
+            }
         }
         ?>
         <form class="form" method="post" action="<?= $_SERVER['REQUEST_URI'] ?>" novalidate>
@@ -132,7 +139,7 @@ include ('header.php');
                 </div>
             </div>
             <div class="form-footer submit">
-                <button type="submit" class="btn cpca"><?= $isEdit ? 'Update' : 'Create' ?></button>
+                <button type="submit" class="btn cpca"><?= $isEdit ? 'Submit New Changes' : 'Add Class' ?></button>
             </div>
         </form>
     </div>

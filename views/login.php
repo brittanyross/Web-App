@@ -57,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 if ($ldapbind) {
                     // Query employee for email and info
                     $res = $db->query("SELECT firstname, lastname, permissionlevel, employeeid FROM people, employees WHERE employees.email = $1 ".
-                        "AND employees.employeeid = people.peopleid", [$ldaprdn]);
+                        "AND employees.employeeid = people.peopleid", [strtolower($ldaprdn)]);
 
                     // If employee exists, get info and redirect
                     if ($res && pg_num_rows($res) > 0) {
@@ -95,14 +95,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // If LDAP doesn't work, check for super user
     if ($error) {
-        $res = $db->query("SELECT salt, hashedpassword FROM superusers WHERE username = $1", [$ldaprdn_no_domain]);
+        $res = $db->query("SELECT * FROM superusers WHERE username = $1", [$ldaprdn_no_domain]);
         if ($res && pg_num_rows($res) > 0) {
             $info = pg_fetch_assoc($res);
             $salt = $info['salt'];
             $hashed = $info['hashedpassword'];
             // Match passwords
             if (hash('sha256', $ldappass . $salt) == $hashed) {
-                $_SESSION['username'] = $ldaprdn_no_domain;
+
+                $employee = pg_fetch_assoc($res = $db->query("SELECT * FROM people WHERE peopleid = $1", [$info['superuserid']]));
+
+                $_SESSION['employeeid'] = $info['superuserid'];
+                $_SESSION['username'] = $employee['firstname'] . ' ' . $employee['lastname'];
                 $_SESSION['role'] = Role::Superuser;
                 pg_free_result($res);
                 header('Location: ' . BASEURL . '/dashboard');
