@@ -34,14 +34,36 @@ for($i = 0; $i < count($attendanceInfo); $i++) {
                 "));"
         );
         //update row information with those values
+        $personId = pg_fetch_result($resultInsert, '');
+        $attendanceInfo[$i]['pid'] = $personId;
     }
 }
 //loop through attendanceInfo and insert records into the database
 
   //create one facilitatorClassAttendance entry
-
+//TODO: waiting on db team
+$db -> no_param_query(
+        "SELECT createFacilitatorClassAttendance( " .
+        "" .
+        ""
+);
   //create one classOffering entry
+$db -> no_param_query(
+        "SELECT createClassOffering( " .
+        "offeringTopicName := '{}'::text, " .
+        "offeringTopicDate := '{}'::timestamp, " .
+        "offeringSiteName := '{}'::text, " .
+        "offeringLanguage := '{}'::text, " .
+        "offeringCurriculumId := {}::int, " .
 
+        "array( " .
+        "'OFFERING_TOPIC_NAME', " .
+        "'OFFERING_TOPIC_DATE', " .
+        "'OFFERING_SITE_NAME', " .
+        "'OFFERING_LANGUAGE', " .
+        "OFFERING_CURRICULUM_ID " .
+        "));"
+);
   //create many participantClassAttendance entries
 
 include('header.php');
