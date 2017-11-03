@@ -3,16 +3,46 @@
 authorizedPage();
 
 global $db;
-
-//unset previous class session information
-if(isset($_SESSION['serializedInfo'])) {
-    unset($_SESSION['serializedInfo']);
-}
+require ('attendance_utilities.php');
 
 $success = false;
+//kill the page if we don't have any information
+if(!isset($_SESSION['serializedInfo'])) {
+    die(); //slow and painful
+}
 
-//call the functions and stored procedures
+$serializedInfo = $_SESSION['serializedInfo'];
+$attendanceInfo = deserializeParticipantMatrix($serializedInfo);
 
+//loop through and search for unregistered participants
+for($i = 0; $i < count($attendanceInfo); $i++) {
+    if($attendanceInfo[$i]['firstClass']){
+        //run function to insert them into the system
+        $resultInsert = $db->no_param_query(
+                "SELECT createOutOfHouseParticipant( ".
+                "participantFirstName := '{$attendanceInfo[$i]['fn']}'::text, " .
+                "participantMiddleInit := '{$attendanceInfo[$i]['mi']}'::varchar, " .
+                "participantLastName := '{$attendanceInfo[$i]['ln']}'::text, " .
+                "participantAge   := {$attendanceInfo[$i]['dob']}::int, " .
+                "participantRace   := '{$attendanceInfo[$i]['race']}'::race " .
+
+                "array( 'PARTICIPANT_FIRST_NAME', " .
+                "'PARTICIPANT_MIDDLE_INITIAL', " .
+                "'PARTICIPANT_LAST_NAME', " .
+                "PARTICIPANT_AGE, " .
+                "'PARTICIPANT_RACE', " .
+                "));"
+        );
+        //update row information with those values
+    }
+}
+//loop through attendanceInfo and insert records into the database
+
+  //create one facilitatorClassAttendance entry
+
+  //create one classOffering entry
+
+  //create many participantClassAttendance entries
 
 include('header.php');
 
@@ -25,17 +55,19 @@ include('header.php');
             <div class="card-block p-2">
                 <?php
                 if($success){
-                    echo "<h4 class=\"card-title\">Success!</h4>";
-                    echo "<h6 class=\"card-subtitle mb-2 text-muted\">Good job!</h6>";
+                    echo "<h4 class=\"card-title\" style=\"text-align: center;\"><i class=\"fa fa-thumbs-up\" aria-hidden=\"true\" style=\"color:green;\"></i> Success!</h4>";
+                    echo "<h6 class=\"card-subtitle mb-2 text-muted\" style=\"text-align: center;\">Attendance Submitted Successfully. Good job!</h6>";
                 } else{
-                    echo "<h4 class=\"card-title\">Error</h4>";
-                    echo "<h6 class=\"card-subtitle mb-2 text-muted\">There was an error inputting the form. Please " .
+                    echo "<h4 class=\"card-title\" style=\"text-align: center;\"><i class=\"fa fa-exclamation-triangle\" aria-hidden=\"true\" style='color: red;'></i> Error</h4>";
+                    echo "<h6 class=\"card-subtitle mb-2 text-muted\" style=\"text-align: center;\">There was an error inputting the form. Please " .
                         " try again or contact your system administrator</h6>";
                 }
 
+                //unset previous class session information
+                if(isset($_SESSION['serializedInfo'])) {
+                    unset($_SESSION['serializedInfo']);
+                }
                 ?>
-                <h4 class="card-title">Success!</h4>
-                <h6 class="card-subtitle mb-2 text-muted">Good job!</h6>
 
 
             </div>

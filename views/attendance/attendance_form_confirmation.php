@@ -69,7 +69,7 @@ $display_time = $convert_time->format('g:i A');
 
         <div class="card">
             <div class="card-block">
-                <form action="" method="post" id="attendance-form-confirmed">
+                <form action="" method="post" id="attendance-sheet">
                     <!-- Table -->
                     <div class="table-responsive">
                         <table class="table table-striped" id="class-list">
@@ -144,15 +144,16 @@ $display_time = $convert_time->format('g:i A');
             </div>
         </div>
         <div class="row flex-column">
-            <div class="d-flex">
-                <div class="justify-content-between">
-                    <button type="button" class="btn btn-danger d-flex justify-content-start" onclick="editAttendance()">Edit Attendance</button>
+            <div class="d-flex flex-row justify-content-between">
+                <div class="p-2">
+                    <button type="button" class="btn btn-danger" onclick="editAttendance()" style="margin-left: 7px;">Edit Attendance</button>
                 </div>
-                <div class="justify-content-between">
-                    <button type="submit" class="btn btn-success d-flex justify-content-end" onclick="submitAttendance()">Submit Attendance</button>
+                <div class="p-2">
+                    <button type="button" class="btn btn-success" onclick="submitAttendance()" style="margin-right: 7px;">Submit Attendance</button>
                 </div>
             </div>
         </div>
+
 
     </div>
     </div>

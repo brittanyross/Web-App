@@ -59,6 +59,7 @@ else {
             "dob"           => $row['dateofbirth'],
             "zip"           => $row['zipcode'],
             "numChildren"   => $row['numchildren'],
+            "race"          => null,
             "comments"      => null,
             "present"       => false,
             "isNew"         => false, //isNew field from DB
@@ -83,17 +84,26 @@ $display_time = $convert_time->format('g:i A');
     <script>
         function setFormAction(formID, action){
             document.getElementById(formID).action = action;
+            return formID;
         }
 
         function submitAttendance() {
             //set page to go to that
-            setFormAction('attendance-sheet', 'attendance-form-confirmation');
-            document.getElementById('attendance-sheet').submit();
+            var id = setFormAction('attendance-sheet', 'attendance-form-confirmation');
+            document.getElementById(id).submit();
         }
 
         function editPerson(){
-            setFormAction('attendance-sheet', 'edit-participant');
-            document.getElementById('attendance-sheet').submit();
+            var id = setFormAction('attendance-sheet', 'edit-participant');
+            document.getElementById(id).submit();
+        }
+
+        function addPerson() {
+            //TODO: handle submission logic
+            addPersonToTable();
+            var id = setFormAction('new-person-entry', 'attendance-form');
+            document.getElementById(id)
+
         }
     </script>
 
@@ -111,7 +121,7 @@ $display_time = $convert_time->format('g:i A');
                 ?>
             </div>
 
-                <div class="card">
+                <div class="card" style="margin-bottom: 10px;">
                     <div class="card-block">
                         <form action="" method="post" id="attendance-sheet">
                             <!-- Table -->
@@ -232,7 +242,7 @@ $display_time = $convert_time->format('g:i A');
                         </h5>
                     </div>
                     <div id="collapseTwo" class="collapse" role="tabpanel" aria-labelledby="headingTwo">
-                        <form>
+                        <form id="new-person-entry" action="">
                             <div class="card-block" style="padding: 10px">
                                 <div class="form-group row" style="margin-left: 10px">
                                     <p>If a person has not filled out intake forms, please enter their information below.</p>
@@ -301,7 +311,8 @@ $display_time = $convert_time->format('g:i A');
 
                                 <!-- validate and add to list above -->
                                 <div class = "row">
-                                    <button type="button" class="btn btn-primary" style="margin-left:15px" onclick="addPersonToTable()">Add Person</button>
+
+                                    <button type="button" class="btn btn-primary" style="margin-left:15px" onclick="addPerson()">Add Person</button>
                                 </div>
                         </form>
                         </div>
