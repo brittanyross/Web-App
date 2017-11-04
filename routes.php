@@ -12,7 +12,7 @@
  *
  * @author Jack Grzechowiak
  * @copyright 2017 Marist College
- * @version 0.1.6
+ * @version 0.3.3
  * @since 0.1
  */
 
@@ -23,6 +23,7 @@ $router->add('/dashboard', 'dashboard.php', 'Home');
 
 $router->add('/login', 'login.php', 'Login');
 $router->add('/logout', 'logout.php', '');
+$router->add('/create-account', 'create_account.php', 'Create Account');
 
 # Agency Requests
 $router->add('/agency-requests', 'agency-requests/agency_requests.php', 'Agency Requests');
@@ -50,3 +51,8 @@ $router->add('/year-end-reports', 'reports/half_year.php', 'Year-End Reports');
 $router->add('/monthly-reports', 'reports/monthly_report.php', 'Monthly Reports');
 $router->add('/custom-reports', 'reports/custom_reports.php', 'Custom Report');
 $router->add('/custom-reports-table', 'reports/custom_reports_table.php', 'Custom Report');
+
+#Forms
+$router->add('/referral-form', 'forms/referral_form.php', 'Referral Form');
+$router->add('/self-referral-form', 'forms/self_referral_form.php', 'Self-Referral Form');
+$router->add('/form-success', 'forms/form_success.php', 'Form Submitted');

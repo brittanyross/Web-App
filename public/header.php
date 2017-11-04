@@ -20,6 +20,9 @@
     <script type="text/javascript" src="/js/custom.js"></script>
     <script type="text/javascript" src="/js/search.js"></script>
     <script type="text/javascript" src="/js/livesearch.js"></script>
+    <script type="text/javascript" src="/js/clone-form-td.js"></script>
+    <script type="text/javascript" src="/js/jquery.mask.min.js"></script>
+    <script type="text/javascript" src="/js/form_helpers.js"></script>
 </head>
 <body>
 <div class="non-menu-content d-flex flex-column
@@ -35,7 +38,8 @@
         </div>
         <?php if (!isset($hideMenu)) { ?>
             <div class="navbar-right text-light">
-                <div class="collapsed" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-user-circle-o fa-lg" id="accountOptions" aria-hidden="true"
+                <span style="display: inline-block; color: rgba(255,255,255,0.9)"><?= $_SESSION["username"] ?></span>
+                <div style="display: inline-block" class="collapsed" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-user-circle-o fa-lg" id="accountOptions" aria-hidden="true"
                    style="position: relative; padding: 10px"></i><i class="fa fa-caret-down" aria-hidden="true" style="margin-right:35px;"></i></div>
                 <div class="dropdown-menu" aria-labelledby="accountOptions" style="top: auto;">
                     <a class="dropdown-item text-secondary <?= active($route, 'account_settings.php') ?>" href="<?= BASEURL.'/account-settings' ?>"><i class="fa fa-fw fa-cog" aria-hidden="true"></i>Account Settings</a>

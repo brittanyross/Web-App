@@ -11,7 +11,7 @@
  *
  * @author Jack Grzechowiak
  * @copyright 2017 Marist College
- * @version 0.1.5
+ * @version 0.2
  * @since 0.1
  */
 require('config.php');
@@ -21,8 +21,12 @@ require('core/view/ViewLoader.php');
 require('core/view/View.php');
 require('core/router/Router.php');
 include_once('core/util/helpers.php');
-$db = Database::loadFromConfig("../core/database/db_config.ini");
+
+// Initialize Database
+$db = Database::loadFromConfig();
 $db->connect();
+
+// Initialize View loading / routing
 $viewLoader = new ViewLoader(BASEPATH.'/views/');
 $view = new View($viewLoader);
 $router = new Router();
