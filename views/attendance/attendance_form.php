@@ -35,13 +35,13 @@ $employee_id = $_SESSION['employeeid'];
 $pageInformation = array();
 
 $successAddingPerson = false;
+$duplicatePerson = false;
 
 //if we have previous information passed to us from lookup form or add person form,
 //  then display this information instead of db information
 if(isset($_SESSION['serializedInfo'])) {
     //we're coming from the attendance-form-confirmation page or the edit-participant page
     if(isset($_POST['fromConfirmPage']) || isset($_POST['fromEditParticipant'])) {
-        $_SESSION['duplicatePostAddPerson'] = false;
         $pageInformation = deserializeParticipantMatrix($_SESSION['serializedInfo']);
     }
     else if(isset($_POST['lookupId'])){
@@ -50,30 +50,46 @@ if(isset($_SESSION['serializedInfo'])) {
         //query against the name and add details to page
     }
     //we're coming from the current page and posting new participant info
-    else if((isset($_POST['fromAddPerson'])) && ($_POST['fromAddPerson'] == 1)){ //avoid reload page error
+    else if(isset($_POST['fromAddPerson']) && $_POST['fromAddPerson'] == 1){ //value is changed when click to add person
         $firstTimeSubmitting = true;
-        if(isset($_SESSION['duplicatePostAddPerson'])){ //avoid duplicate entries on page reload
-            if($_SESSION['duplicatePostAddPerson']){
-                $pageInformation = deserializeParticipantMatrix($_SESSION['serializedInfo']);
+
+        $pageInformation = deserializeParticipantMatrix($_SESSION['serializedInfo']);
+
+        $fn = $_POST['new-person-first'];
+        $mi = $_POST['new-person-middle'];
+        $ln = $_POST['new-person-last'];
+        $race = $_POST['race-select'];
+        $ageInput = $_POST['age-input'];
+        $numC = $_POST['num-children-input'];
+        $zipInput = $_POST['zip-input'];
+
+
+        //ensure there are no duplicates
+        $countP = count($pageInformation);
+        for($j = 0; $j < $countP; $j++){
+
+            //if all of these match, we don't have a new person
+            if(
+                $pageInformation[$j]['fn'] == $fn &&
+                $pageInformation[$j]['mi'] == $mi &&
+                $pageInformation[$j]['ln'] == $ln &&
+                $pageInformation[$j]['race'] == $race &&
+                $pageInformation[$j]['dob'] == date_subtraction((string) $ageInput . " years") &&
+                $pageInformation[$j]['numChildren'] == $numC &&
+                $pageInformation[$j]['zip'] == $zipInput
+            )
+            {
                 $firstTimeSubmitting = false;
+                $duplicatePerson = true;
             }
         }
 
+
         if($firstTimeSubmitting){
-            //ensure no duplicate entries
-            $_SESSION['duplicatePostAddPerson'] = true;
 
             //update our posted information
             updateSessionClassInformation();
             $pageInformation = deserializeParticipantMatrix($_SESSION['serializedInfo']);
-
-            $fn = $_POST['new-person-first'];
-            $mi = $_POST['new-person-middle'];
-            $ln = $_POST['new-person-last'];
-            $race = $_POST['race-select'];
-            $ageInput = $_POST['age-input'];
-            $numC = $_POST['num-children-input'];
-            $zipInput = $_POST['zip-input'];
 
             //validate input
             if(
@@ -117,8 +133,6 @@ if(isset($_SESSION['serializedInfo'])) {
 }
 //else grab information from the db and format it into the associative array format
 else {
-    //ensure no duplicate entries
-    $_SESSION['duplicatePostAddPerson'] = false;
 
     $threeWeeksAgo = date_subtraction('22 days');
 
@@ -222,6 +236,14 @@ $display_time = $convert_time->format('g:i A');
                 echo        "<span aria-hidden=\"true\">&times;</span> ";
                 echo        "</button>";
                 echo        "<div style = 'text-align: center;'><strong>Success!</strong> Participant added to list. </div>";
+                echo    "</div>";
+            }
+            if($duplicatePerson){
+                echo "<div class=\"alert alert-warning alert-dismissible fade show\" role=\"alert\"> ";
+                echo        "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"> ";
+                echo        "<span aria-hidden=\"true\">&times;</span> ";
+                echo        "</button>";
+                echo        "<div style = 'text-align: center;'><strong>Warning!</strong> Duplicate person or page has been refreshed. </div>";
                 echo    "</div>";
             }
 
