@@ -13,6 +13,10 @@ $result_curriculum = $db->no_param_query("SELECT c.curriculumid, c.curriculumnam
 
 $result_classes = $db->no_param_query("SELECT cc.curriculumid, cc.topicname from curriculumclasses cc ORDER BY cc.curriculumid;");
 
+$result_sites = $db->no_param_query("select s.sitename from sites s;");
+
+$result_languages = $db->no_param_query("select * from languages;");
+
 include('header.php');
 
 
@@ -115,6 +119,28 @@ echo "<script>console.log(" . date('d-m-Y') . ")</script>"
                             </select>
                         </div>
                     </fieldset>
+
+                    <div class="form-group">
+                        <label for="site">Site Selection</label>
+                        <select id="site" class="form-control" name="site" onchange="">
+                            <?php
+                            while($row = pg_fetch_assoc($result_sites)){
+                                echo "<option>{$row['sitename']}</option>";
+                            }
+                            ?>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="language">Language Selection</label>
+                        <select id="language" class="form-control" name="lang" onchange="">
+                            <?php
+                            while($row = pg_fetch_assoc($result_languages)){
+                                echo "<option>{$row['lang']}</option>";
+                            }
+                            ?>
+                        </select>
+                    </div>
 
                     <div class="form-group row">
                         <label for="date-input" class="col-2 col-form-label">Date</label>

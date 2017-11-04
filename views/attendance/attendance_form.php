@@ -27,6 +27,8 @@ $selected_class = $_POST['classes'];
 $selected_curr = $_POST['curr'];
 $selected_date = $_POST['date-input'];
 $selected_time = $_POST['time-input'];
+$selected_site = $_POST['site'];
+$selected_lang = $_POST['lang'];
 
 $employee_id = $_SESSION['employeeid'];
 
@@ -35,7 +37,31 @@ $pageInformation = array();
 //if we have previous information passed to us from lookup form or add person form,
 //  then display this information instead of db information
 if(isset($_SESSION['serializedInfo'])) {
-    $pageInformation = deserializeParticipantMatrix($_SESSION['serializedInfo']);
+    //we're coming from the attendance-form-confirmation page or the edit-participant page
+    if(isset($_POST['fromConfirmPage']) || isset($_POST['fromEditParticipant'])) {
+        $pageInformation = deserializeParticipantMatrix($_SESSION['serializedInfo']);
+    }
+    else if(isset($_POST['lookupId'])){
+        $pageInformation = deserializeParticipantMatrix($_SESSION['serializedInfo']);
+        //TODO: Vallie is working on search from this page
+        //query against the name and add details to page
+    }
+    //we're coming from the current page and posting new participant info
+    else{
+        //update our posted information
+        updateSessionClassInformation();
+        $pageInformation = deserializeParticipantMatrix($_SESSION['serializedInfo']);
+
+        $fn = $_POST['new-person-first'];
+        $mi = $_POST['new-person-middle'];
+        $ln = $_POST['new-person-last'];
+        $race = $_POST['race-select'];
+        $ageInput = $_POST['age-input'];
+        $numC = $_POST['num-children-input'];
+        $zipInput = $_POST['zip-input'];
+    }
+
+
 }
 //else grab information from the db and format it into the associative array format
 else {
@@ -89,20 +115,27 @@ $display_time = $convert_time->format('g:i A');
 
         function submitAttendance() {
             //set page to go to that
-            var id = setFormAction('attendance-sheet', 'attendance-form-confirmation');
+            var id = setFormAction('whole-page-form', 'attendance-form-confirmation');
             document.getElementById(id).submit();
         }
 
         function editPerson(){
-            var id = setFormAction('attendance-sheet', 'edit-participant');
+            var id = setFormAction('whole-page-form', 'edit-participant');
+            document.getElementById(id).submit();
+        }
+
+        function addPerson() {
+            var id = setFormAction('whole-page-form', 'attendance-form');
             document.getElementById(id).submit();
         }
 
         function addPerson() {
             //TODO: handle submission logic
-            addPersonToTable();
-            var id = setFormAction('new-person-entry', 'attendance-form');
-            document.getElementById(id)
+            if(jsValidateTable() === true){
+                var id = setFormAction('new-person-entry', 'attendance-form');
+                document.getElementById(id).submit();
+            }
+
 
         }
     </script>
@@ -123,7 +156,7 @@ $display_time = $convert_time->format('g:i A');
 
                 <div class="card" style="margin-bottom: 10px;">
                     <div class="card-block">
-                        <form action="" method="post" id="attendance-sheet">
+                        <form action="" method="post" id="whole-page-form">
                             <!-- Table -->
                             <div class="table-responsive">
                                 <table class="table table-hover table-striped" id="class-list">
@@ -170,7 +203,7 @@ $display_time = $convert_time->format('g:i A');
                                         //pre-fill comment if exists
                                         $comment = null;
                                         (is_null($pageInformation[$i]['comments'])) ? $comment = "" : $comment = $pageInformation[$i]['comments'];
-                                        echo "<textarea class=\"form-control\" type=\"textarea\" rows=\"2\" value=\"{$comment}\" placeholder=\"enter comments here...\" name='{$commentName}'></textarea>";
+                                        echo "<textarea class=\"form-control\" type=\"textarea\" rows=\"2\" placeholder=\"enter comments here...\" name='{$commentName}'>{$comment}</textarea>";
                                         echo "</div>";
                                         echo "</div>";
                                         echo "</td>";
@@ -194,11 +227,12 @@ $display_time = $convert_time->format('g:i A');
                             echo "<input type=\"hidden\" id=\"curr\" name=\"curr\" value=\"{$selected_curr}\" />";
                             echo "<input type=\"hidden\" id=\"date-input\" name=\"date-input\" value=\"{$selected_date}\" />";
                             echo "<input type=\"hidden\" id=\"time-input\" name=\"time-input\" value=\"{$selected_time}\" />";
+                            echo "<input type=\"hidden\" id=\"site\" name=\"site\" value=\"{$selected_site}\" />";
+                            echo "<input type=\"hidden\" id=\"lang\" name=\"lang\" value=\"{$selected_lang}\" />";
 
                             //edit button information
                             echo "<input type=\"hidden\" id=\"editButton\" name=\"editButton\" value=\"\" />";
                             ?>
-                        </form>
                     </div>
                 </div>
         </div>
@@ -207,7 +241,6 @@ $display_time = $convert_time->format('g:i A');
 
             <div id="accordion" role="tablist" aria-multiselectable="true">
                 <div class="card">
-                    <form>
                         <div class="card-header" role="tab" id="headingOne">
                             <h5 class="mb-0">
                                 <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
@@ -231,7 +264,6 @@ $display_time = $convert_time->format('g:i A');
                                 </form>
                             </div>
                         </div>
-                    </form>
                 </div>
                 <div class="card">
                     <div class="card-header" role="tab" id="headingTwo">
@@ -242,7 +274,6 @@ $display_time = $convert_time->format('g:i A');
                         </h5>
                     </div>
                     <div id="collapseTwo" class="collapse" role="tabpanel" aria-labelledby="headingTwo">
-                        <form id="new-person-entry" action="">
                             <div class="card-block" style="padding: 10px">
                                 <div class="form-group row" style="margin-left: 10px">
                                     <p>If a person has not filled out intake forms, please enter their information below.</p>
@@ -252,21 +283,21 @@ $display_time = $convert_time->format('g:i A');
                                 <div class="form-group row">
                                     <label for="new-person-first" class="col-3 col-form-label">First <div style="color:red; display:inline">*</div></label>
                                     <div class="col-9">
-                                        <input class="form-control" type="text" value="" id="new-person-first" placeholder="enter first name...">
+                                        <input class="form-control" type="text" value="" id="new-person-first" name="new-person-first" placeholder="enter first name...">
                                     </div>
                                 </div>
                                 <!-- middle initial -->
                                 <div class="form-group row">
                                     <label for="new-person-middle" class="col-3 col-form-label">Middle Initial</label>
                                     <div class="col-9">
-                                        <input class="form-control" type="text" value="" id="new-person-middle" placeholder="enter middle initial...">
+                                        <input class="form-control" type="text" value="" id="new-person-middle" name="new-person-middle" placeholder="enter middle initial...">
                                     </div>
                                 </div>
                                 <!-- last -->
                                 <div class="form-group row">
                                     <label for="new-person-last" class="col-3 col-form-label">Last <div style="color:red; display:inline">*</div></label>
                                     <div class="col-9">
-                                        <input class="form-control" type="text" value="" id="new-person-last" placeholder="enter last name...">
+                                        <input class="form-control" type="text" value="" id="new-person-last" name="new-person-last" placeholder="enter last name...">
                                     </div>
                                 </div>
                                 <!-- race
@@ -275,7 +306,7 @@ $display_time = $convert_time->format('g:i A');
                                 <div class="form-group row">
                                     <label for="race-select" class="col-3 col-form-label">Race <div style="color:red; display:inline">*</div></label>
                                         <div class="col-9">
-                                        <select id="race-select" class="form-control">
+                                        <select id="race-select" name="race-select" class="form-control">
                                             <option>Select Race...</option>
                                             <?php
                                             while($row = pg_fetch_assoc($get_races)){
@@ -289,25 +320,23 @@ $display_time = $convert_time->format('g:i A');
                                 <div class="form-group row">
                                     <label for="age-input" class="col-3 col-form-label">Age <div style="color:red; display:inline">*</div></label>
                                     <div class="col-9">
-                                        <input class="form-control" type="number" value="" id="age-input" placeholder="please enter age...">
+                                        <input class="form-control" type="number" value="" id="age-input" name="age-input" placeholder="please enter age...">
                                     </div>
                                 </div>
                                 <!-- Number of children under 18 -->
                                 <div class="form-group row">
                                     <label for="num-children-input" class="col-3 col-form-label">Number of children under 18 <div style="color:red; display:inline">*</div></label>
                                     <div class="col-9">
-                                        <input class="form-control" type="number" value="" id="num-children-input" placeholder="please enter number of children...">
+                                        <input class="form-control" type="number" value="" id="num-children-input" name="num-children-input" placeholder="please enter number of children...">
                                     </div>
                                 </div>
                                 <!-- Zip code -->
-                                <fieldset disabled>
-                                    <div class="form-group row">
-                                        <label for="zip-input" class="col-3 col-form-label">Zip code</label>
-                                        <div class="col-9">
-                                            <input class="form-control" type="text" value="12601" id="zip-input" placeholder="enter zip code...">
-                                        </div>
+                                <div class="form-group row">
+                                    <label for="zip-input" class="col-3 col-form-label">Zip code</label>
+                                    <div class="col-9">
+                                        <input class="form-control" type="text" value="12601" id="zip-input" name="zip-input" placeholder="enter zip code...">
                                     </div>
-                                </fieldset>
+                                </div>
 
                                 <!-- validate and add to list above -->
                                 <div class = "row">

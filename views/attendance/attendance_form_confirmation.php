@@ -12,6 +12,8 @@ $selected_class = $_POST['classes'];
 $selected_curr = $_POST['curr'];
 $selected_date = $_POST['date-input'];
 $selected_time = $_POST['time-input'];
+$selected_site = $_POST['site'];
+$selected_lang = $_POST['lang'];
 
 $employee_id = $_SESSION['employeeid'];
 
@@ -47,7 +49,7 @@ $display_time = $convert_time->format('g:i A');
         }
 
         function editAttendance(){
-            setFormAction('attendance-sheet', 'attendance-form-confirmation');
+            setFormAction('attendance-sheet', 'attendance-form');
             document.getElementById('attendance-sheet').submit();
         }
     </script>
@@ -135,6 +137,9 @@ $display_time = $convert_time->format('g:i A');
                     echo "<input type=\"hidden\" id=\"curr\" name=\"curr\" value=\"{$selected_curr}\" />";
                     echo "<input type=\"hidden\" id=\"date-input\" name=\"date-input\" value=\"{$selected_date}\" />";
                     echo "<input type=\"hidden\" id=\"time-input\" name=\"time-input\" value=\"{$selected_time}\" />";
+                    echo "<input type=\"hidden\" id=\"site\" name=\"site\" value=\"{$selected_site}\" />";
+                    echo "<input type=\"hidden\" id=\"lang\" name=\"lang\" value=\"{$selected_lang}\" />";
+                    echo "<input type=\"hidden\" id=\"fromConfirmPage\" name=\"fromConfirmPage\" value=\"1\" />";
 
                     //edit button information
                     echo "<input type=\"hidden\" id=\"editButton\" name=\"editButton\" value=\"\" />";

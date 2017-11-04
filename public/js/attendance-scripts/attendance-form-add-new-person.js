@@ -4,7 +4,7 @@
 
 var newPersonInfoMatrix = [];
 
-function addPersonToTable() {
+function jsValidateTable() {
     var firstName, middleInitial, lastName, race, age, numChildren, zip;
 
     //grab person's information from fields
@@ -36,23 +36,7 @@ function addPersonToTable() {
     }
     insertAlertHere.appendChild(createMessage(valid, errorMessage));
 
-    if(valid){
-        //add to table
-        var table = document.getElementById("class-list");
-        table.appendChild(createRow(firstName,middleInitial,lastName,age,zip,numChildren, "#"))
-
-        //add to internal data type to store until form submission
-        appendNewPerson(firstName, middleInitial, lastName, race, age, numChildren, zip);
-
-        //clear the fields
-        document.getElementById("new-person-first").value = '';
-        document.getElementById("new-person-middle").value = '';
-        document.getElementById("new-person-last").value = '';
-        document.getElementById("race-select").value = 0;
-        document.getElementById("age-input").value = '';
-        document.getElementById("num-children-input").value = '';
-        document.getElementById("zip-input").value = '';
-    }
+    return valid;
 
 }
 
