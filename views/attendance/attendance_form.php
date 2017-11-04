@@ -144,6 +144,9 @@ else {
     //query the view
     $get_participants = $db->no_param_query($fullQuery);
 
+    //TODO: get distinct records and the most up to date information
+
+
     while($row = pg_fetch_assoc($get_participants)){
 
         $pageInformation[] = array(

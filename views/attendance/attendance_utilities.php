@@ -34,10 +34,19 @@ function calculate_age($raw_sqlDate) {
 //input: ray sql timestamp
 //output: nicely formatted date and time
 function formatSQLDate($sqlDate) {
-    $convert_date = DateTime::createFromFormat('Y-m-d H:i:s.u', $sqlDate);
-    $formatted_date = $convert_date->format('l, F jS g:i A');
+    $convertDate = DateTime::createFromFormat('Y-m-d H:i:s.u', $sqlDate);
+    $formattedDate = $convertDate->format('l, F jS g:i A');
 
-    return $formatted_date;
+    return $formattedDate;
+}
+
+//input: date in 'Y-m-d' and time in 'H:i'
+//output: sql timestamp 'Y-m-d H:i:00.000000'
+//description: create timestamp from specific date format
+function makeTimestamp($inputDate, $inputTime){
+    $convertDate = DateTime::createFromFormat('Y-m-d H:i', (string)$inputDate . " " . $inputTime);
+    $timestamp = $convertDate->format('Y-m-d H:i:00.000000');
+    return $timestamp;
 }
 
 
