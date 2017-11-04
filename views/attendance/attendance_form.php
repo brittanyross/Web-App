@@ -34,11 +34,14 @@ $employee_id = $_SESSION['employeeid'];
 
 $pageInformation = array();
 
+$successAddingPerson = false;
+
 //if we have previous information passed to us from lookup form or add person form,
 //  then display this information instead of db information
 if(isset($_SESSION['serializedInfo'])) {
     //we're coming from the attendance-form-confirmation page or the edit-participant page
     if(isset($_POST['fromConfirmPage']) || isset($_POST['fromEditParticipant'])) {
+        $_SESSION['duplicatePostAddPerson'] = false;
         $pageInformation = deserializeParticipantMatrix($_SESSION['serializedInfo']);
     }
     else if(isset($_POST['lookupId'])){
@@ -47,24 +50,76 @@ if(isset($_SESSION['serializedInfo'])) {
         //query against the name and add details to page
     }
     //we're coming from the current page and posting new participant info
-    else{
-        //update our posted information
-        updateSessionClassInformation();
-        $pageInformation = deserializeParticipantMatrix($_SESSION['serializedInfo']);
+    else if((isset($_POST['fromAddPerson'])) && ($_POST['fromAddPerson'] == 1)){ //avoid reload page error
+        $firstTimeSubmitting = true;
+        if(isset($_SESSION['duplicatePostAddPerson'])){ //avoid duplicate entries on page reload
+            if($_SESSION['duplicatePostAddPerson']){
+                $pageInformation = deserializeParticipantMatrix($_SESSION['serializedInfo']);
+                $firstTimeSubmitting = false;
+            }
+        }
 
-        $fn = $_POST['new-person-first'];
-        $mi = $_POST['new-person-middle'];
-        $ln = $_POST['new-person-last'];
-        $race = $_POST['race-select'];
-        $ageInput = $_POST['age-input'];
-        $numC = $_POST['num-children-input'];
-        $zipInput = $_POST['zip-input'];
+        if($firstTimeSubmitting){
+            //ensure no duplicate entries
+            $_SESSION['duplicatePostAddPerson'] = true;
+
+            //update our posted information
+            updateSessionClassInformation();
+            $pageInformation = deserializeParticipantMatrix($_SESSION['serializedInfo']);
+
+            $fn = $_POST['new-person-first'];
+            $mi = $_POST['new-person-middle'];
+            $ln = $_POST['new-person-last'];
+            $race = $_POST['race-select'];
+            $ageInput = $_POST['age-input'];
+            $numC = $_POST['num-children-input'];
+            $zipInput = $_POST['zip-input'];
+
+            //validate input
+            if(
+                validateName($fn) &&
+                validateMiddle($mi) &&
+                validateName($ln) &&
+                validateRace($race) &&
+                validateAge($ageInput) &&
+                validateNumChildren($numC) &&
+                validateZip($zipInput)
+            )
+            {
+                //add to participantMatrix
+                $pageInformation[] = array(
+                    "pid"           => 0, //will be changed later from function
+                    "fn"            => $fn,
+                    "mi"            => $mi,
+                    "ln"            => $ln,
+                    "dob"           => date_subtraction((string) $ageInput . " years"),
+                    "zip"           => $zipInput,
+                    "numChildren"   => $numC,
+                    "race"          => $race,
+                    "comments"      => null,
+                    "present"       => true,
+                    "isNew"         => true, //isNew field from DB
+                    //people who haven't completed the intake forms and just filled out info in the "no intake form" section
+                    "firstClass"    => true
+                );
+
+                $successAddingPerson = true;
+            }
+        }
+
+
     }
-
+    else{
+        //default, just load the page
+        $pageInformation = deserializeParticipantMatrix($_SESSION['serializedInfo']);
+    }
 
 }
 //else grab information from the db and format it into the associative array format
 else {
+    //ensure no duplicate entries
+    $_SESSION['duplicatePostAddPerson'] = false;
+
     $threeWeeksAgo = date_subtraction('22 days');
 
     $fullQuery = "select * from classattendancedetails " .
@@ -108,39 +163,44 @@ $display_time = $convert_time->format('g:i A');
     <script src="/js/attendance-scripts/attendance-form-add-new-person.js"></script>
 
     <script>
-        function setFormAction(formID, action){
-            document.getElementById(formID).action = action;
-            return formID;
+
+        //name of the only form on the page
+        var pageFormName = 'whole-page-form';
+
+        //input: page the form redirects to
+        //output: none
+        function setFormAction(action){
+            document.getElementById(pageFormName).action = action;
         }
 
         function submitAttendance() {
-            //set page to go to that
-            var id = setFormAction('whole-page-form', 'attendance-form-confirmation');
-            document.getElementById(id).submit();
+            setFormAction('attendance-form-confirmation');
+            document.getElementById(pageFormName).submit();
         }
 
         function editPerson(){
-            var id = setFormAction('whole-page-form', 'edit-participant');
-            document.getElementById(id).submit();
+            setFormAction('edit-participant');
+            document.getElementById(pageFormName).submit();
         }
 
-        function addPerson() {
-            var id = setFormAction('whole-page-form', 'attendance-form');
-            document.getElementById(id).submit();
+        //TODO: handle logic (Vallie is working on this page)
+        function searchForPerson() {
+            //setFormAction('');
+            //document.getElementById(pageFormName).submit();
         }
 
         function addPerson() {
             //TODO: handle submission logic
             if(jsValidateTable() === true){
-                var id = setFormAction('new-person-entry', 'attendance-form');
-                document.getElementById(id).submit();
+                setFormAction('attendance-form');
+                document.getElementById('fromAddPerson').value = 1; //helps to identify that we just added someone
+                document.getElementById(pageFormName).submit();
             }
-
-
         }
     </script>
 
     <div class="container-fluid">
+        <form action="" method="post" id="whole-page-form">
         <div class="row flex-column">
             <!-- Default container contents -->
             <div class="h3 text-center">
@@ -154,9 +214,22 @@ $display_time = $convert_time->format('g:i A');
                 ?>
             </div>
 
+            <?php
+
+            if($successAddingPerson){
+                echo "<div class=\"alert alert-success alert-dismissible fade show\" role=\"alert\"> ";
+                echo        "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"> ";
+                echo        "<span aria-hidden=\"true\">&times;</span> ";
+                echo        "</button>";
+                echo        "<div style = 'text-align: center;'><strong>Success!</strong> Participant added to list. </div>";
+                echo    "</div>";
+            }
+
+            ?>
+
                 <div class="card" style="margin-bottom: 10px;">
                     <div class="card-block">
-                        <form action="" method="post" id="whole-page-form">
+
                             <!-- Table -->
                             <div class="table-responsive">
                                 <table class="table table-hover table-striped" id="class-list">
@@ -230,6 +303,9 @@ $display_time = $convert_time->format('g:i A');
                             echo "<input type=\"hidden\" id=\"site\" name=\"site\" value=\"{$selected_site}\" />";
                             echo "<input type=\"hidden\" id=\"lang\" name=\"lang\" value=\"{$selected_lang}\" />";
 
+                            //helps identify if we've just added a person
+                            echo "<input type=\"hidden\" id=\"fromAddPerson\" name=\"fromAddPerson\" value=\"0\" />";
+
                             //edit button information
                             echo "<input type=\"hidden\" id=\"editButton\" name=\"editButton\" value=\"\" />";
                             ?>
@@ -255,13 +331,10 @@ $display_time = $convert_time->format('g:i A');
                                     If a person is not shown here but has already filled out the intake packet,
                                     please search for them here.
                                 </p>
-
-                                <form class="search-agency" target="_blank">
                                     <div class="form-group">
-                                        <input type="text" class="form-control" name="searchquery" placeholder="Begin typing participant's name...">
+                                        <input type="text" class="form-control" name="searchquery" onclick="searchForPerson()" placeholder="Begin typing participant's name...">
                                     </div>
-                                    <button type="button" class="btn cpca form-control">Submit</button>
-                                </form>
+                                    <button type="button" class="btn cpca form-control" onclick="">Submit</button>
                             </div>
                         </div>
                 </div>
@@ -309,9 +382,17 @@ $display_time = $convert_time->format('g:i A');
                                         <select id="race-select" name="race-select" class="form-control">
                                             <option>Select Race...</option>
                                             <?php
+                                            //need to keep track of different races for form validation
+                                            $race_array = array();
+
                                             while($row = pg_fetch_assoc($get_races)){
-                                                echo "<option>{$row['unnest']}</option>";
+                                                $raceOption = $row['unnest'];
+                                                echo "<option>{$raceOption}</option>";
+                                                $race_array[] = $raceOption;
                                             }
+
+                                            //set a session variable so we can validate races after post
+                                            $_SESSION['races'] = $race_array;
                                             ?>
                                         </select>
                                     </div>
@@ -343,7 +424,6 @@ $display_time = $convert_time->format('g:i A');
 
                                     <button type="button" class="btn btn-primary" style="margin-left:15px" onclick="addPerson()">Add Person</button>
                                 </div>
-                        </form>
                         </div>
                     </div>
                 </div>
@@ -354,6 +434,7 @@ $display_time = $convert_time->format('g:i A');
                 <button type="button" class="btn btn-success" onclick="submitAttendance()">Submit Attendance</button>
             </div>
         </div>
+        </form>
     </div>
 
 

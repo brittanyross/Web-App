@@ -65,6 +65,10 @@ function handleAttendanceSheetInfo($classInformation){
     return $classInformation;
 }
 
+//input: none (from session variable)
+//output: none (updates session info)
+//description: deserializes session info, calls function to update,
+//  reserializes and sets session variable
 function updateSessionClassInformation(){
     //get serialized class information
     $serializedClassInfo = $_SESSION['serializedInfo'];
@@ -76,4 +80,74 @@ function updateSessionClassInformation(){
     $updatedInfoSerialize = serializeParticipantMatrix($updatedInfo);
     //update the session info with this new value
     $_SESSION['serializedInfo'] = $updatedInfoSerialize;
+}
+
+//validation functions (occur after JS validation so
+// if they're not valid, it's malicious or they aren't running JS
+
+//input: first or last name
+//output: (boolean)isValid
+function validateName($name) {
+    if(empty($name)){
+        return false;
+    } else{
+        //returns true if matched, validates for a-z and A-Z
+        return preg_match("/^[A-Za-z]+$/", $name);
+    }
+}
+
+//input: middle initial
+//output: true if empty or letter
+function validateMiddle($middle) {
+    if(empty($middle)){
+        return true; //not required
+    } else{
+        //returns true if matched, validates for a-z and A-Z max one character
+        return preg_match("/^[A-Za-z]$/", $middle);
+    }
+}
+
+//input: race
+//output: true if valid race
+function validateRace($race) {
+    if(empty($race)){
+        return false;
+    } else{
+        $raceArray = $_SESSION['races'];
+        return in_array($race, $raceArray);
+    }
+}
+
+//input: age
+//output: true if numeric and [18 to 100]
+function validateAge($age) {
+    if(empty($age)){
+        return false;
+    } else{
+        //returns true if age in valid range 18-100
+        return( is_numeric($age) && (($age >= 18) && ($age <= 100)));
+    }
+}
+
+//input: number of children
+//output: true if not empty, numeric, and [0 to 25]
+function validateNumChildren($num) {
+    if(empty($num)){
+        return false;
+    } else{
+        //returns true if a valid number of children
+        return(is_numeric($num) && (($num >= 0) && ($num <= 25)));
+    }
+
+}
+
+//input: zip code
+//output: true if valid 5 digit US zip
+function validateZip($zip) {
+    if(empty($zip)){
+        return false;
+    } else {
+        //validate zip code (from stackoverflow)
+        return preg_match("/(^\d{5}$)|(^\d{5}-\d{4}$)/", $zip);
+    }
 }

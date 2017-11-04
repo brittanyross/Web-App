@@ -2,8 +2,6 @@
   File to add person to the table of people
  */
 
-var newPersonInfoMatrix = [];
-
 function jsValidateTable() {
     var firstName, middleInitial, lastName, race, age, numChildren, zip;
 
@@ -79,10 +77,7 @@ function createMessage(success, errorMessage) {
     var div = document.createElement("div");
     div.setAttribute("role", "alert");
 
-    if(success){
-        div.setAttribute("class", "alert alert-success");
-        div.innerHTML = "<strong>Success! </strong>Person added to list."
-    } else {
+    if(!success){
         div.setAttribute("class", "alert alert-warning");
         div.innerHTML = "<strong>Oops! </strong>" + errorMessage;
     }
@@ -95,7 +90,7 @@ function validateFields(first, middle, last, race, age, numChildren, zip){
         return "First name may only contain letters. Spaces, numbers, and other characters are not allowed.";
     }
     if(!validateMiddle(middle)){
-        return "Middle initial may only contain one letter."
+        return "Middle initial may only contain one letter or nothing."
     }
     if(!validateName(last)){
         return "Last name may only contain letters. Spaces, numbers, and other characters are not allowed.";
@@ -123,6 +118,7 @@ function validateName(name) {
 }
 
 function validateMiddle(middle) {
+    if(middle === '') return true; //empty
     //returns true if matched, validates for a-z and A-Z max one character
     return (/^[A-Za-z]$/.test(middle));
 }
@@ -145,9 +141,4 @@ function validateNumChildren(num) {
 function validateZip(zip) {
     //validate zip code (from stackoverflow)
     return (/(^\d{5}$)|(^\d{5}-\d{4}$)/.test(zip));
-}
-
-function appendNewPerson(first, middle, last, race, age, numChildren, zip){
-    var newRow = [first, middle, last, race, age, numChildren, zip];
-    newPersonInfoMatrix.push(newRow);
 }
