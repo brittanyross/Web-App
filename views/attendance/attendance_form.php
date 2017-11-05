@@ -42,20 +42,83 @@ $duplicatePerson = false;
 //if we have previous information passed to us from lookup form or add person form,
 //  then display this information instead of db information
 if(isset($_SESSION['serializedInfo'])) {
-    //we're coming from the attendance-form-confirmation page or the edit-participant page
-    if(isset($_POST['fromConfirmPage']) || isset($_POST['fromEditParticipant'])) {
+    //we're coming from the attendance-form-confirmation page - no change needed
+    if(isset($_POST['fromConfirmPage'])) {
         $pageInformation = deserializeParticipantMatrix($_SESSION['serializedInfo']);
+    }
+    else if(isset($_POST['fromEditParticipant'])){
+
     }
     else if(isset($_POST['lookupId'])){
         $pageInformation = deserializeParticipantMatrix($_SESSION['serializedInfo']);
-        //TODO: Vallie is working on search from this page
-        //query against the name and add details to page
-		
-		//this is the participant's id, you should be able to re-use all $selected _x vars 
-		//to res-submit the main form
-		//this will print the participant's id on the top of the page for now, just to demonstrate when it submits
-		echo $_POST['pidLookup'];
-		
+        $lookupId = $_POST['pidLookup'];
+
+        //lookup most recent info from DB --either from class info or from intake packet
+        $resultClassPastAttendance = $db->no_param_query(
+                "select * from classattendancedetails " .
+                "where participantid = {$lookupId} " .
+                "order by date desc; "
+        );
+
+        $fn = $mi = $ln = $dob = $race = $zip = $nc = $isNew = null;
+        //found past attendance history
+        if(pg_num_rows($resultClassPastAttendance)){
+            $row = pg_fetch_assoc($resultClassPastAttendance); //most recent row
+            $fn = $row['firstname'];
+            $mi = $row['middleinit'];
+            $ln = $row['lastname'];
+            $dob = $row['dateofbirth'];
+            $race = $row['race'];
+            $zip = $row['zipcode'];
+            $nc = $row['numchildren'];
+            $isNew = false;
+        } else{ //we didn't find that information find name and other info
+            //grab info from intake packet
+            $resultPersonLookup = $db->no_param_query(
+                "select pe.firstname, pe.middleinit, pe.lastname, pa.dateofbirth, pa.race " .
+                "from people pe, participants pa " .
+                "where pe.peopleid = pa.participantid " .
+                "and pe.peopleid = {$lookupId};"
+            );
+            $row = pg_fetch_assoc($resultPersonLookup);
+            $fn = $row['firstname'];
+            $mi = $row['middleinit'];
+            $ln = $row['lastname'];
+            $dob = $row['dateofbirth'];
+            $race = $row['race'];
+            $isNew = true;
+        }
+
+        //look for duplicates
+        for($k = 0; $k < count($pageInformation); $k++){
+            if($pageInformation[$k]['pid'] == $lookupId){
+                $duplicatePerson = true;
+                $successAddingPerson = false;
+            }
+        }
+
+        //add person to pageInformation
+        if(!$duplicatePerson){
+            $pageInformation[] = array(
+                "pid"           => $lookupId,
+                "fn"            => $fn,
+                "mi"            => $mi,
+                "ln"            => $ln,
+                "dob"           => $dob,
+                "zip"           => $zip,
+                "numChildren"   => $nc,
+                "race"          => $race,
+                "comments"      => null,
+                "present"       => true,
+                "isNew"         => $isNew, //isNew field from DB
+                //people who haven't completed the intake forms and just filled out info in the "no intake form" section
+                "firstClass"    => false
+            );
+        }
+
+        //update our posted information
+        updateSessionClassInformation();
+
     }
     //we're coming from the current page and posting new participant info
     else if(isset($_POST['fromAddPerson']) && $_POST['fromAddPerson'] == 1){ //value is changed when click to add person

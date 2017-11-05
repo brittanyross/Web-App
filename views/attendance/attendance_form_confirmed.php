@@ -88,6 +88,16 @@ for($i = 0; $i < count($attendanceInfo); $i++) {
     if($attendanceInfo[$i]['present']) {
         $tfString = ($attendanceInfo[$i]['isNew'] ? "true" : "false");
 
+        //adjust query to put default fields in for numChildren and zip if empty
+        $numChildrenValue = $attendanceInfo[$i]['numChildren'];
+        if(is_null($numChildrenValue)){
+            $numChildrenValue = "0";
+        }
+        $zipCodeValue = $attendanceInfo[$i]['zip'];
+        if(is_null($zipCodeValue)){
+            $zipCodeValue = "12601";
+        }
+
         $db->no_param_query(
             "INSERT INTO participantclassattendance( " .
             "topicname, " .
@@ -104,9 +114,9 @@ for($i = 0; $i < count($attendanceInfo); $i++) {
             "'{$timestamp}', ".
             "{$attendanceInfo[$i]['pid']}, " .
             "'{$attendanceInfo[$i]['comments']}', " .
-            " {$attendanceInfo[$i]['numChildren']}, " .
+            " {$numChildrenValue}, " .
             "'{$tfString}',  ".
-            "{$attendanceInfo[$i]['zip']}, " .
+            "{$zipCodeValue}, " .
             "'{$selected_site}'" .
             "); "
         );

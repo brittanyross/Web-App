@@ -38,41 +38,6 @@ function jsValidateTable() {
 
 }
 
-function createRow(firstName, middleInitial, lastName, age, zip, numChildren, editLink) {
-    var tr = document.createElement("tr");
-
-
-    var tabCheckBox = document.createElement("td");
-    tabCheckBox.innerHTML = "<label class=\"custom-control custom-checkbox\">\n" +
-        "<input type=\"checkbox\" class=\"custom-control-input\" checked>\n" +
-        "<span class=\"custom-control-indicator\"></span>\n" +
-        "</label>"
-
-    var tabFullName = document.createElement("td");
-    tabFullName.innerHTML = firstName + " " + middleInitial + " " + lastName;
-
-    var tabAge = document.createElement("td");
-    tabAge.innerHTML = age;
-
-    var tabZip = document.createElement("td");
-    tabZip.innerHTML = zip;
-
-    var tabNumChildren = document.createElement("td");
-    tabNumChildren.innerHTML = numChildren;
-
-    var tabEdit = document.createElement("td");
-    tabEdit.innerHTML = "<a href=\"" + editLink + "\">Edit</a>";
-
-    tr.appendChild(tabCheckBox);
-    tr.appendChild(tabFullName);
-    tr.appendChild(tabAge);
-    tr.appendChild(tabZip);
-    tr.appendChild(tabNumChildren);
-    tr.appendChild(tabEdit);
-
-    return tr;
-}
-
 function createMessage(success, errorMessage) {
     var div = document.createElement("div");
     div.setAttribute("role", "alert");
