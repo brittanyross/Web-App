@@ -71,17 +71,35 @@ $db -> no_param_query(
 $db -> no_param_query(
     "INSERT INTO facilitatorclassattendance( " .
     "topicName, date, siteName, facilitatorId ) " .
-    "VALUES ({$selected_class}, {$timestamp}, {$selected_site}, {$selected_facilitator});"
+    "VALUES ('{$selected_class}', '{$timestamp}', '{$selected_site}', {$selected_facilitator});"
 );
 
+//some curr have an apostrophe in their name
+$selected_curr_escaped = escape_apostrophe($selected_curr);
 
 //loop through participants and create many participantClassAttendance entries
 for($i = 0; $i < count($attendanceInfo); $i++) {
     $db->no_param_query(
             "INSERT INTO participantclassattendance( " .
-            "topicname, date, siteName, participantId, comments, numChildren, isNew, zipCode) " .
-            "VALUES({$selected_class}, {$timestamp}, {$attendanceInfo[$i]['comments']}, " .
-                "{$attendanceInfo[$i]['numChildren']}, {$attendanceInfo[$i]['isNew']}, {$attendanceInfo[$i]['zip']}); "
+            "topicname, " .
+            "date, ".
+            "participantId, " .
+            "comments, ".
+            "numChildren, ".
+            "isNew, " .
+            "zipCode, " .
+            "siteName ".
+            ") " .
+            "VALUES(" .
+            "'{$selected_class}', ".
+            "'{$timestamp}', ".
+            "{$attendanceInfo[$i]['pid']}, " .
+            "'{$attendanceInfo[$i]['comments']}', " .
+            " {$attendanceInfo[$i]['numChildren']}, " .
+            "'{$attendanceInfo[$i]['isNew']}',  ".
+            "{$attendanceInfo[$i]['zip']}, " .
+            "'{$selected_site}'" .
+            "); "
     );
 }
 

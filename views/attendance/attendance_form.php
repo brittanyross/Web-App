@@ -125,7 +125,7 @@ if(isset($_SESSION['serializedInfo'])) {
 
 
     }
-    else{
+    else { //coming from cancel pidLookup or anywhere else
         //default, just load the page
         $pageInformation = deserializeParticipantMatrix($_SESSION['serializedInfo']);
     }
