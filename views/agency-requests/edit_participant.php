@@ -3,7 +3,10 @@ authorizedPage();
 
 include('header.php');
 global $db, $params;
+?>
 
+<div class="d-flex flex-column w-100" style="height: fit-content;">
+<?php
 # Get people id from params
 $peopleid = rawurldecode(implode('/', $params));
 //$params[1] = $peopleid;
@@ -34,13 +37,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 		$lname = $_POST["lname-update"];
 		$update = $db->query("UPDATE people SET lastname = $1 WHERE peopleid = $2",[$lname, $peopleid]);
 	}
-	echo(isset($_POST["fname-update"]));
+	echo "<div class=\"alert alert-outline-success w-100\" style=\"display:block;\" role=\"alert\">
+			Participant information has been updated
+			</div>
+			";
+	
+$result = $db->query("SELECT participants.participantid, participants.dateofbirth, participants.race, people.firstname, people.lastname, people.middleinit " .
+					"FROM participants " .
+					"INNER JOIN people ON participants.participantid = people.peopleid WHERE people.peopleid=$1", [$peopleid]);
+
+$participant = pg_fetch_assoc($result);
 	
 }
 
 
 ?>
-<div class="d-flex flex-column w-100" style="height: fit-content;">
+
     <a href="/back"><button class="cpca btn"><i class="fa fa-arrow-left"></i> Back</button></a>
 <div class="d-flex justify-content-center">
 <form class="mt-5 d-flex flex-column w-50 edit-form p-5 rounded" method="POST" action= "">
@@ -66,7 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
     <label for="mphone-update">Cell Phone</label>
     <input name ="mphone-update"  type="phone" class="form-control" id="mphone-update" placeholder="Enter cell phone">
    </div>
-  <input type="submit" value="submit" class="btn btn-primary">
+  <input type="submit" value="Update Information" class="btn cpca">
 </form>	
 </div>
 
