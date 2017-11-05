@@ -78,8 +78,10 @@ $db -> no_param_query(
 //loop through participants and create many participantClassAttendance entries
 for($i = 0; $i < count($attendanceInfo); $i++) {
 
-    $tfString = ($attendanceInfo[$i]['isNew'] ? "true" : "false");
-    $db->no_param_query(
+    if($attendanceInfo[$i]['present']) {
+        $tfString = ($attendanceInfo[$i]['isNew'] ? "true" : "false");
+
+        $db->no_param_query(
             "INSERT INTO participantclassattendance( " .
             "topicname, " .
             "date, ".
@@ -100,7 +102,9 @@ for($i = 0; $i < count($attendanceInfo); $i++) {
             "{$attendanceInfo[$i]['zip']}, " .
             "'{$selected_site}'" .
             "); "
-    );
+        );
+    }
+
 }
 
 $success = true;
