@@ -261,6 +261,7 @@ $display_time = $convert_time->format('g:i A');
 							console.log(sentURL);
 							var matched = sentURL.match( /\/view-participant\/(\d*)/);
 							var peopleid = matched[matched.length-1];
+							var details = $(this).find(".sublist").text();
 							//add the view to the modal
 							$(".modal-body").append("<form class=\"add-to-sheet\" method =\"POST\"action=\"\">"+
 							"<input type=\"hidden\" value="+peopleid+" name=\"pidLookup\">"+
@@ -270,9 +271,12 @@ $display_time = $convert_time->format('g:i A');
 							"<input type=\"hidden\" value=\"<?=$selected_time?>\" name=\"time-input\">"+
 							"<input type=\"hidden\" value=\"<?=$selected_site?>\" name=\"site\">"+
 							"<input type=\"hidden\" value=\"<?=$selected_lang?>\" name=\"lang\">"+
-								"<li class='list-group-item p-4'>"+sentNameList+
+								"<ul class='list-group'>"+
+								"<li class='list-group-item'>"+sentNameList+
 								"<input type=\"submit\" name=\"lookupId\" value= \"Add\" class=\"btn cpca float-right submit-search\">"+
 								"</li>"+
+								"<ul class='list-group'><li class='list-group-item'>"+details+"</li></ul>"+
+								"</ul>"+
 							"</form>");
 							 $("#exampleModal").modal();
 							}
