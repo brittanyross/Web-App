@@ -189,38 +189,38 @@ $display_time = $convert_time->format('g:i A');
 ?>
     <script src="/js/attendance-scripts/attendance-form-add-new-person.js"></script>
 
-        <script>
-        
+       <script>
         //name of the only form on the page
-       var pageFormName = 'whole-page-form';
-
+        var pageFormName = 'whole-page-form';
         //input: page the form redirects to
-        output: none
+        //output: none
         function setFormAction(action){
-           document.getElementById(pageFormName).action = action;
+            document.getElementById(pageFormName).action = action;
         }
-		
+        function submitAttendance() {
+            setFormAction('attendance-form-confirmation');
+            document.getElementById(pageFormName).submit();
+        }
         function editPerson(){
             setFormAction('edit-participant');
             document.getElementById(pageFormName).submit();
         }
-		
-	   function addPerson() {
-		//TODO: handle submission logic
-		if(jsValidateTable() === true){
-			setFormAction('attendance-form');
-			document.getElementById('fromAddPerson').value = 1; //helps to identify that we just added someone
-			document.getElementById(pageFormName).submit();
-		}
-		
+        //TODO: handle logic (Vallie is working on this page)
+        function searchForPerson() {
+            //setFormAction('');
+            //document.getElementById(pageFormName).submit();
         }
-		  function submitAttendance() {
-            //set page to go to that
-            setFormAction('attendance-sheet', 'attendance-form-confirmed');
-            document.getElementById('attendance-sheet').submit();
+        function addPerson() {
+            //TODO: handle submission logic
+            if(jsValidateTable() === true){
+                setFormAction('attendance-form');
+                document.getElementById('fromAddPerson').value = 1; //helps to identify that we just added someone
+                document.getElementById(pageFormName).submit();
+            }
         }
-		</script>
-    <script>
+    </script>
+	
+	<script>
 	//wrapping in jquery to perform searches and adding users
 	$(document).ready(function(){
 		//when uesr clicks the search button within the 'search for person' card
