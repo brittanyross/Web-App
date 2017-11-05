@@ -12,6 +12,8 @@ require "attendance_utilities.php";
 
 include('header.php');
 
+
+	
 //make sure that information was entered into form
 if(!isset($_POST['curr']))
 {
@@ -48,6 +50,12 @@ if(isset($_SESSION['serializedInfo'])) {
         $pageInformation = deserializeParticipantMatrix($_SESSION['serializedInfo']);
         //TODO: Vallie is working on search from this page
         //query against the name and add details to page
+		
+		//this is the participant's id, you should be able to re-use all $selected _x vars 
+		//to res-submit the main form
+		//this will print the participant's id on the top of the page for now, just to demonstrate when it submits
+		echo $_POST['pidLookup'];
+		
     }
     //we're coming from the current page and posting new participant info
     else if(isset($_POST['fromAddPerson']) && $_POST['fromAddPerson'] == 1){ //value is changed when click to add person
@@ -176,11 +184,15 @@ $display_date = $convert_date->format('l, F jS');
 $convert_time = DateTime::createFromFormat('H:i', $selected_time);
 $display_time = $convert_time->format('g:i A');
 
+
+
 ?>
     <script src="/js/attendance-scripts/attendance-form-add-new-person.js"></script>
 
     <script>
-
+	//wrapping in jquery to perform searches and adding users
+	$(document).ready(function(){
+	
         //name of the only form on the page
         var pageFormName = 'whole-page-form';
 
@@ -200,11 +212,74 @@ $display_time = $convert_time->format('g:i A');
             document.getElementById(pageFormName).submit();
         }
 
-        //TODO: handle logic (Vallie is working on this page)
-        function searchForPerson() {
-            //setFormAction('');
-            //document.getElementById(pageFormName).submit();
-        }
+		//when uesr clicks the search button within the 'search for person' card
+		//open a modal using user input as search query, then display in modal
+		$(".active-search").click(function(){
+			//grabbing user input
+			var participantSearch = $(".search-participants").val();
+			//creaing a new form to search the participant result page for user-entered participant
+			$('<form class='+'add-participant'+'>', {
+				"id": "search-participants",
+				"html": '<input type="text" id="searchquery" name="searchquery" value="' + participantSearch + '" />',
+				"method": "post",
+				//setting the destination url to participant search
+				"action": '/participant-search/'+participantSearch
+			}).appendTo(document.body);
+			//append it to the bottom
+			$("body").append("<form class='add-participant' action=''></form>");
+			
+			//instead of directing the user to a new page, we're going to display the 
+			//results of the search in a modal. There is now a modal hidden at the bottom of the screen that will
+			//become active once the search is triggered
+			$(".modal-body").empty();
+			//using ajax to stay on the origin page
+				$.ajax({
+					type: 'GET',
+					url: '/participant-search/'+participantSearch,
+					dataType: 'text',
+					data: $(".add-participant").serialize(),
+					success:function(data){
+						//looking for the participant results
+						var sentName = $(data).find(".list-group-item");
+						//for each result, display a list element with the name of the participant
+						//and a 'add to class' button
+						$.each(sentName, function(){
+							var sentURL = $(this).find('a').attr("href");
+							if(sentURL != undefined){
+							var sentNameList = $(this).find("span").html();
+							console.log(sentURL);
+							var matched = sentURL.match( /\/view-participant\/(\d*)/);
+							var peopleid = matched[matched.length-1];
+							//add the view to the modal
+							$(".modal-body").append("<form class=\"add-to-sheet\" method =\"POST\"action=\"\">"+
+							"<input type=\"hidden\" value="+peopleid+" name=\"pidLookup\">"+
+							"<input type=\"hidden\" value=\"<?=$selected_curr?>\" name=\"curr\">"+
+							"<input type=\"hidden\" value=\"<?=$selected_class?>\" name=\"classes\">"+
+							"<input type=\"hidden\" value=\"<?=$selected_date?>\" name=\"date-input\">"+
+							"<input type=\"hidden\" value=\"<?=$selected_time?>\" name=\"time-input\">"+
+							"<input type=\"hidden\" value=\"<?=$selected_site?>\" name=\"site\">"+
+							"<input type=\"hidden\" value=\"<?=$selected_lang?>\" name=\"lang\">"+
+								"<li class='list-group-item p-4'>"+sentNameList+
+								"<input type=\"submit\" name=\"lookupId\" value= \"Add\" class=\"btn cpca float-right submit-search\">"+
+								"</li>"+
+							"</form>");
+							 $("#exampleModal").modal();
+							}
+							
+						})
+					}
+				});
+		});
+		
+		//allow user to press 'enter' while searching without 
+		//resubmitting the whole form just yet
+			$('.search-participants').keypress(function(event){
+			  if(event.keyCode == 13){
+				$('.active-search').click();
+				event.preventDefault();
+			  }
+			});
+      
 
         function addPerson() {
             //TODO: handle submission logic
@@ -214,6 +289,7 @@ $display_time = $convert_time->format('g:i A');
                 document.getElementById(pageFormName).submit();
             }
         }
+	});
     </script>
 
     <div class="container-fluid">
@@ -357,9 +433,9 @@ $display_time = $convert_time->format('g:i A');
                                     please search for them here.
                                 </p>
                                     <div class="form-group">
-                                        <input type="text" class="form-control" name="searchquery" onclick="searchForPerson()" placeholder="Begin typing participant's name...">
+                                        <input type="text" class="form-control search-participants" name="searchquery"  placeholder="Begin typing participant's name...">
                                     </div>
-                                    <button type="button" class="btn cpca form-control" onclick="">Submit</button>
+                                    <button type="button" class="btn cpca form-control active-search" >Submit</button>
                             </div>
                         </div>
                 </div>
@@ -461,6 +537,20 @@ $display_time = $convert_time->format('g:i A');
         </div>
         </form>
     </div>
+<div class="modal fade w-100" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Add Participants to Attendence</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      </div>
+    </div>
+  </div>
+</div>
 
 
 <?php

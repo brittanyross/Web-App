@@ -517,6 +517,9 @@ label[for=password] {
     width: 75%;
     padding-top: 8px;
 }
+.add-participant{
+	display:hidden;
+}
 
 /* end attendance project */
 /* Results for Live Search */
