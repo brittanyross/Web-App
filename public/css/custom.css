@@ -514,7 +514,6 @@ label[for=password] {
 	background-color:#5C629C;
 	color:white;
 }
-
 /* Referral Forms */
 .form-header {
     flex: 1;
@@ -535,8 +534,6 @@ label[for=password] {
 }
 
 .edit-form{
-	background-color:lightgrey;
-}.edit-form{
 	background-color:lightgrey;
 }
 /*When printing, display all of the main-content div, and nothing else.*/

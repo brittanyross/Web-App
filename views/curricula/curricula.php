@@ -82,7 +82,6 @@ $(document).ready(function(){
 
         //Disables the default browser autocomplete
         $("#curriculum-filter").attr( "autocomplete", "off" );
-
         //construct live search, needs the user input field, where search results will go,
         //desired class name of search result elements, url for where ajax is sending the request, and
         //type of data ajax is returning
