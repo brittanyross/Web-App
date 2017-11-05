@@ -133,7 +133,7 @@ if(isset($_SESSION['serializedInfo'])) {
 
 
     }
-    else { //coming from cancel pidLookup or anywhere else
+    else{
         //default, just load the page
         $pageInformation = deserializeParticipantMatrix($_SESSION['serializedInfo']);
     }
@@ -189,6 +189,7 @@ $display_time = $convert_time->format('g:i A');
 ?>
     <script src="/js/attendance-scripts/attendance-form-add-new-person.js"></script>
 
+        
     <script>
 	//wrapping in jquery to perform searches and adding users
 	$(document).ready(function(){
@@ -202,10 +203,11 @@ $display_time = $convert_time->format('g:i A');
             document.getElementById(pageFormName).action = action;
         }
 
-        function submitAttendance() {
+		$(".submit-attendance").click(function(){
             setFormAction('attendance-form-confirmation');
-            document.getElementById(pageFormName).submit();
-        }
+            $("#whole-page-form").submit(); 
+	   });
+		
 
         function editPerson(){
             setFormAction('edit-participant');
@@ -532,7 +534,7 @@ $display_time = $convert_time->format('g:i A');
 
             <br/>
             <div class="d-flex justify-content-start">
-                <button type="button" class="btn btn-success" onclick="submitAttendance()">Submit Attendance</button>
+                <button type="button" class="btn btn-success submit-attendance">Submit Attendance</button>
             </div>
         </div>
         </form>
