@@ -47,7 +47,7 @@ include('header.php');
         while ($row = pg_fetch_assoc($result)) {
             ?>
             <li class="list-group-item">
-                <button class="btn btn-outline-info advanced-info"><i class="fa fa-question" aria-hidden="true"></i></button>
+                <button class="btn btn-outline-secondary advanced-info"><i class="fa fa-caret-right" aria-hidden="true"></i></button>
                 <span>&nbsp;<?php echo $row['lastname'].", ".$row['firstname']. " ". $row['middleinit'];?></span>
                 <a class="float-right" href="/view-participant/<?= $row['participantid'] ?>">
                     <button class="p-view btn cpca">
