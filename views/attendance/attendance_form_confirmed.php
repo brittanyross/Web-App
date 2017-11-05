@@ -74,11 +74,11 @@ $db -> no_param_query(
     "VALUES ('{$selected_class}', '{$timestamp}', '{$selected_site}', {$selected_facilitator});"
 );
 
-//some curr have an apostrophe in their name
-$selected_curr_escaped = escape_apostrophe($selected_curr);
 
 //loop through participants and create many participantClassAttendance entries
 for($i = 0; $i < count($attendanceInfo); $i++) {
+
+    $tfString = ($attendanceInfo[$i]['isNew'] ? "true" : "false");
     $db->no_param_query(
             "INSERT INTO participantclassattendance( " .
             "topicname, " .
@@ -96,7 +96,7 @@ for($i = 0; $i < count($attendanceInfo); $i++) {
             "{$attendanceInfo[$i]['pid']}, " .
             "'{$attendanceInfo[$i]['comments']}', " .
             " {$attendanceInfo[$i]['numChildren']}, " .
-            "'{$attendanceInfo[$i]['isNew']}',  ".
+            "'{$tfString}',  ".
             "{$attendanceInfo[$i]['zip']}, " .
             "'{$selected_site}'" .
             "); "
