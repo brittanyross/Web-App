@@ -28,8 +28,8 @@ $participant = pg_fetch_assoc($result);
 $buttonOptions = null;
 if(hasRole(Role::Superuser)){
 	// echo "i'm super user and stuff";
-	$buttonOptions = "<a href='/edit-participant/".$participant['participantid']."'><button class='btn btn-outline-primary float-right'>Edit</button></a>".
-	"<button class='btn btn-outline-danger float-right'>Remove</button>";
+	$buttonOptions = "<a href='/edit-participant/".$participant['participantid']."'><button class='btn btn-outline-secondary ml-2 float-right'>Edit</button></a>".
+	"<button class='btn btn-outline-danger ml-2 float-right'>Remove</button>";
 }
 
 $resultNotes = $db->query("SELECT * from participantclassattendance WHERE participantid = $1", [$peopleid]);
@@ -73,7 +73,7 @@ function status($timestamp, $activePeriod){
 	}
 	return $statuses;
 }
-$statuses = status($notes['date'],39);
+$statuses = status($notes['date'],40);
 ?>
     <div class="card" style="max-width: 700px; width: 100%; margin: 0 auto;">
         <div class="card-header">
