@@ -43,26 +43,37 @@ $notes = pg_fetch_assoc($resultNotes);
        <button class="cpca btn" onclick="goBack()"><i class="fa fa-arrow-left"></i> Back</button>
     </div>
 	<?php
+/**
+ * Checks the status of a participant
+ * sets active status based on last class attended
+ * shows last date/time of attendence  
+ * @param $timestamp last time participant was seen
+ * @param $activePeriod range for which participant can be absent before 
+ * being considered inactive
+ * @return array the set of status properties that
+ *   will be assigned to the status span
+**/
 function status($timestamp, $activePeriod){
-	$statuses = array();
 	$currentDate =new DateTime("now", new DateTimeZone("America/New_York"));
 	$passedTime =new DateTime($timestamp, new DateTimeZone("America/New_York"));
-	$timeDifference = $passedTime->diff($currentDate); 
-	$timePassed=(int) $timeDifference->format('%a');
-	if($timePassed < $activePeriod){
-		//echo "not over $activePeriod days <br>";
-		$readableDate= $passedTime->format(' l jS F Y \a\t g:ia ');
-		//print_r($readableDate);
-		$statuses["status"] = "active </span> <i>last seen  : ".toString($readableDate)[0]."</i>";
-		$statuses["class"] = "badge badge-success";
+	$timeDifference =(int) $passedTime->diff($currentDate)->format('%a');
+	
+	if($timeDifference <= $activePeriod){
+		$readableDate= $passedTime->format('m/d/Y g:i A');
+		$statuses = array(
+						"status" => "active </span> <i>last seen  : ".toString($readableDate)[0]."</i>",
+						"class" => "badge badge-success",
+						);
 	}else{
-		//echo "over $activePeriod days";
-		$statuses["status"] = "inactive";
-		$statuses["class"] = "badge badge-secondary";
+		$readableDate= $passedTime->format(' l jS F Y \a\t g:ia ');
+		$statuses = array(
+						"status" => "inactive </span> <i>last seen  : ".toString($readableDate)[0]."</i>",
+						"class" => "badge badge-secondary",
+						);
 	}
 	return $statuses;
 }
-$satuses = status($notes['date'],50);
+$statuses = status($notes['date'],39);
 ?>
     <div class="card" style="max-width: 700px; width: 100%; margin: 0 auto;">
         <div class="card-header">
@@ -76,7 +87,7 @@ $satuses = status($notes['date'],50);
             <hr>
             <div class="pl-3">
                 <p class="participant_name"><b>Name: </b> <?= $participant['firstname']." ".$participant['middleinit']." ".$participant['lastname'] ?></p>
-                <p class="participant_status"><b>Status: </b> <span class="<?= $satuses['class']?>"><?= $satuses['status']?></p>
+                <p class="participant_status"><b>Status: </b> <span class="<?=$statuses['class']?>"><?=$statuses['status']?></p>
                 <p class="participant_notes"><b>Notes: </b> <p class="pl-3">"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."</p></p>
                 <p class="participant_other"><b>Other: </b> Other items to note</p>
                 <p class="participant_contact"><b>Contact: </b></p>
