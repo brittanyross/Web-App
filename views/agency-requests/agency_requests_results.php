@@ -38,8 +38,8 @@ include('header.php');
         #if query returns nothing, throw an error to the user
         if(pg_num_rows($result) == 0){
         ?>
-            <div class="alert alert-warning">
-                <strong>Sorry, did not return any results for </strong> <u><?php echo $searchquery ?></u>
+            <div class="text-center">
+               No participants found with name <i>"<?php echo $searchquery ?>"</i>
             </div>
         <?php
         }//end if
