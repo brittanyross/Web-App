@@ -147,32 +147,48 @@ else {
     $fullQuery = "select * from classattendancedetails " .
         " where curriculumname = '" . escape_apostrophe($selected_curr) . "' " .
         "and facilitatorid = {$employee_id} " .
-        "and date >= '{$threeWeeksAgo}';";
+        "and date >= '{$threeWeeksAgo}'" .
+        "ORDER BY date DESC;";
 
     //query the view
     $get_participants = $db->no_param_query($fullQuery);
 
-    //TODO: get distinct records and the most up to date information
-
+    $addedPIDs = array();
 
     while($row = pg_fetch_assoc($get_participants)){
 
-        $pageInformation[] = array(
-            "pid"           => $row['participantid'],
-            "fn"            => $row['firstname'],
-            "mi"            => $row['middleinit'],
-            "ln"            => $row['lastname'],
-            "dob"           => $row['dateofbirth'],
-            "zip"           => $row['zipcode'],
-            "numChildren"   => $row['numchildren'],
-            "race"          => null,
-            "comments"      => null,
-            "present"       => false,
-            "isNew"         => false, //isNew field from DB
-            //people who haven't completed the intake forms and just filled out info in the "no intake form" section
-            "firstClass"    => false
-    );
+        $pid = $row['participantid'];
+
+        //look through the records to see if this person was added before
+
+        $alreadyAdded = false;
+        for($j = 0; $j < count($addedPIDs); $j++){
+            if($addedPIDs[$j] == $pid) $alreadyAdded = true;
+        }
+
+        if(!$alreadyAdded){
+            $addedPIDs[] = $pid;
+            //not added yet, so let's add
+            $pageInformation[] = array(
+                "pid"           => $pid,
+                "fn"            => $row['firstname'],
+                "mi"            => $row['middleinit'],
+                "ln"            => $row['lastname'],
+                "dob"           => $row['dateofbirth'],
+                "zip"           => $row['zipcode'],
+                "numChildren"   => $row['numchildren'],
+                "race"          => null,
+                "comments"      => null,
+                "present"       => false,
+                "isNew"         => false, //isNew field from DB
+                //people who haven't completed the intake forms and just filled out info in the "no intake form" section
+                "firstClass"    => false
+            );
+        }
+
     }
+
+
 }
 
 

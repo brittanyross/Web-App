@@ -39,18 +39,25 @@ $attendanceInfo = deserializeParticipantMatrix($serializedInfo);
 for($i = 0; $i < count($attendanceInfo); $i++) {
     if($attendanceInfo[$i]['firstClass'] && $attendanceInfo[$i]['present']){ //first class ever and present
         //run function to insert them into the system
+
+        //this converts the age that was converted in attendance form so it can be converted again in the proc
+        //WARNING: if, by some miracle it's this person's birthday and their age changes in the nanoseconds that this
+        //  takes to run, then there may be an issue ¯\_(ツ)_/¯
+        $age = calculate_age($attendanceInfo[$i]['dob']);
+
         $resultInsert = $db->no_param_query(
                 "SELECT createOutOfHouseParticipant( ".
                 "participantFirstName := '{$attendanceInfo[$i]['fn']}'::text, " .
                 "participantMiddleInit := '{$attendanceInfo[$i]['mi']}'::varchar, " .
                 "participantLastName := '{$attendanceInfo[$i]['ln']}'::text, " .
-                "participantAge   := {$attendanceInfo[$i]['dob']}::int, " .
+                "participantAge   := {$age}::int, " .
                 "participantRace   := '{$attendanceInfo[$i]['race']}'::race, " .
                 //TODO: change employeeID when DB sorts it out
-                "employeeID := 1::int "
+                "employeeID := 1::int " .
+                "); "
         );
         //update row information with those values
-        $personId = pg_fetch_result($resultInsert, 'participantId');
+        $personId = pg_fetch_result($resultInsert, 'createOutOfHouseParticipant');
         $attendanceInfo[$i]['pid'] = $personId;
     }
 }
