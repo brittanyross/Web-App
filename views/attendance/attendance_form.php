@@ -190,42 +190,39 @@ $display_time = $convert_time->format('g:i A');
     <script src="/js/attendance-scripts/attendance-form-add-new-person.js"></script>
 
         <script>
-        var pageFormName = 'whole-page-form';
+        
+        //name of the only form on the page
+       var pageFormName = 'whole-page-form';
+
+        //input: page the form redirects to
+        output: none
         function setFormAction(action){
-            document.getElementById(pageFormName).action = action;
+           document.getElementById(pageFormName).action = action;
         }
+		
         function editPerson(){
             setFormAction('edit-participant');
             document.getElementById(pageFormName).submit();
         }
-		       function addPerson() {
-            //TODO: handle submission logic
-            if(jsValidateTable() === true){
-                setFormAction('attendance-form');
-                document.getElementById('fromAddPerson').value = 1; //helps to identify that we just added someone
-                document.getElementById(pageFormName).submit();
-            }
+		
+	   function addPerson() {
+		//TODO: handle submission logic
+		if(jsValidateTable() === true){
+			setFormAction('attendance-form');
+			document.getElementById('fromAddPerson').value = 1; //helps to identify that we just added someone
+			document.getElementById(pageFormName).submit();
+		}
+		
+        }
+		  function submitAttendance() {
+            //set page to go to that
+            setFormAction('attendance-sheet', 'attendance-form-confirmed');
+            document.getElementById('attendance-sheet').submit();
         }
 		</script>
     <script>
 	//wrapping in jquery to perform searches and adding users
 	$(document).ready(function(){
-	
-        //name of the only form on the page
-       // var pageFormName = 'whole-page-form';
-
-        //input: page the form redirects to
-        //output: none
-        //function setFormAction(action){
-          //  document.getElementById(pageFormName).action = action;
-        //}
-
-	/*	$(".submit-attendance").click(function(){
-            setFormAction('attendance-form-confirmation');
-            $("#whole-page-form").submit(); 
-	   });*/
-		
-       
 		//when uesr clicks the search button within the 'search for person' card
 		//open a modal using user input as search query, then display in modal
 		$(".active-search").click(function(){
@@ -539,7 +536,7 @@ $display_time = $convert_time->format('g:i A');
 
             <br/>
             <div class="d-flex justify-content-start">
-                <button type="button" class="btn btn-success submit-attendance">Submit Attendance</button>
+                <button type="button" class="btn btn-success" onclick="submitAttendance()" >Submit Attendance</button>
             </div>
         </div>
         </form>
