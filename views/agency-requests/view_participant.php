@@ -64,13 +64,20 @@ function status($timestamp, $activePeriod){
 						"status" => "active </span> <i>last seen  : ".toString($readableDate)[0]."</i>",
 						"class" => "badge badge-success",
 						);
-	}else{
+	}else if($timeDifference >= $activePeriod){
 		$readableDate= $passedTime->format(' l jS F Y \a\t g:ia ');
 		$statuses = array(
 						"status" => "inactive </span> <i>last seen  : ".toString($readableDate)[0]."</i>",
 						"class" => "badge badge-secondary",
 						);
 	}
+	if($timestamp == ""){
+				$statuses = array(
+				"status" => "inactive</span>  <i> No classes taken yet</i>",
+				"class" => "badge badge-primary",
+				);
+	}
+	//TODO: Add condition for if the participant graduates 
 	return $statuses;
 }
 $statuses = status($notes['date'],40);
