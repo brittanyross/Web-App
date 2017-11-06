@@ -25,6 +25,11 @@ $result = $db->no_param_query("select fca.topicname, fca.date, co.sitename " .
     <script src="/js/attendance-scripts/historical-class-view.js"></script>
 
     <div class="container col-12">
+        <div class="row flex-row" style="margin-bottom: 20px">
+            <button type="button" class="btn btn-default col-12" style="margin-top: 15px" onclick="window.location.href='./new-class'">Record Attendance For New Class</button>
+            <button type="button" class="btn btn-info col-12" style="margin-top: 15px" onclick="window.location.href='./historical-class-search'">Search For Historical Attendance</button>
+        </div>
+
         <div class="row col-12">
 
             <div class="card col-12">
@@ -55,7 +60,6 @@ $result = $db->no_param_query("select fca.topicname, fca.date, co.sitename " .
                                             $myFormatDate = date("m/d/y", $time);
                                             $myFormatTime = date("h:i A", $time);
                                             echo "<td>{$myFormatDate} <em>{$myFormatTime}</em></td>";
-                                            //echo "<td><a href=\"#\" type=\"submit\" name=\"action\" value="{$counter}">More details...</a> </td>";
                                             echo "<td><button href=\"#\" class=\"btn btn-link\" type=\"submit\" onclick=\"changeHiddenFormFieldValue({$counter})\">More details...</button></td>";
                                         echo "</tr>";
                                         $counter++;
@@ -70,10 +74,6 @@ $result = $db->no_param_query("select fca.topicname, fca.date, co.sitename " .
                     </div>
                 </div>
             </div>
-
-
-            <button type="button" class="btn btn-default col-12" style="margin-top: 15px" onclick="window.location.href='./new-class'">Record Attendance For New Class</button>
-            <button type="button" class="btn btn-info col-12" style="margin-top: 15px" onclick="window.location.href='./historical-class-search'">Search For Historical Attendance</button>
         </div>
 
     </div>

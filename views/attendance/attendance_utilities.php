@@ -45,7 +45,8 @@ function formatSQLDate($sqlDate) {
 //description: create timestamp from specific date format
 function makeTimestamp($inputDate, $inputTime){
     $convertDate = DateTime::createFromFormat('Y-m-d H:i', (string)$inputDate . " " . $inputTime);
-    $timestamp = $convertDate->format('Y-m-d H:i:00.000000');
+    //the one preserves the milliseconds for the function formatSQLDate(timestamp) to work properly
+    $timestamp = $convertDate->format('Y-m-d H:i:00.000001');
     return $timestamp;
 }
 
