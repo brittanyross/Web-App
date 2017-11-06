@@ -142,6 +142,13 @@ echo "<script>console.log(" . date('d-m-Y') . ")</script>"
                         </select>
                     </div>
 
+                    <div class="form-group">
+                        <label for="classes">Facilitator Selection</label>
+                        <select id="classes" class="form-control" name="classes" onchange="">
+                            <option></option>
+                        </select>
+                    </div>
+
                     <div class="form-group row">
                         <label for="date-input" class="col-2 col-form-label">Date</label>
                         <div class="col-10">

@@ -17,7 +17,7 @@ $result = $db->no_param_query("select fca.topicname, fca.date, co.sitename " .
 "and fca.date = co.date " .
 "and fca.facilitatorid = {$peopleid} " .
 "order by fca.date desc " .
-"limit 20; ");
+"limit 5; ");
 
 
 ?>
