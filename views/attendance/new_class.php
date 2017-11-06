@@ -143,8 +143,8 @@ echo "<script>console.log(" . date('d-m-Y') . ")</script>"
                     </div>
 
                     <div class="form-group">
-                        <label for="classes">Facilitator Selection</label>
-                        <select id="classes" class="form-control" name="classes" onchange="">
+                        <label for="facilitator">Facilitator Selection</label>
+                        <select id="facilitator" class="form-control" name="classes" onchange="">
                             <option></option>
                         </select>
                     </div>
