@@ -20,7 +20,6 @@ $whatPageWeCameFrom = null;
 if(isset ($_POST["whichButton"])) {
     $whatPageWeCameFrom = "dashboard";
     $classN = $_POST["whichButton"];
-    echo "<h1>{$classN}</h1>";
     $queryClassList  = "select fca.topicname, fca.date, co.sitename " .
         "from facilitatorclassattendance fca, classoffering co " .
         "where fca.topicname = co.topicname " .
