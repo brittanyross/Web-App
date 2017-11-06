@@ -25,10 +25,7 @@ $result = $db->no_param_query("select fca.topicname, fca.date, co.sitename " .
     <script src="/js/attendance-scripts/historical-class-view.js"></script>
 
     <div class="container col-12">
-        <div class="row flex-row" style="margin-bottom: 20px">
-            <button type="button" class="btn btn-default col-12" style="margin-top: 15px" onclick="window.location.href='./new-class'">Record Attendance For New Class</button>
-            <button type="button" class="btn btn-info col-12" style="margin-top: 15px" onclick="window.location.href='./historical-class-search'">Search For Historical Attendance</button>
-        </div>
+
 
         <div class="row col-12">
 
@@ -71,9 +68,37 @@ $result = $db->no_param_query("select fca.topicname, fca.date, co.sitename " .
                             <!-- The hidden field -->
                             <input type="hidden" id="whichButton" name="whichButton" value="" />
                         </form>
+                        <div class="d-flex justify-content-center">
+                            <nav aria-label="Page navigation example">
+                                <ul class="pagination">
+                                    <li class="page-item">
+                                        <a class="page-link" href="#" aria-label="Previous">
+                                            <span aria-hidden="true">&laquo;</span>
+                                            <span class="sr-only">Previous</span>
+                                        </a>
+                                    </li>
+                                    <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="#" aria-label="Next">
+                                            <span aria-hidden="true">&raquo;</span>
+                                            <span class="sr-only">Next</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+
+
                     </div>
                 </div>
             </div>
+        </div>
+
+        <div class="row flex-row" style="margin-bottom: 20px">
+            <button type="button" class="btn btn-default col-12" style="margin-top: 15px" onclick="window.location.href='./new-class'">Record Attendance For New Class</button>
+            <button type="button" class="btn btn-info col-12" style="margin-top: 15px" onclick="window.location.href='./historical-class-search'">Search For Historical Attendance</button>
         </div>
 
     </div>

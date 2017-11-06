@@ -34,7 +34,15 @@ function calculate_age($raw_sqlDate) {
 //input: ray sql timestamp
 //output: nicely formatted date and time
 function formatSQLDate($sqlDate) {
-    $convertDate = DateTime::createFromFormat('Y-m-d H:i:s.u', $sqlDate);
+    //for some reason, if a timestamp is H:i:s.000000, fetching the row drops the microseconds.
+    //  this is a workaround
+    $sqlDateString = (string) $sqlDate;
+    if(strpos($sqlDateString, '.') == false) {
+        //period not found, must add
+        $sqlDateString .= ".000000";
+    }
+
+    $convertDate = DateTime::createFromFormat('Y-m-d H:i:s.u', $sqlDateString);
     $formattedDate = $convertDate->format('l, F jS g:i A');
 
     return $formattedDate;
@@ -46,7 +54,7 @@ function formatSQLDate($sqlDate) {
 function makeTimestamp($inputDate, $inputTime){
     $convertDate = DateTime::createFromFormat('Y-m-d H:i', (string)$inputDate . " " . $inputTime);
     //the one preserves the milliseconds for the function formatSQLDate(timestamp) to work properly
-    $timestamp = $convertDate->format('Y-m-d H:i:00.000001');
+    $timestamp = $convertDate->format('Y-m-d H:i:00.000000');
     return $timestamp;
 }
 
