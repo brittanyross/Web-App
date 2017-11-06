@@ -46,8 +46,24 @@ if(isset($_SESSION['serializedInfo'])) {
     if(isset($_POST['fromConfirmPage'])) {
         $pageInformation = deserializeParticipantMatrix($_SESSION['serializedInfo']);
     }
-    else if(isset($_POST['fromEditParticipant'])){
+    else if(isset($_POST['fromConfirmEditParticipant'])){
+        $pageInformation = deserializeParticipantMatrix($_SESSION['serializedInfo']);
+        $selected_edit_num = $_POST['editButton'];
+        $changed_num_children = $_POST['num-children-input-change'];
+        $changed_zip = $_POST['zip-input-change'];
 
+        //validate
+        if(validateNumChildren($changed_num_children) && validateZip($changed_zip)){
+            //get the corresponding person
+            $pageInformation[$selected_edit_num]['numChildren'] = $changed_num_children;
+            $pageInformation[$selected_edit_num]['zip'] = $changed_zip;
+
+            //update the session matrix
+            $_SESSION['serializedInfo'] = serializeParticipantMatrix($pageInformation);
+        } else{ //TODO: change when tested
+            echo "<h1>Invalid Input</h1>";
+            die();
+        }
     }
     else if(isset($_POST['lookupId'])){
         $pageInformation = deserializeParticipantMatrix($_SESSION['serializedInfo']);
@@ -280,14 +296,13 @@ $display_time = $convert_time->format('g:i A');
             setFormAction('attendance-form-confirmation');
             document.getElementById(pageFormName).submit();
         }
-        function editPerson(){
+        //used in edit buttons
+        function editPerson(buttonNumber){
+            //set form value to button value
+            document.getElementById("editButton").value = buttonNumber;
+
             setFormAction('edit-participant');
             document.getElementById(pageFormName).submit();
-        }
-        //TODO: handle logic (Vallie is working on this page)
-        function searchForPerson() {
-            //setFormAction('');
-            //document.getElementById(pageFormName).submit();
         }
         function addPerson() {
             //TODO: handle submission logic
@@ -469,11 +484,11 @@ $display_time = $convert_time->format('g:i A');
                                         echo "</div>";
                                         echo "</td>";
                                         echo "<td>";
-                                        echo "<button class='btn btn-link' onclick='editPerson()'>Edit</button>";
+                                        echo "<button class='btn btn-link' onclick='editPerson({$i})'>Edit</button>";
                                         echo "</td>";
                                         echo "</tr>";
                                     }
-                                    //update the session information
+
                                     $_SESSION['serializedInfo'] = serializeParticipantMatrix($pageInformation);
                                         ?>
                                     </tbody>
@@ -609,7 +624,6 @@ $display_time = $convert_time->format('g:i A');
 
                                 <!-- validate and add to list above -->
                                 <div class = "row">
-
                                     <button type="button" class="btn btn-primary" style="margin-left:15px" onclick="addPerson()">Add Person</button>
                                 </div>
                         </div>

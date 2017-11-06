@@ -44,6 +44,8 @@ $router->add('/historical-class-view', 'attendance/historical_class_view.php', '
 $router->add('/historical-class-search', 'attendance/historical_class_lookup.php', 'Search By Day');
 $router->add('/historical-class-search-results', 'attendance/historical_class_lookup_results.php', 'Historical Class Search Results');
 $router->add('/attendance-form-confirmed', 'attendance/attendance_form_confirmed.php', 'Attendance Confirmed');
+$router->add('/edit-participant', 'attendance/edit_participant.php', 'Edit Participant');
+$router->add('/edit-participant-confirm', 'attendance/edit_participant_confirm.php', 'Confirm Participant Edit');
 
 #Reports
 $router->add('/quarterly-reports', 'reports/quarterly.php', 'Quarterly Reports');

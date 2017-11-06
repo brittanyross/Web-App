@@ -94,13 +94,19 @@ function validateRace(race) {
 }
 
 function validateAge(age) {
+    var ageNumber = parseInt(age);
+    if(isNaN(ageNumber)) return false;
+    if(typeof(ageNumber) !== "number") return false;
     //returns true if age in valid range 18-100
-    return((age >= 18) && (age <= 100));
+    return((ageNumber >= 18) && (ageNumber <= 100));
 }
 
 function validateNumChildren(num) {
+    var number = parseInt(num);
+    if(isNaN(number)) return false;
+    if(typeof(number) !== "number") return false;
     //returns true if a valid number of children
-    return((num >= 0) && (num <= 25))
+    return((number >= 0) && (number <= 25))
 }
 
 function validateZip(zip) {
