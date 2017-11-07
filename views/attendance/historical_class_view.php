@@ -13,47 +13,44 @@ $_SESSION['employeeid'] = 1;
 $peopleid = $_SESSION['employeeid'];
 
 $classN = null;
-$queryClassList = null;
 $whatPageWeCameFrom = null;
 
-//check to see where the post came from
+//shared information we're grabbing
+$queryClass = "select fca.topicname, fca.date, co.sitename, peop.firstname, peop.middleinit, peop.lastname, cur.curriculumname " .
+                "from facilitatorclassattendance fca, classoffering co, " .
+                     "facilitators fac, employees emp, people peop, curriculumclasses cc, curricula cur " .
+                "where fca.topicname = co.topicname " .
+                    "and fca.sitename = co.sitename " .
+                    "and fca.date = co.date " .
+                    "and fca.facilitatorid = fac.facilitatorid " .
+                    "and fac.facilitatorid = emp.employeeid " .
+                    "and emp.employeeid = peop.peopleid " .
+                    "and co.curriculumid = cc.curriculumid " .
+                    "and cc.curriculumid = cur.curriculumid ";
+
+//additional parameters - check to see where the post came from
 if(isset ($_POST["whichButton"])) {
     $whatPageWeCameFrom = "dashboard";
     $classN = $_POST["whichButton"];
-    $queryClassList  = "select fca.topicname, fca.date, co.sitename " .
-        "from facilitatorclassattendance fca, classoffering co " .
-        "where fca.topicname = co.topicname " .
-        "and fca.sitename = co.sitename " .
-        "and fca.date = co.date " .
-        "and fca.facilitatorid = {$peopleid} " .
-        "order by fca.date desc " .
-        "limit 20; ";
+
+    $queryClass .= "and fca.facilitatorid = {$peopleid} " .
+                    "order by fca.date desc " .
+                    "limit 20; ";
 }
 else if(isset($_POST["whichButtonHistoricalSearch"])){
     $whatPageWeCameFrom = "historicalLookup";
     $classN = $_POST["whichButtonHistoricalSearch"];
     $classListDate = $_POST["input-date"];
-    $queryClassList = "select fca.topicname, fca.date, co.sitename " .
-        "from facilitatorclassattendance fca, classoffering co, curricula cu, " .
-        "facilitators fac, employees emp, people peop " .
-        "where fca.topicname = co.topicname " .
-        "and fca.sitename = co.sitename " .
-        "and fca.date = co.date " .
-        "and co.curriculumid = cu.curriculumid " .
-        "and fca.facilitatorid = fac.facilitatorid " .
-        "and fac.facilitatorid = emp.employeeid " .
-        "and emp.employeeid = peop.peopleid " .
-        "and to_char(co.date, 'YYYY-MM-DD') = '{$classListDate}';";
+
+    $queryClass .= "and to_char(co.date, 'YYYY-MM-DD') = '{$classListDate}';";
 }
 else{ //shouldn't be here
-    die;
+    echo "<h1>Please use 'recent classes' or the 'historical attendance lookup tool' to access attendance history.</h1>";
+    die; //on the Whirly Dirly
 }
 
-
-
-
 //grab the specific class we clicked
-$resultClassInfo = $db->no_param_query($queryClassList);
+$resultClassInfo = $db->no_param_query($queryClass);
 
 //loop through to desired result
 for($i = 0; $i < $classN; $i++){
@@ -62,16 +59,18 @@ for($i = 0; $i < $classN; $i++){
 $row = pg_fetch_assoc($resultClassInfo); //actual row we want
 
 $class_topic = $row['topicname'];
+$class_curriculum = $row['curriculumname'];
 $site_name = $row['sitename'];
 $class_date = $row['date'];
+$facilitator_name = $row['firstname'] . " " . $row['middleinit'] . " " . $row['lastname'];
 $displayDate = formatSQLDate($class_date);
 
-$queryClassInformation = "select firstname fn, middleinit mi, lastname ln, numchildren nc, comments c, participantid pid " .
+$queryClassInformation = "select * " .
         "from classattendancedetails " .
         "where topicname = '" . escape_apostrophe($class_topic) ."' " .
         "and sitename = '" . escape_apostrophe($site_name) ."' " .
         "and date = '{$class_date}' " .
-        "order by ln asc;";
+        "order by lastname asc;";
 
 $result = $db->no_param_query($queryClassInformation);
 
@@ -90,15 +89,23 @@ $result = $db->no_param_query($queryClassInformation);
             <div class="card">
                 <div class="card-block">
                     <h4 class="card-title" style="margin-top: 10px; margin-left: 10px; text-align: center;">Attendance: <?php echo $displayDate; ?> </h4>
-                    <h6 style="text-align: center;"><?php echo $site_name . " : " . $class_topic?></h6>
+                    <h6 style="text-align: center;"><?php echo $class_curriculum . " : " . $class_topic?></h6>
+                    <h6 style="text-align: center;"><i><?php echo "Facilitator : " . $facilitator_name?></i></h6>
+                    <h6 style="text-align: center;"><i><?php echo "Site : " . $site_name?></i></h6>
                     <!-- Table -->
                     <div class="table-responsive">
                         <table class="table table-striped">
                             <thead>
                             <tr>
                                 <th>Name</th>
-                                <th>Number of children under 18</th>
+                                <th>Age</th>
+                                <th>Zip</th>
+                                <th>Number of </br>children under 18</th>
                                 <th>Comments</th>
+                                <th>New?</th>
+                                <th>Race</th>
+                                <th>Sex</th>
+                                <th>DOB</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -106,9 +113,19 @@ $result = $db->no_param_query($queryClassInformation);
                             <?php
                                 while($row = pg_fetch_assoc($result)) {
                                     echo "<tr class=\"m-0\">";
-                                        echo "<td>{$row['fn']} {$row['mi']} {$row['ln']}</td>";
-                                        echo "<td>{$row['nc']}</td>";
-                                        echo "<td>{$row['c']}</td>";
+                                        echo "<td>{$row['firstname']} {$row['middleinit']} {$row['lastname']}</td>";
+                                        $dob = $row['dateofbirth'];
+                                        $age = calculate_age($dob);
+                                        echo "<td>{$age}</td>";
+                                        echo "<td>{$row['zipcode']}</td>";
+                                        echo "<td>{$row['numchildren']}</td>";
+                                        echo "<td>{$row['comments']}</td>";
+                                        $tf = $row['isnew'] ? $tf = "yes" : $tf = "no";
+                                        echo "<td>{$tf}</td>";
+                                        echo "<td>{$row['race']}</td>";
+                                        echo "<td>{$row['sex']}</td>";
+                                        echo "<td>{$dob}</td>";
+
                                     echo "</tr>";
                                 }
 
