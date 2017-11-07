@@ -17,7 +17,7 @@ $result = $db->no_param_query("select fca.topicname, fca.date, co.sitename " .
 "and fca.date = co.date " .
 "and fca.facilitatorid = {$peopleid} " .
 "order by fca.date desc " .
-"limit 5; ");
+"limit 20; ");
 
 
 ?>
@@ -46,18 +46,18 @@ $result = $db->no_param_query("select fca.topicname, fca.date, co.sitename " .
                                         <th></th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody id="result-pag">
                                 <?php
                                     $counter = 0;
                                     while($row = pg_fetch_assoc($result)) {
-                                        echo "<tr>";
+                                        echo "<tr id='{$counter}'>";
                                             echo "<td>{$row['topicname']}</td>";
                                             echo "<td>{$row['sitename']}</td>";
                                             $time = strtotime($row['date']);
                                             $myFormatDate = date("m/d/y", $time);
                                             $myFormatTime = date("h:i A", $time);
                                             echo "<td>{$myFormatDate} <em>{$myFormatTime}</em></td>";
-                                            echo "<td><button href=\"#\" class=\"btn btn-link\" type=\"submit\" onclick=\"changeHiddenFormFieldValue({$counter})\">More details...</button></td>";
+                                            echo "<td><button href=\"\" class=\"btn btn-link\" type=\"submit\" onclick=\"changeHiddenFormFieldValue({$counter})\">More details...</button></td>";
                                         echo "</tr>";
                                         $counter++;
                                     }
@@ -69,25 +69,11 @@ $result = $db->no_param_query("select fca.topicname, fca.date, co.sitename " .
                             <input type="hidden" id="whichButton" name="whichButton" value="" />
                         </form>
                         <div class="d-flex justify-content-center">
-                            <nav aria-label="Page navigation example">
-                                <ul class="pagination">
-                                    <li class="page-item">
-                                        <a class="page-link" href="#" aria-label="Previous">
-                                            <span aria-hidden="true">&laquo;</span>
-                                            <span class="sr-only">Previous</span>
-                                        </a>
-                                    </li>
-                                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                    <li class="page-item">
-                                        <a class="page-link" href="#" aria-label="Next">
-                                            <span aria-hidden="true">&raquo;</span>
-                                            <span class="sr-only">Next</span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </nav>
+                            <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                                <div class="btn-group mr-2" role="group" aria-label="First group" id="button-nav" style="margin-bottom: 10px;">
+                                    <button type="button" name="btn-pag" id="btn-pag-1" class="btn btn-primary" onclick="selectButton(1)">1</button>
+                                </div>
+                            </div>
                         </div>
 
 
@@ -102,6 +88,9 @@ $result = $db->no_param_query("select fca.topicname, fca.date, co.sitename " .
         </div>
 
     </div>
+
+    <script src="/js/attendance-scripts/dashboard-pagination.js"></script>
+
 <?php
 include('footer.php');
 ?>
