@@ -83,7 +83,6 @@ function changeButton(num) {
 //set all buttons to secondary
 function resetButtonColors() {
     var btnGroup = document.getElementsByName("btn-pag");
-    console.log(btnGroup.length);
     for(var i = 0; i < btnGroup.length; i++){
         btnGroup[i].removeAttribute('class');
         btnGroup[i].classList.add('btn');
