@@ -100,8 +100,13 @@ function updateSessionClassInformation(){
     $_SESSION['serializedInfo'] = $updatedInfoSerialize;
 }
 
+
+//================================================================
+//INPUT VALIDATION
+//================================================================
 //validation functions (occur after JS validation so
 // if they're not valid, it's malicious or they aren't running JS
+
 
 //input: first or last name
 //output: (boolean)isValid

@@ -17,6 +17,13 @@ $result_sites = $db->no_param_query("select s.sitename from sites s;");
 
 $result_languages = $db->no_param_query("select * from languages;");
 
+$result_facilitators = $db->no_param_query("select peop.firstname, peop.middleinit, peop.lastname, peop.peopleid " .
+                                            "from people peop, employees emp, facilitators f " .
+                                            "where peop.peopleid = emp.employeeid " .
+                                            "and emp.employeeid = f.facilitatorid " .
+                                            "order by peop.lastname asc;"
+);
+
 include('header.php');
 
 
@@ -145,7 +152,12 @@ echo "<script>console.log(" . date('d-m-Y') . ")</script>"
                     <div class="form-group">
                         <label for="facilitator">Facilitator Selection</label>
                         <select id="facilitator" class="form-control" name="classes" onchange="">
-                            <option></option>
+                            <?php
+                            while($row = pg_fetch_assoc($result_facilitators)){
+                                $fullName = $row['firstname'] . " " . $row['middleinit'] . " " . $row['lastname'];
+                                echo "<option>{$fullName}</option>";
+                            }
+                            ?>
                         </select>
                     </div>
 
