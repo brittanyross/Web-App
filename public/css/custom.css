@@ -534,6 +534,45 @@ label[for=password] {
     text-align: right;
 }
 
+/* Help */
+#help-section {
+    overflow-y: auto;
+}
+
+#help-section h4 {
+    color: #5C629C;
+}
+#help-section h5 {
+    color: #343A40;
+}
+
+#toc {
+    border-left: 1px solid #E9ECEF;
+    overflow-y: auto;
+}
+
+@media (max-width: 991px) {
+    #toc {
+        display: none;
+    }
+}
+
+#toc nav {
+    padding-left: 25px;
+}
+.toc-entry {
+    color: #868E96;
+    padding: 2px 1rem;
+}
+.toc-entry:hover {
+    color: #5C629C;
+    cursor: pointer;
+}
+
+.toc-entry.active {
+    color: #5C629C;
+    font-weight: bold;
+}
 .radio-group {
     text-align: right;
 }
