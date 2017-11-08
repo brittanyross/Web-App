@@ -354,7 +354,7 @@ $display_time = $convert_time->format('g:i A');
             div.setAttribute("role", "alert");
             div.setAttribute("class", "alert alert-warning");
             div.innerHTML = "<strong>Oops! </strong>Error in comment for <strong><em>" + errorFor +  "</em></strong>: Please use only letters, numbers, periods, commas, " +
-                "and question marks in comments.";
+                "spaces, and question marks in comments.";
 
             insertAlertHere.appendChild(div);
         }

@@ -72,9 +72,6 @@ echo "<script>console.log(" . date('d-m-Y') . ")</script>"
             }
         }
 
-
-
-
         //add new options
 
         var node = document.createElement("OPTION");
@@ -86,13 +83,55 @@ echo "<script>console.log(" . date('d-m-Y') . ")</script>"
         console.log(classesMatrix.length);
         for(var i = 0; i < classesMatrix.length; i++){
             if(classesMatrix[i][0].toString() === curriculumNumberSelected){ //same course number
-                console.log("got here");
                 var classNode = document.createElement("OPTION");
                 classNode.innerHTML = classesMatrix[i][1];
                 classesElement.appendChild(classNode);
             }
         }
 
+    }
+
+    function populateTimes() {
+        var selectTime = document.getElementById('time-input');
+
+        var optionArray = [];
+
+        //AM
+        for(var i = 0; i < 12; i++){
+            var hourAM;
+            if(i === 0){
+                hourAM = 12;
+            } else{
+                hourAM = i;
+            }
+            optionArray.push(createTime(hourAM, "00", "AM"))
+            optionArray.push(createTime(hourAM, "30", "AM"))
+        }
+
+        //PM
+        for(var j = 0; j < 12; j++){
+            var hourPM;
+            if(j === 0){
+                hourPM = 12;
+            } else{
+                hourPM = j;
+            }
+            optionArray.push(createTime(hourPM, "00", "PM"))
+            optionArray.push(createTime(hourPM, "30", "PM"))
+        }
+
+        for(var k = 0; k < optionArray.length; k++){
+            selectTime.appendChild(optionArray[k]);
+        }
+    }
+
+    //input: hour and time integers
+    //output: option object
+    function createTime(hour, minute, amORpm){
+        var option = document.createElement('OPTION');
+        option.innerHTML = (hour + ":" + minute + " " + amORpm).toString();
+
+        return option;
     }
     
     function enableSubmitButton() {
@@ -203,7 +242,9 @@ echo "<script>console.log(" . date('d-m-Y') . ")</script>"
                     <div class="form-group row">
                         <label for="time-input" class="col-2 col-form-label">Time</label>
                         <div class="col-10">
-                            <input class="form-control" type="time" value="<?php echo date('H:i') ?>" id="time-input" name = "time-input">
+                            <select class="form-control" id="time-input" name = "time-input">
+
+                            </select>
                         </div>
                     </div>
                     <?php echo "<input type = \"hidden\" id=\"facilitator\" name=\"facilitator\" value=\"{$defaultValueFacilitatorId}\" />"  ?>
@@ -219,6 +260,15 @@ echo "<script>console.log(" . date('d-m-Y') . ")</script>"
             </div>
         </div>
     </div>
+
+<script>
+    window.onload = function () {
+        populateTimes();
+    };
+
+
+
+</script>
 
 <?php
 include('footer.php');
