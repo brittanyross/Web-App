@@ -80,7 +80,6 @@ for($i = 0; $i < count($attendanceInfo); $i++) {
             "employeeID := 1::int " .
             "); ";
 
-        echo $resultInsertQuery;
         $resultInsert = $db->no_param_query($resultInsertQuery);
 
         //update row information with those values
