@@ -139,6 +139,13 @@ $(document).ready(function(){
             ?>
         </div>
     </div>
+
+    <script>
+        $(function() {
+            showTutorial('classes');
+        });
+    </script>
+
     <?php
     include('footer.php');
 }

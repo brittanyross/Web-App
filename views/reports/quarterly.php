@@ -64,9 +64,14 @@
     include('header.php');
 ?>
 <div class="container">
-	<div class="container pt-5">
+	<div class="container" align="right">
+		<button type="button" class="btn cpca" onclick="window.print()" <?php if ($_SERVER['REQUEST_METHOD'] !== 'POST') echo "style='display: none;'"?>>
+			<i class="fa fa-print" aria-hidden="true"></i> Print
+		</button>
+	</div>
+	<div class="container pt-3">
 		<form action="" method="POST" autocomplete="on">
-			<div class="row" style="margin-bottom: 1%">
+			<div id="quarterly-reports-fields" class="row" style="margin-bottom: 1%">
 				<div class="col">
 					<div class="form-group">
 						<select class="form-control" name="quarter" id="quarter">
@@ -88,7 +93,7 @@
 			<div class="row pb-3">
 				<div class="col"></div>
 				<div class="col-centered">
-					<button type="submit" class="btn cpca">Generate Report</button>
+					<button id="quarterly-reports-generate" type="submit" class="btn cpca">Generate Report</button>
 				</div>
 				<div class="col"></div>
 			</div>
@@ -223,6 +228,9 @@
 			yearElem.selectedIndex = year - y;
 		}
 	}
+	$(function() {
+		showTutorial('quarterlyReports');
+	});
 </script>
 <style>
 @media print{
