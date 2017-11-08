@@ -296,8 +296,10 @@ $display_time = $convert_time->format('g:i A');
             document.getElementById(pageFormName).action = action;
         }
         function submitAttendance() {
-            setFormAction('attendance-form-confirmation');
-            document.getElementById(pageFormName).submit();
+            if(validateComments()){
+                setFormAction('attendance-form-confirmation');
+                document.getElementById(pageFormName).submit();
+            }
         }
         //used in edit buttons
         function editPerson(buttonNumber){
@@ -316,13 +318,50 @@ $display_time = $convert_time->format('g:i A');
             }
         }
 
-        function validateComments(comment){
+        function validateComments(){
             //loop through table and verify each comment
-
+            var tableParent = document.getElementById('attendance-table-body');
             //create alert box and report what record failed
 
-            //returns true if matched, validates for a-z and A-Z
-            return (/^[a-zA-Z0-9\s.]*$/.test(comment));
+            for(var i = 0; i < tableParent.childElementCount; i++){
+                //grab the contents of the textarea
+                var tableRow = tableParent.children[i];
+                var textArea = tableRow.children[(tableRow.childElementCount - 2)].children[0].children[0].children[0];
+
+                var comment = textArea.value;
+                //not a valid comment
+                if(!(validateComment(comment))){
+                    var name = tableRow.children[1].innerHTML;
+                    createCommentErrorBox(name);
+                    return false;
+                }
+            }
+
+
+            return true;
+        }
+
+        //input: name of comment in person's text area that has special/forbidden characters
+        function createCommentErrorBox(errorFor){
+            var insertAlertHere = document.getElementById('insert-comment-alert-here');
+
+            while(insertAlertHere.hasChildNodes()) { //remove all children
+                insertAlertHere.removeChild(insertAlertHere.lastChild);
+            }
+
+            //create error box
+            var div = document.createElement("div");
+            div.setAttribute("role", "alert");
+            div.setAttribute("class", "alert alert-warning");
+            div.innerHTML = "<strong>Oops! </strong>Error in comment for <strong><em>" + errorFor +  "</em></strong>: Please use only letters, numbers, periods, commas, " +
+                "and question marks in comments.";
+
+            insertAlertHere.appendChild(div);
+        }
+
+        function validateComment(comment) {
+            //returns true if matched, validates for a-z A-Z spaces period or comma
+            return (/^[a-zA-Z0-9\s.,?]*$/.test(comment));
         }
     </script>
 	
@@ -446,6 +485,8 @@ $display_time = $convert_time->format('g:i A');
                 <div class="card" style="margin-bottom: 10px;">
                     <div class="card-block">
 
+                        <div id="insert-comment-alert-here"></div>
+
                             <!-- Table -->
                             <div class="table-responsive">
                                 <table class="table table-hover table-striped" id="class-list">
@@ -460,10 +501,8 @@ $display_time = $convert_time->format('g:i A');
                                         <th></th>
                                     </tr>
                                     </thead>
-                                    <tbody>
+                                    <tbody id="attendance-table-body">
 
-
-                                    <tr class="m-0">
                                     <?php
                                     for($i = 0; $i < count($pageInformation); $i++) {
                                         //field names - unique field names for individuals which are checked upon post
