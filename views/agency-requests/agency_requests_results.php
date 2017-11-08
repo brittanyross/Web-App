@@ -26,7 +26,7 @@ $result = $db->query("SELECT  participants.participantid, participants.dateofbir
                         "OR LOWER(CONCAT(people.lastname, ' ' , people.firstname, ' ',people.middleinit )) LIKE $1".
 						"OR LOWER(CONCAT(people.firstname, ' ' , people.lastname)) LIKE $1 ".
                         "OR LOWER(CONCAT(people.lastname, ' ' , people.firstname)) LIKE $1",  ['%'.$searchquery.'%']);
-
+$familyResult;
 include('header.php');
 ?>
 <div class="w-100 d-flex flex-column">

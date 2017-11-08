@@ -14,58 +14,6 @@
  * @since 0.1
  */
 
-$roleViews = [
-    Role::Facilitator => [
-	"facilitator"
-    ],
-    Role::Admin => [ 
-	"admin"
-    ],
-    Role::SuperAdmin => [
-	"super-admin"
-    ]
-];
-
-switch($roleViews[$_SESSION['role']][0]){
-	case "super-admin":
-	$buttonOptions = "<button class='btn btn-outline-primary float-right'>Edit</button>".
-	"<button class='btn btn-outline-danger float-right'>Remove</button>";
-	
-	break;
-	
-	case Role::Admin:
-	break;
-	
-	case Role::SuperAdmin:
-	break;
-	
-	default:
-		print_r(  $roleViews[$_SESSION['role']]);
-	
-}
-
-<<<<<<< HEAD
-=======
-switch($roleViews[$_SESSION['role']][0]){
-	case "super-admin":
-	$buttonOptions = "<button class='btn btn-outline-primary float-right'>Edit</button>".
-	"<button class='btn btn-outline-danger float-right'>Remove</button>";
-	
-	break;
-	
-	case Role::Admin:
-	break;
-	
-	case Role::SuperAdmin:
-	break;
-	
-	default:
-		print_r(  $roleViews[$_SESSION['role']]);
-	
-}
-
->>>>>>> Adding conditional role buttons for editing of participants
-
 global $db, $params;
 $peopleid = $params[0];
 
@@ -79,8 +27,8 @@ $participant = pg_fetch_assoc($result);
 $buttonOptions = null;
 if(hasRole(Role::Superuser)){
 	// echo "i'm super user and stuff";
-	$buttonOptions = "<a href='/edit-participant/".$participant['participantid']."'><button class='btn btn-outline-primary float-right'>Edit</button></a>".
-	"<button class='btn btn-outline-danger float-right'>Remove</button>";
+	$buttonOptions = "<a href='/edit-participant/".$participant['participantid']."'><button class='btn btn-outline-secondary ml-2 float-right'>Edit</button></a>".
+	"<button class='btn btn-outline-danger ml-2 float-right'>Remove</button>";
 }
 
 $resultNotes = $db->query("SELECT * from participantclassattendance WHERE participantid = $1", [$peopleid]);
@@ -102,6 +50,46 @@ include('header.php');
 			</div>
 		</div>
     </div>
+	<?php
+/**
+ * Checks the status of a participant
+ * sets active status based on last class attended
+ * shows last date/time of attendence  
+ * @param $timestamp last time participant was seen
+ * @param $activePeriod range for which participant can be absent before 
+ * being considered inactive
+ * @return array the set of status properties that
+ *   will be assigned to the status span
+**/
+function status($timestamp, $activePeriod){
+	$currentDate =new DateTime("now", new DateTimeZone("America/New_York"));
+	$passedTime =new DateTime($timestamp, new DateTimeZone("America/New_York"));
+	$timeDifference =(int) $passedTime->diff($currentDate)->format('%a');
+	
+	if($timeDifference <= $activePeriod){
+		$readableDate= $passedTime->format('m/d/Y g:i A');
+		$statuses = array(
+						"status" => "active </span> <i>last seen  : ".toString($readableDate)[0]."</i>",
+						"class" => "badge badge-success",
+						);
+	}else if($timeDifference >= $activePeriod){
+		$readableDate= $passedTime->format(' l jS F Y \a\t g:ia ');
+		$statuses = array(
+						"status" => "inactive </span> <i>last seen  : ".toString($readableDate)[0]."</i>",
+						"class" => "badge badge-secondary",
+						);
+	}
+	if($timestamp == ""){
+				$statuses = array(
+				"status" => "inactive</span>  <i> No classes taken yet</i>",
+				"class" => "badge badge-primary",
+				);
+	}
+	//TODO: Add condition for if the participant graduates 
+	return $statuses;
+}
+$statuses = status($notes['date'],40);
+?>
     <div class="card" style="max-width: 700px; width: 100%; margin: 0 auto;">
         <div class="card-header">
             <h4 class="modal-title"><?= $participant['firstname']." ".$participant['middleinit']." ".$participant['lastname']." ".$buttonOptions?></h4>
@@ -114,7 +102,7 @@ include('header.php');
             <hr>
             <div class="pl-3">
                 <p class="participant_name"><b>Name: </b> <?= $participant['firstname']." ".$participant['middleinit']." ".$participant['lastname'] ?></p>
-                <p class="participant_status"><b>Status: </b> <span class="badge badge-success">active</span> </p>
+                <p class="participant_status"><b>Status: </b> <span class="<?=$statuses['class']?>"><?=$statuses['status']?></p>
                 <p class="participant_notes"><b>Notes: </b> <p class="pl-3">"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."</p></p>
                 <p class="participant_other"><b>Other: </b> Other items to note</p>
                 <p class="participant_contact"><b>Contact: </b></p>
