@@ -22,6 +22,29 @@ $selected_date = $_POST['date-input'];
 $selected_time = $_POST['time-input'];
 $selected_site = $_POST['site'];
 $selected_lang = $_POST['lang'];
+$selected_facilitator = $_POST['facilitator'];
+
+{
+    /*
+    //input validation
+    $result_curriculum = $db->no_param_query("SELECT c.curriculumname FROM curricula c ORDER BY c.curriculumname ASC;");
+
+    $result_classes = $db->no_param_query("SELECT cc.topicname from curriculumclasses cc ORDER BY cc.curriculumid;");
+
+    $result_sites = $db->no_param_query("select s.sitename from sites s;");
+
+    $result_languages = $db->no_param_query("select lang from languages;");
+
+    $result_facilitators = $db->no_param_query("select peop.firstname, peop.middleinit, peop.lastname, peop.peopleid " .
+        "from people peop, employees emp, facilitators f " .
+        "where peop.peopleid = emp.employeeid " .
+        "and emp.employeeid = f.facilitatorid " .
+        "order by peop.lastname asc;"
+    );
+
+    */
+
+}
 
 
 
@@ -45,17 +68,21 @@ for($i = 0; $i < count($attendanceInfo); $i++) {
         //  takes to run, then there may be an issue ¯\_(ツ)_/¯
         $age = calculate_age($attendanceInfo[$i]['dob']);
 
-        $resultInsert = $db->no_param_query(
-                "SELECT createOutOfHouseParticipant( ".
-                "participantFirstName := '{$attendanceInfo[$i]['fn']}'::text, " .
-                "participantMiddleInit := '{$attendanceInfo[$i]['mi']}'::varchar, " .
-                "participantLastName := '{$attendanceInfo[$i]['ln']}'::text, " .
-                "participantAge   := {$age}::int, " .
-                "participantRace   := '{$attendanceInfo[$i]['race']}'::race, " .
-                //TODO: change employeeID when DB sorts it out
-                "employeeID := 1::int " .
-                "); "
-        );
+
+        $resultInsertQuery =
+            "SELECT createOutOfHouseParticipant( ".
+            "participantFirstName := '{$attendanceInfo[$i]['fn']}'::text, " .
+            "participantMiddleInit := '{$attendanceInfo[$i]['mi']}'::varchar, " .
+            "participantLastName := '{$attendanceInfo[$i]['ln']}'::text, " .
+            "participantAge   := {$age}::int, " .
+            "participantRace   := '{$attendanceInfo[$i]['race']}'::race, " .
+            //TODO: change employeeID when DB sorts it out
+            "employeeID := 1::int " .
+            "); ";
+
+        echo $resultInsertQuery;
+        $resultInsert = $db->no_param_query($resultInsertQuery);
+
         //update row information with those values
         $personId = pg_fetch_result($resultInsert, 'createOutOfHouseParticipant');
         $attendanceInfo[$i]['pid'] = $personId;

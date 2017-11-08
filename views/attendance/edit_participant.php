@@ -20,11 +20,15 @@ $selected_date = $_POST['date-input'];
 $selected_time = $_POST['time-input'];
 $selected_site = $_POST['site'];
 $selected_lang = $_POST['lang'];
+$selected_facilitator = $_POST['facilitator'];
 
 //1. deserialize and update session info
 //update class information from previous form
 
-updateSessionClassInformation();
+//if we're not from the confirm edit page, update page information with attendance form post fields
+if(!isset($_POST['fromConfirmEditParticipant'])){
+    updateSessionClassInformation();
+}
 $pageInformation = deserializeParticipantMatrix($_SESSION['serializedInfo']);
 
 $checkPageInfo = deserializeParticipantMatrix($_SESSION['serializedInfo']);
@@ -184,6 +188,8 @@ $selected_person = $pageInformation[$selected_edit_num];
                         echo "<input type=\"hidden\" id=\"time-input\" name=\"time-input\" value=\"{$selected_time}\" />";
                         echo "<input type=\"hidden\" id=\"site\" name=\"site\" value=\"{$selected_site}\" />";
                         echo "<input type=\"hidden\" id=\"lang\" name=\"lang\" value=\"{$selected_lang}\" />";
+                        echo "<input type=\"hidden\" id=\"facilitator\" name=\"facilitator\" value=\"{$selected_facilitator}\" />";
+
                         echo "<input type=\"hidden\" id=\"fromConfirmPage\" name=\"fromConfirmPage\" value=\"1\" />";
 
                         //edit button information

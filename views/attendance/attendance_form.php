@@ -2,8 +2,6 @@
 
 authorizedPage();
 
-$_SESSION['employeeid'] = 1;
-
 //generic db script copied and pasted
 
 global $db;
@@ -12,7 +10,8 @@ require "attendance_utilities.php";
 
 include('header.php');
 
-
+//add as session variable
+$_SESSION['employeeid'] = 1;
 	
 //make sure that information was entered into form
 if(!isset($_POST['curr']))
@@ -25,6 +24,7 @@ if(!isset($_POST['curr']))
     die;
 }
 
+//grab post,
 $selected_class = $_POST['classes'];
 $selected_curr = $_POST['curr'];
 $selected_date = $_POST['date-input'];
@@ -32,7 +32,10 @@ $selected_time = $_POST['time-input'];
 $selected_site = $_POST['site'];
 $selected_lang = $_POST['lang'];
 
-$employee_id = $_SESSION['employeeid'];
+$selected_facilitator = $_POST['facilitator'];
+
+//get facilitatorId from name
+
 
 $pageInformation = array();
 
@@ -225,7 +228,7 @@ else {
 
     $fullQuery = "select * from classattendancedetails " .
         " where curriculumname = '" . escape_apostrophe($selected_curr) . "' " .
-        "and facilitatorid = {$employee_id} " .
+        "and facilitatorid = {$selected_facilitator} " .
         "and date >= '{$threeWeeksAgo}'" .
         "ORDER BY date DESC;";
 
@@ -312,6 +315,15 @@ $display_time = $convert_time->format('g:i A');
                 document.getElementById(pageFormName).submit();
             }
         }
+
+        function validateComments(comment){
+            //loop through table and verify each comment
+
+            //create alert box and report what record failed
+
+            //returns true if matched, validates for a-z and A-Z
+            return (/^[a-zA-Z0-9\s.]*$/.test(comment));
+        }
     </script>
 	
 	<script>
@@ -365,6 +377,7 @@ $display_time = $convert_time->format('g:i A');
 							"<input type=\"hidden\" value=\"<?=$selected_time?>\" name=\"time-input\">"+
 							"<input type=\"hidden\" value=\"<?=$selected_site?>\" name=\"site\">"+
 							"<input type=\"hidden\" value=\"<?=$selected_lang?>\" name=\"lang\">"+
+							"<input type=\"hidden\" value=\"<?=$selected_facilitator?>\" name=\"facilitator\">"+
 								"<ul class='list-group'>"+
 								"<li class='list-group-item'>"+sentNameList+
 								"<input type=\"submit\" name=\"lookupId\" value= \"Add\" class=\"btn cpca float-right submit-search\">"+
@@ -505,6 +518,7 @@ $display_time = $convert_time->format('g:i A');
                             echo "<input type=\"hidden\" id=\"time-input\" name=\"time-input\" value=\"{$selected_time}\" />";
                             echo "<input type=\"hidden\" id=\"site\" name=\"site\" value=\"{$selected_site}\" />";
                             echo "<input type=\"hidden\" id=\"lang\" name=\"lang\" value=\"{$selected_lang}\" />";
+                            echo "<input type=\"hidden\" id=\"facilitator\" name=\"facilitator\" value=\"{$selected_facilitator}\" />";
 
                             //helps identify if we've just added a person
                             echo "<input type=\"hidden\" id=\"fromAddPerson\" name=\"fromAddPerson\" value=\"0\" />";

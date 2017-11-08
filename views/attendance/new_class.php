@@ -4,6 +4,8 @@ authorizedPage();
 
 global $db;
 
+$_SESSION['employeeid'] = 1;
+
 //unset previous class session information
 if(isset($_SESSION['serializedInfo'])) {
     unset($_SESSION['serializedInfo']);
@@ -97,6 +99,23 @@ echo "<script>console.log(" . date('d-m-Y') . ")</script>"
         document.getElementById("sub").disabled = false;
     }
 
+    function setEmployeeIdField(){
+        var formFac = document.getElementById('facilitator');
+        var selection = document.getElementById('facilitator-name');
+
+        var nameSelected = selection.value;
+        var employeeId;
+        //match name with id
+        for(var i = 0; i < selection.childElementCount; i++){
+            if(selection[i].value === nameSelected){
+                employeeId = parseInt(selection[i].id);
+            }
+        }
+        console.log(employeeId);
+
+        formFac.value = employeeId;
+    }
+
 </script>
     <div class="container">
 
@@ -150,12 +169,25 @@ echo "<script>console.log(" . date('d-m-Y') . ")</script>"
                     </div>
 
                     <div class="form-group">
-                        <label for="facilitator">Facilitator Selection</label>
-                        <select id="facilitator" class="form-control" name="classes" onchange="">
+                        <label for="facilitator-name">Facilitator Selection</label>
+                        <select id="facilitator-name" class="form-control" name="facilitator-name" onchange="setEmployeeIdField()">
                             <?php
+                            $counter = 0;
+                            $first = true;
+                            $defaultValueFacilitatorId = 0;
                             while($row = pg_fetch_assoc($result_facilitators)){
+                                if($first){$first = false; $defaultValueFacilitatorId = $row['peopleid'];}
+                                $selected = "";
+                                //choose default facilitator
+                                if((isset($_SESSION['employeeid'])) && ($_SESSION['employeeid'] == $row['peopleid'])){
+                                    $selected = "selected=\"selected\"";
+                                    $defaultValueFacilitatorId = $row['peopleid'];
+                                }
+
+                                $facilitatorId = $row['peopleid'];
+
                                 $fullName = $row['firstname'] . " " . $row['middleinit'] . " " . $row['lastname'];
-                                echo "<option>{$fullName}</option>";
+                                echo "<option {$selected} id=\"{$facilitatorId}\">{$fullName}</option>";
                             }
                             ?>
                         </select>
@@ -174,15 +206,20 @@ echo "<script>console.log(" . date('d-m-Y') . ")</script>"
                             <input class="form-control" type="time" value="<?php echo date('H:i') ?>" id="time-input" name = "time-input">
                         </div>
                     </div>
+                    <?php echo "<input type = \"hidden\" id=\"facilitator\" name=\"facilitator\" value=\"{$defaultValueFacilitatorId}\" />"  ?>
+
 
                     <fieldset disabled="disabled" id="sub">
                         <button type="submit" class="btn btn-primary">Submit</button>
                     </fieldset>
+
+
                 </form>
 
             </div>
         </div>
     </div>
+
 <?php
 include('footer.php');
 ?>

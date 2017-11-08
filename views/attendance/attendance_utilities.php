@@ -174,3 +174,40 @@ function validateZip($zip) {
         return preg_match("/(^\d{5}$)|(^\d{5}-\d{4}$)/", $zip);
     }
 }
+
+function validateClass($results, $input){
+    while($row = pg_fetch_assoc($results)){
+        if($input == $row['topicname']) return true;
+    }
+    return false;
+}
+
+function validateCurriculum($results, $input){
+    while($row = pg_fetch_assoc($results)){
+        if($input == $row['topicname']) return true;
+    }
+    return false;
+}
+
+function validateDate($date){
+
+}
+
+function validateTime($time){
+
+
+}
+
+function validateSite($results, $input){
+    while($row = pg_fetch_assoc($results)){
+        if($input == $row['sitename']) return true;
+    }
+    return false;
+}
+
+function validateLanguage($results, $input){
+    while($row = pg_fetch_assoc($results)){
+        if($input == $row['lang']) return true;
+    }
+    return false;
+}
