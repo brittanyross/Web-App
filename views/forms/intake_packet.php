@@ -395,8 +395,6 @@ include('header.php');
 
             <div class="dropdown">
 
-                <button class="cpca btn" onclick="goBack()"><i class="fa fa-arrow-left"></i> Back</button>
-
                 <form id="intake_packet" action="/intake-packet" method="post" novalidate>
                     <div id="accordion" role="tablist" aria-multiselectable="true">
                         <br>

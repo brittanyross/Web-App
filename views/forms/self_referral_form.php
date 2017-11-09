@@ -140,8 +140,6 @@ include('header.php');
 
             <div class="dropdown">
 
-                <button class="cpca btn" onclick="goBack()"><i class="fa fa-arrow-left"></i> Back</button>
-
                 <form id="self_participant_info" action="/self-referral-form" method="post" novalidate>
                     <div id="accordion" role="tablist" aria-multiselectable="true">
                         <br>
